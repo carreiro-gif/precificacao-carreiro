@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistema de Precificação</title>
+  <!-- Link para o arquivo CSS -->
   style.css
 </head>
 <body>
@@ -25,7 +26,7 @@
     <img id="logo-loja" src="" alt="Logo da Loja" style="max-width:100px;">
     <input type="file" id="upload-logo" onchange="alterarLogo()">
     <input type="text" id="editar-nome" placeholder="Editar nome da loja">
-    Nome</button>
+    <button onclick="salvarNome()">Salvar Nome</button>
 
     <nav>
       <button onclick="showSection('dashboard')">Dashboard</button>
@@ -88,6 +89,7 @@
     </main>
   </section>
 
+  <!-- Link para o arquivo JavaScript -->
   script.js</script>
 </body>
 </html>
