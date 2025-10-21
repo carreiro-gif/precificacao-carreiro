@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Precificação</title>
+  style.css
+</head>
+<body>
+  <header>
+    <h1>Gerenciador de Lojas</h1>
+  </header>
+
+  <!-- Página Inicial: Gerenciar Lojas -->
+  <section id="lojas" class="active">
+    <h2>Minhas Lojas</h2>
+    <div id="lista-lojas"></div>
+    <button onclick="novaLoja()">+ Adicionar Loja</button>
+  </section>
+
+  <!-- Painel da Loja -->
+  <section id="painel-loja">
+    <button onclick="voltar()">← Voltar</button>
+    <h2 id="nome-loja"></h2>
+    <img id="logo-loja" src="" alt="Logo da Loja" style="max-width:100px;">
+    <input type="file" id="upload-logo" onchange="alterarLogo()">
+    <input type="text" id="editar-nome" placeholder="Editar nome da loja">
+    Nome</button>
+
+    <nav>
+      <button onclick="showSection('dashboard')">Dashboard</button>
+      <button onclick="showSection('dna')">DNA</button>
+      <button onclick="showSection('faturamento')">Faturamento</button>
+      <button onclick="showSection('insumos')">Insumos</button>
+      <button onclick="showSection('ficha')">Ficha Técnica</button>
+      <button onclick="showSection('pv')">Preço de Venda</button>
+      <button onclick="showSection('combos')">Combos</button>
+    </nav>
+
+    <main>
+      <section id="dashboard" class="aba">
+        <h3>Dashboard</h3>
+        <p>DNA Total: <span id="dna-total">0%</span></p>
+        <p>Faturamento do mês: R$ <span id="faturamento-mes">0,00</span></p>
+      </section>
+
+      <section id="dna" class="aba">
+        <h3>DNA da Empresa</h3>
+        <label>Taxa Débito (%): <input type="number" id="taxa-debito"></label>
+        <label>Taxa Crédito (%): <input type="number" id="taxa-credito"></label>
+        <label>Voucher (%): <input type="number" id="voucher"></label>
+        <button onclick="calcularDNA()">Calcular DNA</button>
+      </section>
+
+      <section id="faturamento" class="aba">
+        <h3>Faturamento Mensal</h3>
+        <input type="month" id="mes-faturamento">
+        <input type="number" id="valor-faturamento" placeholder="Valor R$">
+        <button onclick="salvarFaturamento()">Salvar</button>
+        <ul id="lista-faturamento"></ul>
+      </section>
+
+      <section id="insumos" class="aba">
+        <h3>Cadastro de Insumos</h3>
+        <input type="text" id="nome-insumo" placeholder="Nome">
+        <input type="number" id="preco-compra" placeholder="Preço de Compra">
+        <input type="number" id="fator-conversao" placeholder="Fator Conversão">
+        <button onclick="salvarInsumo()">Salvar</button>
+        <table id="tabela-insumos">
+          <tr><th>Nome</th><th>Custo Unitário</th></tr>
+        </table>
+      </section>
+
+      <section id="ficha" class="aba">
+        <h3>Ficha Técnica</h3>
+        <p>Selecione insumos e calcule CMV</p>
+      </section>
+
+      <section id="pv" class="aba">
+        <h3>Preço de Venda</h3>
+        <p>Calcule PV para Loja, iFood, CI e 99Food</p>
+      </section>
+
+      <section id="combos" class="aba">
+        <h3>Combos</h3>
+        <p>Monte combos e calcule preços</p>
+      </section>
+    </main>
+  </section>
+
+  script.js</script>
+</body>
+</html>
