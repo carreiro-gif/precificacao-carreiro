@@ -1,1157 +1,494 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Precificação Carreiro</title>
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-  <meta http-equiv="Pragma" content="no-cache"/>
-  <meta http-equiv="Expires" content="0"/>
-  <style>
-    /* ====== TEMA ROXO/BRANCO ====== */
-    :root{
-      --bg:#0f0b1b; --panel:#17122a; --muted:#b6add3; --text:#ffffff;
-      --primary:#6a3bf1; --primary-2:#8a5bff; --border:#2a2242; --ring: rgba(138,91,255,.5);
-    }
-    *{ box-sizing:border-box }
-    html,body{ height:100% }
-    body{
-      margin:0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      color:var(--text);
-      background:
-        radial-gradient(1100px 600px at -10% -10%, rgba(106,59,241,.18) 0%, transparent 60%),
-        radial-gradient(900px 500px at 120% 10%, rgba(138,91,255,.16) 0%, transparent 60%),
-        var(--bg);
-    }
-    :focus-visible{ outline:2px solid var(--ring); outline-offset:2px; border-radius:8px }
-
-    /* Header */
-    .app-header{
-      position:sticky; top:0; z-index:50;
-      display:flex; align-items:center; justify-content:space-between; gap:16px;
-      padding:14px 22px;
-      background:linear-gradient(180deg, rgba(21,16,41,.85), rgba(21,16,41,.6));
-      border-bottom:1px solid var(--border); backdrop-filter: blur(8px);
-    }
-    .brand{ display:flex; align-items:center; gap:12px }
-    .logo{ width:42px; height:42px; border-radius:10px; object-fit:cover; border:1px solid var(--border) }
-    .title-wrap h1{ margin:0; font-size:1.15rem; letter-spacing:.2px }
-    .subtitle{ color:var(--muted); font-size:.85rem }
-
-    /* Botões */
-    .btn{
-      appearance:none; border:1px solid var(--border); background:rgba(255,255,255,.06);
-      padding:10px 14px; border-radius:12px; color:var(--text); cursor:pointer; font-weight:600;
-      transition: transform .12s ease, box-shadow .12s ease, background .2s ease, border-color .2s ease;
-    }
-    .btn:hover{ transform: translateY(-1px); border-color:#3a2f5c; box-shadow: 0 10px 30px rgba(0,0,0,.25), 0 4px 10px rgba(106,59,241,.2) }
-    .btn:active{ transform: translateY(0) scale(.99) }
-    .btn.primary{ background:linear-gradient(135deg, var(--primary), var(--primary-2)); border:none }
-    .btn.ghost{ background:rgba(255,255,255,.1) }
-    .file-btn{ position:relative; overflow:hidden }
-
-    /* Layout principal */
-    .app-main{ display:grid; grid-template-columns: 280px 1fr; min-height: calc(100vh - 72px) }
-    .sidebar{
-      padding:16px; border-right:1px solid var(--border);
-      background:linear-gradient(180deg, rgba(21,16,41,.7), rgba(21,16,41,.3));
-    }
-    .sidebar-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px }
-    .lojas-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px }
-    .lojas-list li{
-      display:flex; align-items:center; justify-content:space-between; gap:8px;
-      padding:10px 12px; border:1px solid var(--border); border-radius:12px;
-      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
-    }
-    .lojas-list li.active{ outline:2px solid var(--primary); outline-offset:2px }
-    .loja-actions{ display:flex; gap:6px }
-    .loja-actions .btn{ padding:6px 8px; font-size:.85rem }
-
-    .content{ padding:18px 22px }
-    .tabbar{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px }
-    .tab{
-      border:1px solid var(--border); background:rgba(255,255,255,.05); color:var(--text);
-      padding:10px 14px; border-radius:999px; cursor:pointer; font-weight:600;
-    }
-    .tab.active{ background:linear-gradient(135deg, var(--primary), var(--primary-2)); border:none }
-    .tab-panel{
-      display:none; border:1px solid var(--border); border-radius:16px; padding:16px;
-      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-    }
-    .tab-panel.active{ display:block }
-
-    .panel-header{ display:flex; gap:10px; align-items:center; margin-bottom:12px; flex-wrap:wrap }
-    .store-name{
-      flex:1; border:1px solid var(--border); border-radius:10px; padding:10px 12px;
-      background:rgba(255,255,255,.08); color:var(--text); font-size:1rem;
-    }
-
-    .cards{ display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:14px }
-    .card{
-      border:1px solid var(--border); border-radius:16px; padding:14px;
-      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-      box-shadow: 0 1px 0 rgba(255,255,255,.04) inset;
-    }
-
-    .app-footer{
-      border-top:1px solid var(--border); padding:12px 22px; color:var(--muted);
-      background:linear-gradient(180deg, rgba(21,16,41,.6), rgba(21,16,41,.4));
-    }
-
-    .warning{
-      position:fixed; left:16px; right:16px; bottom:16px; z-index:9999;
-      background:#2b1f52; color:#fff; padding:12px 14px; border:1px solid #3a2f5c; border-radius:10px;
-      display:none;
-    }
-
-    /* ====== TABELA (Insumos / Fichas) ====== */
-    .table-wrap{ overflow:hidden }
-    .table-scroll{ overflow:auto }
-    .table{ width:100%; border-collapse: collapse; min-width: 760px; }
-    .table th, .table td{ padding:10px 12px; border-bottom:1px solid var(--border) }
-    .table thead th{ position:sticky; top:0; background:rgba(21,16,41,.85) }
-    .table tr:hover td{ background: rgba(255,255,255,.03) }
-    .table .actions{ display:flex; gap:8px; flex-wrap:wrap }
-    .table .actions .btn{ padding:6px 8px; font-size:.85rem }
-
-    /* ====== MODAL DE COLAR PLANILHA ====== */
-    .modal-mask{
-      position:fixed; inset:0; background:rgba(0,0,0,.45);
-      display:none; align-items:center; justify-content:center; z-index:1000;
-    }
-    .modal{
-      width:min(820px, 92vw); background: #1c1534; border:1px solid var(--border);
-      border-radius:14px; padding:16px;
-    }
-    .modal h4{ margin:0 0 8px 0 }
-    .modal textarea{
-      width:100%; height:240px; resize:vertical;
-      background:rgba(255,255,255,.07); color:var(--text);
-      border:1px solid var(--border); border-radius:10px; padding:10px 12px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-      white-space: pre;
-    }
-    .modal .row{ display:flex; gap:8px; align-items:center; justify-content:space-between; flex-wrap:wrap; margin:8px 0 }
-    .modal small{ color:var(--muted) }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Precificação Carreiro — PV (espelho da planilha)</title>
+<style>
+  :root{
+    --bg:#0d0f14; --card:#141826; --line:#232840; --muted:#94a0bf;
+    --text:#eaf0ff; --acc:#7c5cff; --ok:#2ecc71; --warn:#f1c40f; --danger:#ff6b81;
+  }
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
+  .wrap{max-width:1200px;margin:24px auto;padding:0 16px}
+  h1{font-size:22px;margin:0 0 6px} h2{font-size:18px;margin:20px 0 8px;color:#d7def4}
+  .muted{color:var(--muted)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0}
+  .row{display:flex;gap:12px;flex-wrap:wrap} .col{flex:1 1 260px;min-width:260px}
+  label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+  input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:#0e1220;color:var(--text)}
+  textarea{min-height:110px;font-family:ui-monospace,Menlo,monospace}
+  .btn{background:var(--acc);border:0;color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer}
+  .btn.ghost{background:transparent;border:1px solid var(--line)}
+  .btn.alt{background:#2a2f47}
+  .btn.ok{background:var(--ok)} .btn.warn{background:var(--warn);color:#111} .btn.danger{background:var(--danger)}
+  table{width:100%;border-collapse:collapse} th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right}
+  th:first-child,td:first-child{text-align:left}
+  .mono{font-family:ui-monospace,Menlo,monospace}
+  .pill{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:#1a1f34;color:#cbd6ff;font-size:12px}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  @media (max-width:800px){ .grid{grid-template-columns:1fr} }
+</style>
 </head>
 <body>
-  <header class="app-header">
-    <div class="brand">
-      <!-- Logo SVG embutida -->
-      data:image/svg+xml;utf8,<?xml version=<svg width='48' height='48' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%236a3bf1'/><stop offset='100%' stop-color='%238a5bff'/></linearGradient></defs><rect rx='14' ry='14' width='64' height='64' fill='url(%23g)'/><path d='M18 40c8-2 12-10 14-18 2 8 6 16 14 18-6 2-10 4-14 8-4-4-8-6-14-8z' fill='white' opacity='.9'/></svg>">
-      <div class="title-wrap">
-        <h1>Precificação Carreiro</h1>
-        <span class="subtitle">Gestão de custos e preços — hamburgueria</span>
+<div class="wrap">
+  <h1>PV — Espelho da Planilha</h1>
+  <div class="muted">DNA% por mês (CF% do mês + cartões + voucher + impostos + royalties + marketing) → PV Loja; canais com gross-up (taxa %) e Entrega/Campanha (R$).</div>
+
+  <!-- CONTEXTO / SELETORES -->
+  <div class="card">
+    <div class="row">
+      <div class="col">
+        <label>Loja</label>
+        <select id="lojaSelect"></select>
       </div>
-    </div>
-
-    <nav class="top-actions">
-      <button class="btn primary" onclick="novaloja()">+ Nova loja</button>
-      <button class="btn ghost" onclick="duplicar()">Duplicar loja</button>
-      <label class="btn ghost file-btn">
-        Alterar logo
-        <input type="file" accept="image/*" onchange="alterarLogo(this)" hidden>
-      </label>
-    </nav>
-  </header>
-
-  <main class="app-main">
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <h2>Lojas</h2>
+      <div class="col">
+        <label>Mês/Ano</label>
+        <div class="row" style="gap:8px">
+          <select id="mesSelect"></select>
+          <select id="anoSelect"></select>
+        </div>
+        <div class="muted" id="cfHint" style="margin-top:6px"></div>
       </div>
-      <ul id="listaLojas" class="lojas-list"></ul>
-    </aside>
-
-    <section class="content">
-      <div class="tabbar">
-        <button class="tab active" data-tab="dashboard" onclick="showSection('dashboard')">Dashboard</button>
-        <button class="tab" data-tab="dna" onclick="showSection('dna')">DNA</button>
-        <button class="tab" data-tab="faturamento" onclick="showSection('faturamento')">Faturamento</button>
-        <button class="tab" data-tab="insumos" onclick="showSection('insumos')">Insumos</button>
-        <button class="tab" data-tab="ficha" onclick="showSection('ficha')">Ficha Técnica</button>
-        <button class="tab" data-tab="pv" onclick="showSection('pv')">PV</button>
-        <button class="tab" data-tab="combos" onclick="showSection('combos')">Combos</button>
+      <div class="col">
+        <label>Ficha Técnica (CMV + Embalagem)</label>
+        <select id="fichaSelect"></select>
+        <div class="muted" id="fichaInfo" style="margin-top:6px"></div>
       </div>
-
-      <!-- DASHBOARD -->
-      <section id="dashboard" class="tab-panel active">
-        <div class="panel-header">
-          <input id="nomeLoja" class="store-name" placeholder="Nome da loja"/>
-          <button class="btn primary" onclick="salvarNome()">Salvar nome</button>
-          <button class="btn" onclick="voltar()">Voltar</button>
-        </div>
-        <div class="cards">
-          <article class="card">
-            <h3>Resumo</h3>
-            <p>Total de lojas: <strong id="totalLojas">0</strong></p>
-            <p>Última atualização: <strong id="ultimaAtualizacao">—</strong></p>
-          </article>
-          <article class="card">
-            <h3>Margem</h3>
-            <p>Margem média: <strong id="margemMedia">—</strong></p>
-          </article>
-        </div>
-      </section>
-
-      <!-- DNA -->
-      <section id="dna" class="tab-panel">
-        <h3>DNA</h3>
-        <p>Cadastre custos fixos por mês (aluguel, salários, energia, gás, internet etc.). (em breve)</p>
-      </section>
-
-      <!-- FATURAMENTO -->
-      <section id="faturamento" class="tab-panel">
-        <h3>Faturamento</h3>
-        <p>Resumo mensal, ticket médio, % delivery vs balcão. (em breve)</p>
-      </section>
-
-      <!-- INSUMOS (CRUD + Import/Export + Busca + Duplicar) -->
-      <section id="insumos" class="tab-panel">
-        <div class="panel-header" style="justify-content:space-between; gap:12px;">
-          <h3 style="margin:0">Insumos</h3>
-          <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button class="btn ghost" onclick="exportarJSON()">Exportar JSON</button>
-            <label class="btn ghost file-btn">
-              Importar JSON
-              <input type="file" accept="application/json" onchange="importarJSON(this)" hidden>
-            </label>
-            <label class="btn ghost file-btn">
-              Importar CSV
-              <input type="file" accept=".csv,text/csv" onchange="importarCSV(this)" hidden>
-            </label>
-            <button class="btn ghost" onclick="abrirModalColar()">Colar da planilha</button>
-            <button class="btn" onclick="baixarModeloCSV()">Baixar modelo CSV</button>
-          </div>
-        </div>
-
-        <!-- Formulário de Insumos -->
-        <form id="formInsumo" onsubmit="return salvarInsumo(event)" class="card" style="margin-bottom:12px;">
-          <input type="hidden" id="insumoId">
-          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
-            <div>
-              <label>Nome do insumo</label>
-              <input id="insumoNome" required placeholder="Ex.: Pão com gergelim" class="store-name">
-            </div>
-            <div>
-              <label>Unidade</label>
-              <select id="insumoUnidade" class="store-name" required>
-                <option value="un">un</option>
-                <option value="g">g</option>
-                <option value="ml">ml</option>
-              </select>
-            </div>
-            <div>
-              <label>Custo da compra (R$)</label>
-              <input id="insumoCustoCompra" required inputmode="decimal" placeholder="Ex.: 25,50" class="store-name">
-            </div>
-            <div>
-              <label>Quantidade na compra</label>
-              <input id="insumoQtdCompra" required inputmode="decimal" placeholder="Ex.: 1000 (g/ml) ou 12 (un)" class="store-name">
-            </div>
-            <div>
-              <label>Perda (%)</label>
-              <input id="insumoPerda" inputmode="decimal" placeholder="0 a 100" class="store-name">
-            </div>
-          </div>
-          <div style="display:flex; gap:8px; margin-top:10px;">
-            <button class="btn primary" type="submit">Salvar insumo</button>
-            <button class="btn" type="button" onclick="limparFormInsumo()">Limpar</button>
-          </div>
-        </form>
-
-        <!-- Busca -->
-        <div class="card" style="margin-bottom:12px;">
-          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-            <input id="buscaInsumo" class="store-name" placeholder="Pesquisar por nome/unidade...">
-            <small style="color:#b6add3">Dica: digite parte do nome (ex.: “pão”, “cheddar”).</small>
-          </div>
-        </div>
-
-        <!-- Tabela de Insumos -->
-        <div class="card table-wrap">
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-            <strong>Lista de insumos</strong>
-            <small style="color:#b6add3">Custo unitário = custo compra ÷ qtd compra ÷ (1 - perda)</small>
-          </div>
-          <div class="table-scroll">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Nome</th>
-                  <th style="text-align:right;">Unid</th>
-                  <th style="text-align:right;">Custo compra (R$)</th>
-                  <th style="text-align:right;">Qtd compra</th>
-                  <th style="text-align:right;">Perda (%)</th>
-                  <th style="text-align:right;">Custo unit. (R$ / un-g-ml)</th>
-                  <th style="width:220px;">Ações</th>
-                </tr>
-              </thead>
-              <tbody id="tbodyInsumos"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- FICHA TÉCNICA (CRUD) -->
-      <section id="ficha" class="tab-panel">
-        <div class="panel-header" style="justify-content:space-between; gap:12px;">
-          <h3 style="margin:0">Ficha Técnica</h3>
-          <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button class="btn" onclick="novaFicha()">+ Nova ficha</button>
-          </div>
-        </div>
-
-        <!-- Form de Ficha -->
-        <form id="formFicha" onsubmit="return salvarFicha(event)" class="card" style="margin-bottom:12px;">
-          <input type="hidden" id="fichaId">
-          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px;">
-            <div>
-              <label>Nome da ficha</label>
-              <input id="fichaNome" required placeholder="Ex.: Cheeseburger" class="store-name">
-            </div>
-            <div>
-              <label>Rendimento (porções)</label>
-              <input id="fichaRendimento" required inputmode="decimal" value="1" class="store-name">
-            </div>
-            <div>
-              <label>Custo total (R$)</label>
-              <input id="fichaCustoTotal" disabled class="store-name" title="Calculado automaticamente">
-            </div>
-          </div>
-
-          <hr style="border:0;border-top:1px solid var(--border); margin:12px 0">
-
-          <!-- Adicionar item -->
-          <div style="display:grid; grid-template-columns: 1fr 160px 140px; gap:10px; align-items:center;">
-            <div>
-              <label>Insumo</label>
-              <input id="fItemInsumo" list="listaInsumosDatalist" placeholder="Digite e selecione..." class="store-name">
-              <datalist id="listaInsumosDatalist"></datalist>
-            </div>
-            <div>
-              <label>Quantidade</label>
-              <input id="fItemQtd" inputmode="decimal" placeholder="Ex.: 90" class="store-name">
-            </div>
-            <div style="align-self:end;">
-              <button class="btn" type="button" onclick="adicionarItemFicha()">Adicionar item</button>
-            </div>
-          </div>
-
-          <div class="card table-wrap" style="margin-top:12px;">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-              <strong>Itens da ficha</strong>
-              <small style="color:#b6add3">Custo item = custo unitário do insumo × quantidade</small>
-            </div>
-            <div class="table-scroll">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Insumo</th>
-                    <th style="text-align:right;">Unid</th>
-                    <th style="text-align:right;">Qtd</th>
-                    <th style="text-align:right;">Custo unit. (R$)</th>
-                    <th style="text-align:right;">Custo item (R$)</th>
-                    <th style="width:120px;">Ações</th>
-                  </tr>
-                </thead>
-                <tbody id="tbodyFichaItens"></tbody>
-              </table>
-            </div>
-          </div>
-
-          <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
-            <button class="btn primary" type="submit">Salvar ficha</button>
-            <button class="btn" type="button" onclick="limparFormFicha()">Limpar</button>
-          </div>
-        </form>
-
-        <!-- Lista de Fichas -->
-        <div class="card table-wrap">
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-            <strong>Fichas cadastradas</strong>
-            <input id="buscaFicha" class="store-name" placeholder="Buscar ficha por nome..." style="max-width:320px">
-          </div>
-          <div class="table-scroll">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Nome</th>
-                  <th style="text-align:right;">Rend.</th>
-                  <th style="text-align:right;">Itens</th>
-                  <th style="text-align:right;">Custo total (R$)</th>
-                  <th style="width:220px;">Ações</th>
-                </tr>
-              </thead>
-              <tbody id="tbodyFichas"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- PV -->
-      <section id="pv" class="tab-panel">
-        <h3>Preço de Venda (PV)</h3>
-        <p>(próximo passo) PV por markup/margem alvo com base na ficha técnica + DNA.</p>
-      </section>
-
-      <!-- COMBOS -->
-      <section id="combos" class="tab-panel">
-        <h3>Combos</h3>
-        <p>(depois) Montagem de combos e sugestão de PV.</p>
-      </section>
-    </section>
-  </main>
-
-  <footer class="app-footer">
-    <span>© Espaço Carreiro Lanches</span>
-  </footer>
-
-  <!-- Modal de colar planilha -->
-  <div id="maskColar" class="modal-mask">
-    <div class="modal">
-      <h4>Colar da planilha (Excel/Google Sheets)</h4>
-      <div class="row">
-        <small>Cole aqui linhas com <b>cabeçalho</b>. Separadores aceitos: TAB, ponto e vírgula (;) ou vírgula (,).</small>
-      </div>
-      <textarea id="textareaColar" placeholder="Exemplo:
-Nome;Unidade;CustoCompra;QtdCompra;Perda
-Pão com gergelim;un;25,50;12;0
-Carne bovina moída;g;36,00;1000;5
-Cheddar fatiado;un;32,00;24;0"></textarea>
-      <div class="row">
-        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-          <label style="display:flex; gap:6px; align-items:center;">
-            <input type="checkbox" id="chkSubstituir"> Substituir itens com mesmo <b>Nome</b> (case-insensitive)
-          </label>
-        </div>
-        <div style="display:flex; gap:8px; align-items:center;">
-          <button class="btn primary" onclick="importarPorColagem()">Importar</button>
-          <button class="btn" onclick="fecharModalColar()">Cancelar</button>
-        </div>
-      </div>
-      <div class="row">
-        <small>Campos reconhecidos (cabeçalho): <code>Nome</code>, <code>Unidade</code>, <code>CustoCompra</code>, <code>QtdCompra</code>, <code>Perda</code>.<br>
-        Sinônimos: Nome|Insumo · Unidade|Unid · Custo|ValorCompra|Preco|Preço · Qtd|Quantidade · Perda|Perdas|%Perda.</small>
+      <div class="col">
+        <label>Lucro estimado (margem alvo, % do PV)</label>
+        <input id="lucroAlvo" type="number" step="0.01" value="20">
       </div>
     </div>
   </div>
 
-  <!-- Aviso caso abra no github.com (preview sem JS) -->
-  <div id="warn" class="warning"></div>
+  <!-- DNA (conforme sua aba 3.DNA_Empresa) -->
+  <div class="card">
+    <h2>DNA da Empresa (porcentagens que incidem sobre o PV)</h2>
+    <div class="grid">
+      <div><label>Taxa Cartões — Média Débito/Crédito (%)</label><input id="dnaCartoes" type="number" step="0.01" value="3.64"></div>
+      <div><label>Voucher/Cashback (%)</label><input id="dnaVoucher" type="number" step="0.01" value="7.99"></div>
+      <div><label>Imposto (%)</label><input id="dnaImposto" type="number" step="0.01" value="0"></div>
+      <div><label>Royalties (%)</label><input id="dnaRoyalties" type="number" step="0.01" value="0"></div>
+      <div><label>Marketing (%)</label><input id="dnaMarketing" type="number" step="0.01" value="0"></div>
+      <div>
+        <label>Cálculo do Custo Fixo (%)</label>
+        <select id="cfBase">
+          <option value="mes">Custo Fixo do mês / Faturamento do mês</option>
+          <option value="media">Média (se disponível/importada)</option>
+        </select>
+      </div>
+    </div>
+    <div class="muted" style="margin-top:8px" id="dnaResumo"></div>
+  </div>
 
-  <script>
-    (function(){
-      /* ====== AVISO DE PREVIEW DO GITHUB ====== */
-      const warn = document.getElementById('warn');
-      if(location.host.includes('github.com')){
-        warn.style.display = 'block';
-        warn.innerHTML = '⚠️ Você está vendo a <b>pré-visualização do GitHub (github.com)</b>. '
-          + 'Abra o site publicado em https://github.io</a> para interatividade.';
-      }
+  <!-- Canais -->
+  <div class="card">
+    <h2>Parâmetros por Canal</h2>
+    <div class="row">
+      <div class="col">
+        <h3 class="muted">Loja</h3>
+        <div class="muted">PV Loja = CMV/(1 - (DNA% + Lucro%))</div>
+      </div>
+      <div class="col">
+        <h3 class="muted">iFood</h3>
+        <label>Taxa iFood (%)</label><input id="ifoodTaxa" type="number" step="0.01" value="17">
+        <label>Entrega (R$)</label><input id="ifoodEntrega" type="number" step="0.01" value="9">
+        <label>Campanha/Cupom (R$)</label><input id="ifoodCampanha" type="number" step="0.01" value="0">
+      </div>
+      <div class="col">
+        <h3 class="muted">99Food</h3>
+        <label>Taxa 99Food (%)</label><input id="n99Taxa" type="number" step="0.01" value="15">
+        <label>Entrega (R$)</label><input id="n99Entrega" type="number" step="0.01" value="0">
+        <label>Campanha/Cupom (R$)</label><input id="n99Campanha" type="number" step="0.01" value="0">
+      </div>
+      <div class="col">
+        <h3 class="muted">Arredondamento</h3>
+        <label>Regra</label>
+        <select id="roundRule">
+          <option value="end_99">Terminar em ,99</option>
+          <option value="end_90">Terminar em ,90</option>
+          <option value="step_0_50">Degrau R$ 0,50</option>
+          <option value="none">Sem arredondamento</option>
+        </select>
+        <label>Direção</label>
+        <select id="roundDir">
+          <option value="up">Para cima</option>
+          <option value="nearest">Mais próximo</option>
+          <option value="down">Para baixo</option>
+        </select>
+      </div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn" id="btnCalcular">Calcular</button>
+      <button class="btn ghost" id="btnSalvar">Salvar como padrão da loja</button>
+      <span id="status" class="pill"></span>
+    </div>
+  </div>
 
-      /* ====== ESTADO (localStorage) ====== */
-      const STORAGE_KEY = 'carreiro.precificacao.v1';
-      function loadState(){
-        try{
-          const raw = localStorage.getItem(STORAGE_KEY);
-          return raw ? JSON.parse(raw) : { lojas: [], lojaAtivaId: null, ultimaAtualizacao: null };
-        }catch(e){ return { lojas: [], lojaAtivaId: null, ultimaAtualizacao: null }; }
-      }
-      function saveState(s){
-        s.ultimaAtualizacao = new Date().toISOString();
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
-      }
-      let state = loadState();
+  <!-- Resultado -->
+  <div class="card">
+    <h2>Resultado & Breakdown</h2>
+    <table>
+      <thead><tr><th>Campo</th><th class="mono">Valor</th></tr></thead>
+      <tbody id="tb"></tbody>
+    </table>
+  </div>
 
-      function uid(){ return (crypto?.randomUUID?.() || Math.random().toString(36).slice(2)) }
-      function getLojaAtiva(){ return state.lojas.find(l => l.id === state.lojaAtivaId) || null }
-      function setLojaAtiva(id){ state.lojaAtivaId = id; saveState(state); render(); }
-      function fmtData(iso){ return iso ? new Date(iso).toLocaleString('pt-BR') : '—' }
+  <!-- Importadores rápidos (CSV/Colar) -->
+  <div class="card">
+    <h2>Importar dados (CSV/colagem)</h2>
+    <div class="row">
+      <div class="col">
+        <label>Despesas Fixas do mês (colunas: ano,mes,loja,totalFixosMes)</label>
+        <textarea id="csvFixos" placeholder="ano,mes,loja,totalFixosMes&#10;2025,9,Espaço Carreiro Lanches,4951.12"></textarea>
+        <button class="btn warn" id="btnImpFixos">Importar Fixos</button>
+      </div>
+      <div class="col">
+        <label>Faturamento do mês (colunas: ano,mes,loja,receitaBruta)</label>
+        <textarea id="csvFat" placeholder="ano,mes,loja,receitaBruta&#10;2025,9,Espaço Carreiro Lanches,18037.58"></textarea>
+        <button class="btn warn" id="btnImpFat">Importar Faturamento</button>
+      </div>
+      <div class="col">
+        <label>Fichas (colunas: id,nome,custoTotal)</label>
+        <textarea id="csvFichas" placeholder="id,nome,custoTotal&#10;carreirinho,CARREIRINHO,4.22265825"></textarea>
+        <button class="btn warn" id="btnImpFichas">Importar Fichas</button>
+      </div>
+    </div>
+    <div class="muted" style="margin-top:8px">
+      Integração direta com seu app: <span class="mono">window.injectData({ lojas:[...], fichas:[...] })</span>
+    </div>
+  </div>
 
-      /* ====== FUNÇÕES GLOBAIS BASE ====== */
-      window.novaloja = function(){
-        const id = uid();
-        state.lojas.push({ id, nome: `Loja ${state.lojas.length + 1}`, logo: null, dna:{}, faturamento:{}, insumos:[], fichas:[], pv:{}, combos:[] });
-        state.lojaAtivaId = id; saveState(state); render();
-      };
-      window.duplicar = function(){
-        const atual = getLojaAtiva();
-        if(!atual){ alert('Nenhuma loja selecionada.'); return; }
-        const id = uid();
-        const clone = JSON.parse(JSON.stringify(atual));
-        clone.id = id; clone.nome = `${atual.nome} (cópia)`;
-        state.lojas.push(clone); state.lojaAtivaId = id; saveState(state); render();
-      };
-      window.salvarNome = function(){
-        const atual = getLojaAtiva();
-        if(!atual){ alert('Nenhuma loja selecionada.'); return; }
-        const input = document.getElementById('nomeLoja');
-        if(!input){ alert('Campo de nome não encontrado'); return; }
-        const novo = input.value.trim();
-        if(novo) atual.nome = novo;
-        saveState(state); render();
-      };
-      window.voltar = function(){ window.showSection('dashboard'); };
-      window.showSection = function(sectionId){
-        document.querySelectorAll('.tab').forEach(tab => tab.classList.toggle('active', tab.dataset.tab === sectionId));
-        document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === sectionId || p.id === `tab-${sectionId}`));
-      };
-      window.abrirLoja = function(id){ setLojaAtiva(id); };
-      window.alterarLogo = function(input){
-        const file = input?.files?.[0]; const atual = getLojaAtiva();
-        if(!file || !atual) return;
-        const reader = new FileReader();
-        reader.onload = () => { atual.logo = reader.result; saveState(state); render(); };
-        reader.readAsDataURL(file);
-      };
+  <div class="muted" style="margin:16px 0">
+    Obs.: DNA% segue sua planilha (CF% do mês + cartões + voucher + impostos + royalties + marketing). Canais aplicam gross-up da taxa (%)
+    e “brutalização” da entrega/campanha no numerador, idêntico ao modelo. 
+  </div>
+</div>
 
-      /* ====== UTILS NUMÉRICOS ====== */
-      function toNumber(v){
-        if(typeof v === 'number') return v;
-        if(!v) return 0;
-        return parseFloat(String(v).replace(/\./g,'').replace(',', '.')) || 0;
-      }
-      function money(v){ return (v ?? 0).toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); }
-      function normaliza(s){ return String(s||'').toLowerCase(); }
-
-      /* ====== INSUMOS (CRUD + import) ====== */
-      function getInsumos(){
-        const loja = getLojaAtiva();
-        return loja ? (loja.insumos || []) : [];
-      }
-      function setInsumos(arr){
-        const loja = getLojaAtiva(); if(!loja) return;
-        loja.insumos = arr; saveState(state);
-      }
-      function custoUnitario(ins){
-        const perdaFator = 1 - (toNumber(ins.perda)/100);
-        const efetivo = Math.max(0.000001, toNumber(ins.qtdCompra) * Math.max(0.000001, perdaFator));
-        return toNumber(ins.custoCompra) / efetivo;
-      }
-      window.salvarInsumo = function(e){
-        if(e) e.preventDefault();
-        const loja = getLojaAtiva(); if(!loja){ alert('Nenhuma loja selecionada.'); return false; }
-        const id = document.getElementById('insumoId').value || null;
-        const nome = document.getElementById('insumoNome').value.trim();
-        const unidade = document.getElementById('insumoUnidade').value;
-        const custoCompra = toNumber(document.getElementById('insumoCustoCompra').value);
-        const qtdCompra = toNumber(document.getElementById('insumoQtdCompra').value);
-        const perda = Math.min(100, Math.max(0, toNumber(document.getElementById('insumoPerda').value||0)));
-        if(!nome){ alert('Informe o nome.'); return false; }
-        if(!qtdCompra || qtdCompra<=0){ alert('Quantidade da compra precisa ser > 0.'); return false; }
-        const insumos = getInsumos();
-        if(id){
-          const i = insumos.findIndex(x => x.id === id);
-          if(i>=0) insumos[i] = { ...insumos[i], nome, unidade, custoCompra, qtdCompra, perda };
-        }else{
-          insumos.push({ id: uid(), nome, unidade, custoCompra, qtdCompra, perda });
-        }
-        setInsumos(insumos); renderInsumos(); limparFormInsumo(); return false;
-      };
-      window.limparFormInsumo = function(){
-        document.getElementById('insumoId').value = '';
-        document.getElementById('insumoNome').value = '';
-        document.getElementById('insumoUnidade').value = 'un';
-        document.getElementById('insumoCustoCompra').value = '';
-        document.getElementById('insumoQtdCompra').value = '';
-        document.getElementById('insumoPerda').value = '';
-      };
-      window.editarInsumo = function(id){
-        const ins = getInsumos().find(x => x.id === id); if(!ins) return;
-        document.getElementById('insumoId').value = ins.id;
-        document.getElementById('insumoNome').value = ins.nome;
-        document.getElementById('insumoUnidade').value = ins.unidade;
-        document.getElementById('insumoCustoCompra').value = String(ins.custoCompra).replace('.', ',');
-        document.getElementById('insumoQtdCompra').value = String(ins.qtdCompra).replace('.', ',');
-        document.getElementById('insumoPerda').value = String(ins.perda ?? 0).replace('.', ',');
-        document.getElementById('insumoNome').focus();
-        showSection('insumos');
-      };
-      window.removerInsumo = function(id){
-        if(!confirm('Excluir este insumo?')) return;
-        setInsumos(getInsumos().filter(x => x.id !== id));
-        renderInsumos();
-      };
-      window.duplicarInsumo = function(id){
-        const ins = getInsumos().find(x => x.id === id); if(!ins) return;
-        const copia = { ...ins, id: uid(), nome: ins.nome + ' (cópia)' };
-        const arr = getInsumos(); arr.push(copia); setInsumos(arr); renderInsumos();
-      };
-
-      /* Busca insumos */
-      let termoBusca = '';
-      function aplicaBusca(arr){
-        if(!termoBusca) return arr;
-        const t = normaliza(termoBusca);
-        return arr.filter(x => normaliza(x.nome).includes(t) || normaliza(x.unidade).includes(t));
-      }
-
-      /* Importação CSV/Colagem */
-      function detectarSep(linha){
-        if(linha.includes('\t')) return '\t';
-        if((linha.match(/;/g)||[]).length >= (linha.match(/,/g)||[]).length) return ';';
-        return ',';
-      }
-      function cabecalhoMap(headers){
-        const map = {};
-        headers.forEach((h, i)=>{
-          const k = normaliza(h).replace(/\s+/g,'');
-          if(/^(nome|insumo)$/.test(k)) map.nome = i;
-          else if(/^(unidade|unid|un)$/.test(k)) map.unidade = i;
-          else if(/^(custocompra|custo|valorcompra|preco|preço)$/.test(k)) map.custo = i;
-          else if(/^(qtdcompra|qtd|quantidade)$/.test(k)) map.qtd = i;
-          else if(/^(perda|perdas|%perda|perda%)$/.test(k)) map.perda = i;
-        });
-        return map;
-      }
-      function parseTabela(texto){
-        const linhas = String(texto||'').trim().split(/\r?\n/).filter(l=>l.trim()!=='');
-        if(linhas.length===0) return [];
-        const sep = detectarSep(linhas[0]);
-        const headers = linhas[0].split(sep).map(s=>s.trim());
-        const map = cabecalhoMap(headers);
-        const out = [];
-        for(let i=1;i<linhas.length;i++){
-          const cols = linhas[i].split(sep).map(s=>s.trim());
-          const nome = cols[map.nome] || '';
-          const unidade = (cols[map.unidade] || 'un').toLowerCase();
-          const custoCompra = toNumber(cols[map.custo] || 0);
-          const qtdCompra = toNumber(cols[map.qtd] || 0);
-          const perda = toNumber(cols[map.perda] || 0);
-          if(!nome || !qtdCompra) continue;
-          out.push({ id: uid(), nome, unidade, custoCompra, qtdCompra, perda });
-        }
-        return out;
-      }
-      window.importarCSV = function(input){
-        const file = input?.files?.[0]; if(!file) return;
-        const reader = new FileReader();
-        reader.onload = ()=>{ const itens = parseTabela(reader.result);
-          if(itens.length===0){ alert('Nada para importar. Verifique o cabeçalho e os separadores.'); return; }
-          mesclarInsumos(itens, false);
-        };
-        reader.readAsText(file, 'utf-8');
-      };
-      const mask = document.getElementById('maskColar');
-      const txtColar = document.getElementById('textareaColar');
-      window.abrirModalColar = function(){ txtColar.value=''; mask.style.display='flex'; }
-      window.fecharModalColar = function(){ mask.style.display='none'; }
-      window.importarPorColagem = function(){
-        const substituir = document.getElementById('chkSubstituir').checked;
-        const itens = parseTabela(txtColar.value);
-        if(itens.length===0){ alert('Nada para importar. Confira cabeçalho/valores.'); return; }
-        mesclarInsumos(itens, substituir);
-      };
-      function mesclarInsumos(novos, substituir){
-        const arr = getInsumos();
-        if(substituir){
-          novos.forEach(n=>{
-            const i = arr.findIndex(a => normaliza(a.nome) === normaliza(n.nome));
-            if(i>=0) arr[i] = { ...n, id: arr[i].id }; else arr.push(n);
-          });
-        }else{
-          arr.push(...novos);
-        }
-        setInsumos(arr); renderInsumos(); fecharModalColar(); showSection('insumos'); alert(`Importados ${novos.length} insumos.`);
-      }
-      window.baixarModeloCSV = function(){
-        const csv = [
-          'Nome;Unidade;CustoCompra;QtdCompra;Perda',
-          'Pão com gergelim;un;25,50;12;0',
-          'Carne bovina moída;g;36,00;1000;5',
-          'Cheddar fatiado;un;32,00;24;0',
-          'Bacon fatiado;g;45,00;1000;0',
-          'Alface americano;g;6,00;500;10',
-          'Cebola roxa;g;8,00;500;5',
-          'Picles;g;18,00;1000;0',
-          'Molho especial;ml;20,00;1000;0'
-        ].join('\n');
-        const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'modelo-insumos.csv';
-        document.body.appendChild(a); a.click(); a.remove();
-      };
-
-      /* ====== EXPORTAR/IMPORTAR JSON ====== */
-      window.exportarJSON = function(){
-        const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
-        const a = document.createElement('a');
-        const dt = new Date().toISOString().slice(0,10);
-        a.href = URL.createObjectURL(blob);
-        a.download = `precificacao-carreiro-backup-${dt}.json`;
-        document.body.appendChild(a); a.click(); a.remove();
-      };
-      window.importarJSON = function(input){
-        const file = input?.files?.[0]; if(!file) return;
-        const reader = new FileReader();
-        reader.onload = () => {
-          try{
-            const data = JSON.parse(reader.result);
-            if(!data || typeof data !== 'object' || !Array.isArray(data.lojas)){ alert('Arquivo inválido.'); return; }
-            state = data; saveState(state); render(); showSection('insumos'); alert('Dados importados com sucesso!');
-          }catch(e){ console.error(e); alert('Falha ao ler o JSON.'); }
-        };
-        reader.readAsText(file);
-      };
-
-      /* ====== FICHA TÉCNICA (CRUD) ====== */
-      function getFichas(){
-        const loja = getLojaAtiva(); return loja ? (loja.fichas || []) : [];
-      }
-      function setFichas(arr){
-        const loja = getLojaAtiva(); if(!loja) return; loja.fichas = arr; saveState(state);
-      }
-      function getInsumoByNameCaseInsensitive(nome){
-        const t = normaliza(nome);
-        return getInsumos().find(i => normaliza(i.nome) === t) || null;
-      }
-      function custoItem(ins, qtd){ return custoUnitario(ins) * toNumber(qtd); }
-      function custoTotalFicha(itens){
-        return itens.reduce((acc, it)=>{
-          const ins = getInsumoById(it.insumoId); if(!ins) return acc;
-          return acc + custoItem(ins, it.qtd);
-        }, 0);
-      }
-      function getInsumoById(id){ return getInsumos().find(x => x.id === id) || null; }
-
-      /* Form de Ficha (estado no DOM) */
-      window.novaFicha = function(){
-        limparFormFicha(); showSection('ficha'); document.getElementById('fichaNome').focus();
-      };
-      window.limparFormFicha = function(){
-        document.getElementById('fichaId').value = '';
-        document.getElementById('fichaNome').value = '';
-        document.getElementById('fichaRendimento').value = '1';
-        document.getElementById('fichaCustoTotal').value = '';
-        document.getElementById('fItemInsumo').value = '';
-        document.getElementById('fItemQtd').value = '';
-        document.getElementById('tbodyFichaItens').innerHTML = '';
-        atualizarCustoTotalForm();
-      };
-      function adicionarLinhaItem(insumoId, nome, unidade, qtd){
-        const tbody = document.getElementById('tbodyFichaItens');
-        const ins = getInsumoById(insumoId); if(!ins) return;
-        const custoU = custoUnitario(ins);
-        const custoI = custoU * toNumber(qtd);
-        const tr = document.createElement('tr');
-        tr.dataset.insumoId = insumoId;
-        tr.dataset.qtd = String(qtd);
-        tr.innerHTML = `
-          <td>${nome}</td>
-          <td style="text-align:right">${unidade}</td>
-          <td style="text-align:right">${toNumber(qtd).toLocaleString('pt-BR')}</td>
-          <td style="text-align:right">${money(custoU)}</td>
-          <td style="text-align:right">${money(custoI)}</td>
-          <td>
-            <div class="actions">
-              <button class="btn" type="button" onclick="editarItemFicha(this)">Editar</button>
-              <button class="btn" type="button" onclick="removerItemFicha(this)">Remover</button>
-            </div>
-          </td>`;
-        tbody.appendChild(tr);
-        atualizarCustoTotalForm();
-      }
-      function atualizarCustoTotalForm(){
-        const tbody = document.getElementById('tbodyFichaItens');
-        let total = 0;
-        [...tbody.querySelectorAll('tr')].forEach(tr=>{
-          const ins = getInsumoById(tr.dataset.insumoId); if(!ins) return;
-          total += custoItem(ins, toNumber(tr.dataset.qtd));
-        });
-        document.getElementById('fichaCustoTotal').value = money(total);
-      }
-      window.adicionarItemFicha = function(){
-        const nome = document.getElementById('fItemInsumo').value.trim();
-        const qtd = toNumber(document.getElementById('fItemQtd').value);
-        if(!nome){ alert('Informe o nome do insumo.'); return; }
-        if(!qtd || qtd<=0){ alert('Informe uma quantidade > 0.'); return; }
-        const ins = getInsumoByNameCaseInsensitive(nome);
-        if(!ins){ alert('Insumo não encontrado. Use um nome igual ao cadastrado em Insumos.'); return; }
-        adicionarLinhaItem(ins.id, ins.nome, ins.unidade, qtd);
-        document.getElementById('fItemInsumo').value = ''; document.getElementById('fItemQtd').value = '';
-      };
-      window.removerItemFicha = function(btn){
-        const tr = btn.closest('tr'); tr.remove(); atualizarCustoTotalForm();
-      };
-      window.editarItemFicha = function(btn){
-        const tr = btn.closest('tr');
-        const ins = getInsumoById(tr.dataset.insumoId); if(!ins) return;
-        document.getElementById('fItemInsumo').value = ins.nome;
-        document.getElementById('fItemQtd').value = tr.dataset.qtd;
-        tr.remove(); atualizarCustoTotalForm();
-      };
-
-      window.salvarFicha = function(e){
-        if(e) e.preventDefault();
-        const id = document.getElementById('fichaId').value || null;
-        const nome = document.getElementById('fichaNome').value.trim();
-        const rendimento = Math.max(1, toNumber(document.getElementById('fichaRendimento').value || 1));
-        if(!nome){ alert('Informe o nome da ficha.'); return false; }
-        const itens = [];
-        document.querySelectorAll('#tbodyFichaItens tr').forEach(tr=>{
-          itens.push({ insumoId: tr.dataset.insumoId, qtd: toNumber(tr.dataset.qtd) });
-        });
-        if(itens.length===0){ if(!confirm('A ficha está sem itens. Deseja salvar assim mesmo?')) return false; }
-        const fichas = getFichas();
-        if(id){
-          const i = fichas.findIndex(f => f.id === id);
-          if(i>=0) fichas[i] = { ...fichas[i], nome, rendimento, itens };
-        }else{
-          fichas.push({ id: uid(), nome, rendimento, itens });
-        }
-        setFichas(fichas); renderFichas(); limparFormFicha(); alert('Ficha salva!');
-        return false;
-      };
-
-      window.editarFicha = function(id){
-        const f = getFichas().find(x => x.id === id); if(!f) return;
-        limparFormFicha();
-        document.getElementById('fichaId').value = f.id;
-        document.getElementById('fichaNome').value = f.nome;
-        document.getElementById('fichaRendimento').value = f.rendimento ?? 1;
-        // preencher itens
-        f.itens?.forEach(it=>{
-          const ins = getInsumoById(it.insumoId);
-          if(ins) adicionarLinhaItem(it.insumoId, ins.nome, ins.unidade, it.qtd);
-        });
-        showSection('ficha');
-      };
-
-      window.removerFicha = function(id){
-        if(!confirm('Excluir esta ficha técnica?')) return;
-        setFichas(getFichas().filter(x => x.id !== id));
-        renderFichas();
-      };
-
-      window.duplicarFicha = function(id){
-        const f = getFichas().find(x => x.id === id); if(!f) return;
-        const copia = { ...f, id: uid(), nome: f.nome + ' (cópia)' };
-        const arr = getFichas(); arr.push(copia); setFichas(arr); renderFichas();
-      };
-
-      function calcCustoTotalFichaObj(f){
-        const itens = f.itens || [];
-        return itens.reduce((acc, it)=>{
-          const ins = getInsumoById(it.insumoId); if(!ins) return acc;
-          return acc + custoItem(ins, toNumber(it.qtd));
-        }, 0);
-      }
-
-      /* ====== RENDER ====== */
-      function popularDatalistInsumos(){
-        const dl = document.getElementById('listaInsumosDatalist'); if(!dl) return;
-        dl.innerHTML = '';
-        getInsumos().forEach(i=>{
-          const opt = document.createElement('option');
-          opt.value = i.nome; dl.appendChild(opt);
-        });
-      }
-
-      function render(){
-        // Lojas
-        const ul = document.getElementById('listaLojas');
-        if(ul){
-          ul.innerHTML = '';
-          state.lojas.forEach(l=>{
-            const li = document.createElement('li');
-            li.className = l.id === state.lojaAtivaId ? 'active' : '';
-            li.innerHTML = `<span>${l.nome}</span>
-              <span class="loja-actions"><button class="btn" onclick="abrirLoja('${l.id}')">Abrir</button></span>`;
-            ul.appendChild(li);
-          });
-        }
-        // KPIs
-        const total = document.getElementById('totalLojas'); if(total) total.textContent = state.lojas.length;
-        const ultima = document.getElementById('ultimaAtualizacao'); if(ultima) ultima.textContent = fmtData(state.ultimaAtualizacao);
-
-        // Nome/Logo
-        const loja = getLojaAtiva();
-        const nomeInput = document.getElementById('nomeLoja'); if(nomeInput) nomeInput.value = loja?.nome || '';
-        const logoEl = document.querySelector('.logo'); if(logoEl && loja?.logo) logoEl.src = loja.logo;
-
-        // Busca Insumos
-        const busca = document.getElementById('buscaInsumo');
-        if(busca && !busca._wired){
-          busca._wired = true;
-          busca.addEventListener('input', ()=>{ termoBusca = busca.value; renderInsumos(); });
-        }
-
-        // Busca Fichas
-        const buscaF = document.getElementById('buscaFicha');
-        if(buscaF && !buscaF._wired){
-          buscaF._wired = true;
-          buscaF.addEventListener('input', ()=> renderFichas());
-        }
-
-        renderInsumos();
-        renderFichas();
-        popularDatalistInsumos();
-        atualizarCustoTotalForm();
-      }
-
-      window.renderInsumos = function(){
-        const tbody = document.getElementById('tbodyInsumos'); if(!tbody) return;
-        const arr = aplicaBusca(getInsumos());
-        tbody.innerHTML = '';
-        arr.forEach(ins => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${ins.nome}</td>
-            <td style="text-align:right">${ins.unidade}</td>
-            <td style="text-align:right">${money(ins.custoCompra)}</td>
-            <td style="text-align:right">${(ins.qtdCompra ?? 0).toLocaleString('pt-BR')}</td>
-            <td style="text-align:right">${(ins.perda ?? 0).toLocaleString('pt-BR')}%</td>
-            <td style="text-align:right">${money(custoUnitario(ins))}</td>
-            <td>
-              <div class="actions">
-                <button class="btn" onclick="editarInsumo('${ins.id}')">Editar</button>
-                <button class="btn" onclick="duplicarInsumo('${ins.id}')">Duplicar</button>
-                <button class="btn" onclick="removerInsumo('${ins.id}')">Excluir</button>
-              </div>
-            </td>`;
-          tbody.appendChild(tr);
-        });
-      };
-
-      function renderFichas(){
-        const tbody = document.getElementById('tbodyFichas'); if(!tbody) return;
-        const termo = normaliza(document.getElementById('buscaFicha')?.value || '');
-        const arr = getFichas().filter(f => !termo || normaliza(f.nome).includes(termo));
-        tbody.innerHTML = '';
-        arr.forEach(f=>{
-          const total = calcCustoTotalFichaObj(f);
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${f.nome}</td>
-            <td style="text-align:right">${(f.rendimento ?? 1)}</td>
-            <td style="text-align:right">${(f.itens?.length || 0)}</td>
-            <td style="text-align:right">${money(total)}</td>
-            <td>
-              <div class="actions">
-                <button class="btn" onclick="editarFicha('${f.id}')">Editar</button>
-                <button class="btn" onclick="duplicarFicha('${f.id}')">Duplicar</button>
-                <button class="btn" onclick="removerFicha('${f.id}')">Excluir</button>
-              </div>
-            </td>`;
-          tbody.appendChild(tr);
-        });
-      }
-
-      document.addEventListener('DOMContentLoaded', ()=>{
-        if(state.lojas.length === 0){
-          const id = uid();
-          state.lojas.push({ id, nome: 'Loja 1', logo: null, dna:{}, faturamento:{}, insumos:[], fichas:[], pv:{}, combos:[] });
-          state.lojaAtivaId = id; saveState(state);
-        }else{
-          if(!getLojaAtiva()){ state.lojaAtivaId = state.lojas[0].id; saveState(state); }
-        }
-        // Tabs com listener (além do onclick)
-        document.querySelectorAll('.tab').forEach(btn=>{
-          btn.addEventListener('click', ()=> window.showSection(btn.dataset.tab));
-        });
-        render();
-      });
-    })();
-  </script>
 <script>
-/* =========================================================================
-   SELEÇÃO DE INGREDIENTES (PATCH RÁPIDO, NÃO ALTERA SEU HTML)
-   - Injeta o botão "Selecionar ingrediente" ao lado do #fItemInsumo
-   - Cria modal com busca de insumos e botão "Selecionar"
-   - Integra com funções já existentes: getInsumos(), getInsumoById(), custoUnitario(), money()
-   - Caso money() não exista, define um fallback local
-   ========================================================================= */
+/* ===========================
+   Estado inicial
+   =========================== */
+const LS_KEY = 'pv_state_v48';
 
-(function(){
-  // ==== Fallbacks seguros (não sobrescrevem se já existirem) ====
-  if (typeof window.money !== 'function') {
-    window.money = function(v){ return (v ?? 0).toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); };
-  }
-  function $(sel){ return document.querySelector(sel); }
-  function create(tag, props = {}, children = []){
-    const el = document.createElement(tag);
-    Object.entries(props).forEach(([k,v])=>{
-      if(k === 'style' && typeof v === 'object'){ Object.assign(el.style, v); }
-      else if(k in el){ el[k] = v; } else { el.setAttribute(k, v); }
-    });
-    (Array.isArray(children)?children:[children]).forEach(ch=>{
-      if(!ch && ch!==0) return;
-      if(typeof ch === 'string') el.insertAdjacentHTML('beforeend', ch);
-      else el.appendChild(ch);
-    });
-    return el;
-  }
-
-  // ==== (1) Injeta o botão "Selecionar ingrediente" ao lado do campo #fItemInsumo ====
-  function injectSelectButton(){
-    const input = $('#fItemInsumo');
-    if(!input) return; // campo não existe nesta tela
-    // já existe um botão? evita duplicar
-    if(input.dataset.selBtnInjected === '1') return;
-
-    // empacota input e botão num contêiner flex sem quebrar layout
-    const wrapper = create('div', { style: { display:'flex', gap:'8px', alignItems:'center' }});
-    input.parentNode.insertBefore(wrapper, input);
-    wrapper.appendChild(input);
-
-    const btn = create('button', {
-      className:'btn ghost',
-      type:'button',
-      onclick: abrirSelecaoIngredientes,
-      textContent:'Selecionar ingrediente'
-    });
-    wrapper.appendChild(btn);
-
-    input.dataset.selBtnInjected = '1';
-  }
-
-  // ==== (2) Cria modal apenas se ainda não existir ====
-  function ensureModal(){
-    if ($('#maskSelIng')) return; // já existe
-
-    // Máscara + caixa do modal
-    const mask = create('div', { id:'maskSelIng', className:'modal-mask' });
-    const modal = create('div', { className:'modal' });
-
-    const header = create('div', { className:'row', style:{ justifyContent:'space-between' } }, [
-      create('h4', { textContent:'Seleção de ingredientes' }),
-      create('button', { className:'btn', type:'button', onclick: fecharSelecaoIngredientes, textContent:'Fechar' })
-    ]);
-
-    const searchRow = create('div', { className:'row' }, [
-      create('input', {
-        id:'buscaSelIng',
-        className:'store-name',
-        placeholder:'Digite parte do nome (ex.: pão, cheddar, bacon)',
-        style:{ flex:'1', minWidth:'260px' }
-      })
-    ]);
-
-    const table = create('table', { className:'table' }, [
-      create('thead', {}, `
-        <tr>
-          <th>Nome do insumo</th>
-          <th style="text-align:right;">Unid</th>
-          <th style="text-align:right;">Custo unit. (R$)</th>
-          <th style="width:120px;">Ação</th>
-        </tr>
-      `),
-      create('tbody', { id:'tbodySelIng' })
-    ]);
-
-    const scroll = create('div', { className:'table-scroll', style:{ maxHeight:'360px' } }, table);
-    const wrap = create('div', { className:'table-wrap', style:{ marginTop:'8px' } }, scroll);
-
-    const hint = create('div', { className:'row' }, [
-      create('small', { innerHTML:'Dica: digite parte do nome (ex.: <b>pão</b>) e clique em <b>Selecionar</b>.' })
-    ]);
-
-    modal.appendChild(header);
-    modal.appendChild(searchRow);
-    modal.appendChild(wrap);
-    modal.appendChild(hint);
-    mask.appendChild(modal);
-    document.body.appendChild(mask);
-
-    // Reutiliza estilos de modal/tabela do seu projeto:
-    // - .modal-mask, .modal, .row, .table-wrap, .table-scroll, .table, .btn, .store-name
-    // Caso .modal-mask não exista, aplica um estilo mínimo:
-    const hasModalMaskStyle = getComputedStyle(mask).position === 'fixed';
-    if(!hasModalMaskStyle){
-      Object.assign(mask.style, {
-        position:'fixed', inset:'0', background:'rgba(0,0,0,.45)',
-        display:'none', alignItems:'center', justifyContent:'center', zIndex:'1000'
-      });
-      Object.assign(modal.style, {
-        width:'min(820px, 92vw)', background:'#1c1534', border:'1px solid #2a2242',
-        borderRadius:'14px', padding:'16px', color:'#fff'
-      });
+const defaultState = {
+  lojas: [
+    {
+      id:'loja1', nome:'Espaço Carreiro Lanches',
+      fixos: [ /* {ano,mes,totalFixosMes} */ ],
+      faturamento: [ /* {ano,mes,receitaBruta} */ ],
+      dnaPadrao: {
+        cartoesPercent: 3.64, voucherPercent: 7.99, impostoPercent: 0, royaltiesPercent: 0, marketingPercent: 0,
+        cfBase: 'mes' // 'mes' ou 'media'
+      },
+      canaisPadrao: {
+        ifood: { taxaPercent:17, entrega:9, campanha:0 },
+        n99:   { taxaPercent:15, entrega:0, campanha:0 }
+      },
+      lucroPadraoPercent: 20
     }
+  ],
+  fichas: [
+    // Exemplos / você pode importar os seus:
+    { id:'carreirinho', nome:'CARREIRINHO', custoTotal:4.22265825 },
+    { id:'duplo-carreirinho', nome:'DUPLO CARREIRINHO', custoTotal:5.11640825 }
+  ]
+};
 
-    // Liga busca
-    const busca = $('#buscaSelIng');
-    if (busca && !busca._wired){
-      busca._wired = true;
-      busca.addEventListener('input', ()=> renderSelecaoIngredientes(busca.value));
-    }
-  }
+let state = loadState();
 
-  // ==== (3) Ações do modal ====
-  window.abrirSelecaoIngredientes = function(){
-    ensureModal();
-    const mask = $('#maskSelIng');
-    const busca = $('#buscaSelIng');
-    if(!mask) return;
-    mask.style.display = 'flex';
-    if(busca){ busca.value=''; setTimeout(()=>busca.focus(), 50); }
-    renderSelecaoIngredientes('');
-  };
+/* ===========================
+   UI - seletores
+   =========================== */
+const selLoja = document.getElementById('lojaSelect');
+const selMes  = document.getElementById('mesSelect');
+const selAno  = document.getElementById('anoSelect');
+const selFicha= document.getElementById('fichaSelect');
 
-  window.fecharSelecaoIngredientes = function(){
-    const mask = $('#maskSelIng');
-    if(mask) mask.style.display = 'none';
-  };
-
-  window.selecionarIngrediente = function(insumoId){
-    if(typeof getInsumoById !== 'function') { alert('Função getInsumoById não encontrada.'); return; }
-    const ins = getInsumoById(insumoId);
-    if(!ins) return;
-    const inputInsumo = $('#fItemInsumo');
-    if(inputInsumo) inputInsumo.value = ins.nome;
-    fecharSelecaoIngredientes();
-    const inputQtd = $('#fItemQtd');
-    if(inputQtd) inputQtd.focus();
-  };
-
-  function renderSelecaoIngredientes(termo){
-    const tbody = $('#tbodySelIng');
-    if(!tbody) return;
-    if(typeof getInsumos !== 'function' || typeof custoUnitario !== 'function'){
-      tbody.innerHTML = `<tr><td colspan="4" style="color:#b6add3">Funções base não encontradas (getInsumos/custoUnitario).</td></tr>`;
-      return;
-    }
-    const t = String(termo || '').toLowerCase().trim();
-    const todos = getInsumos();
-    const filtrados = t ? todos.filter(i => (i.nome||'').toLowerCase().includes(t)) : todos;
-
-    tbody.innerHTML = '';
-    filtrados.forEach(ins=>{
-      const tr = create('tr');
-      const custoU = money(custoUnitario(ins));
-      tr.innerHTML = `
-        <td>${ins.nome}</td>
-        <td style="text-align:right">${ins.unidade}</td>
-        <td style="text-align:right">${custoU}</td>
-        <td>
-          <div class="actions">
-            <button class="btn" type="button" onclick="selecionarIngrediente('${ins.id}')">Selecionar</button>
-          </div>
-        </td>`;
-      tbody.appendChild(tr);
-    });
-
-    if(filtrados.length === 0){
-      const tr = create('tr');
-      tr.innerHTML = `<td colspan="4" style="color:#b6add3">Nenhum insumo encontrado para “${termo}”.</td>`;
-      tbody.appendChild(tr);
-    }
-  }
-
-  // ==== (4) Rodar após o DOM carregar: injeta o botão ====
-  document.addEventListener('DOMContentLoaded', ()=>{
-    // injeta assim que abrir Ficha Técnica ou se já estiver nela
-    injectSelectButton();
-
-    // Caso sua UI recrie a área da ficha ao trocar de aba, re-injeta ao clicar na tab
-    document.querySelectorAll('.tab[data-tab="ficha"]').forEach(tab=>{
-      tab.addEventListener('click', ()=>{
-        setTimeout(injectSelectButton, 50);
-      });
-    });
+function hydrateSelectors(){
+  selLoja.innerHTML='';
+  state.lojas.forEach(l=>{
+    const o=document.createElement('option'); o.value=l.id; o.textContent=l.nome; selLoja.appendChild(o);
   });
-})();
+  selMes.innerHTML='';
+  for(let m=1;m<=12;m++){const o=document.createElement('option');o.value=m;o.textContent=String(m).padStart(2,'0');selMes.appendChild(o);}
+  selAno.innerHTML='';
+  const y=new Date().getFullYear(); for(let a=y-2;a<=y+1;a++){const o=document.createElement('option');o.value=a;o.textContent=a;selAno.appendChild(o);}
+  selFicha.innerHTML='';
+  state.fichas.forEach(f=>{ const o=document.createElement('option'); o.value=f.id; o.textContent=`${f.nome}`; selFicha.appendChild(o); });
+
+  if(state.lojas.length) selLoja.value=state.lojas[0].id;
+  selMes.value = (new Date().getMonth()+1);
+  selAno.value = new Date().getFullYear();
+  if(state.fichas.length) selFicha.value=state.fichas[0].id;
+
+  applyDefaultsFromLoja();
+  updateHints();
+}
+hydrateSelectors();
+
+function applyDefaultsFromLoja(){
+  const l=getLoja();
+  if(!l) return;
+  document.getElementById('dnaCartoes').value = l.dnaPadrao.cartoesPercent ?? 0;
+  document.getElementById('dnaVoucher').value = l.dnaPadrao.voucherPercent ?? 0;
+  document.getElementById('dnaImposto').value = l.dnaPadrao.impostoPercent ?? 0;
+  document.getElementById('dnaRoyalties').value = l.dnaPadrao.royaltiesPercent ?? 0;
+  document.getElementById('dnaMarketing').value = l.dnaPadrao.marketingPercent ?? 0;
+  document.getElementById('cfBase').value = l.dnaPadrao.cfBase ?? 'mes';
+
+  document.getElementById('ifoodTaxa').value = l.canaisPadrao.ifood?.taxaPercent ?? 17;
+  document.getElementById('ifoodEntrega').value = l.canaisPadrao.ifood?.entrega ?? 9;
+  document.getElementById('ifoodCampanha').value = l.canaisPadrao.ifood?.campanha ?? 0;
+
+  document.getElementById('n99Taxa').value = l.canaisPadrao.n99?.taxaPercent ?? 15;
+  document.getElementById('n99Entrega').value = l.canaisPadrao.n99?.entrega ?? 0;
+  document.getElementById('n99Campanha').value = l.canaisPadrao.n99?.campanha ?? 0;
+
+  document.getElementById('lucroAlvo').value = l.lucroPadraoPercent ?? 20;
+
+  updateFichaInfo();
+}
+
+selLoja.addEventListener('change', ()=>{ applyDefaultsFromLoja(); updateHints(); });
+selMes.addEventListener('change', updateHints); selAno.addEventListener('change', updateHints);
+selFicha.addEventListener('change', updateFichaInfo);
+
+function updateHints(){
+  const l=getLoja(); if(!l) return;
+  const ano=+selAno.value, mes=+selMes.value;
+  const fixo = l.fixos.find(x=>+x.ano===ano && +x.mes===mes)?.totalFixosMes ?? 0;
+  const fat  = l.faturamento.find(x=>+x.ano===ano && +x.mes===mes)?.receitaBruta ?? 0;
+  const cfPct = fat>0 ? (fixo/fat) : 0;
+  document.getElementById('cfHint').textContent = `CF% do mês: ${(cfPct*100).toFixed(2)}%  (fixos ${fmt(fixo)} / faturamento ${fmt(fat)})`;
+  updateDnaResumo();
+}
+function updateFichaInfo(){
+  const f=getFichaAtual();
+  document.getElementById('fichaInfo').textContent = f ? `CMV+Emb: ${fmt(f.custoTotal)}` : '—';
+}
+
+/* ===========================
+   Helpers
+   =========================== */
+function loadState(){ try{ const raw=localStorage.getItem(LS_KEY); return raw? JSON.parse(raw): structuredClone(defaultState);}catch(e){ return structuredClone(defaultState);} }
+function saveState(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+function getLoja(){ return state.lojas.find(l=> l.id===selLoja.value); }
+function getFichaAtual(){ return state.fichas.find(f=> f.id===selFicha.value); }
+function toNum(x){ const n=parseFloat(String(x).replace(',','.')); return isFinite(n)? n:0; }
+const fmt = (v)=> (isFinite(v)? v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}) : '—');
+
+function arredonda(preco, rule, dir){
+  const pennies = (x)=> Math.round(x*100)/100;
+  if(rule==='none') return pennies(preco);
+
+  if(rule==='end_99' || rule==='end_90'){
+    const end = rule==='end_99'? 0.99 : 0.90;
+    const base = Math.floor(preco);
+    let cand = base + end;
+    if(dir==='up' && cand<preco) cand = base+1+end;
+    if(dir==='down' && cand>preco) cand = Math.max(0, base-1+end);
+    if(dir==='nearest'){
+      const up = base+1+end, down=Math.max(0,base-1+end);
+      cand = (Math.abs(up-preco)<Math.abs(preco-down))? up : down;
+    }
+    return pennies(cand);
+  }
+  if(rule==='step_0_50'){
+    const step=0.50;
+    const f=dir==='up'? Math.ceil : dir==='down'? Math.floor : Math.round;
+    return pennies(f(preco/step)*step);
+  }
+  return pennies(preco);
+}
+
+/* ===========================
+   DNA & PV (fórmulas da planilha)
+   =========================== */
+function getCFPercent(loja, ano, mes, base){
+  const arrCF = loja.fixos||[], arrFat = loja.faturamento||[];
+  if(base==='media'){
+    // média simples dos registros existentes
+    const sCF=arrCF.reduce((a,b)=>a+toNum(b.totalFixosMes||0),0);
+    const sFat=arrFat.reduce((a,b)=>a+toNum(b.receitaBruta||0),0);
+    return sFat>0? sCF/sFat : 0;
+  }else{
+    const fixo = arrCF.find(x=>+x.ano===ano && +x.mes===mes)?.totalFixosMes ?? 0;
+    const fat  = arrFat.find(x=>+x.ano===ano && +x.mes===mes)?.receitaBruta ?? 0;
+    return fat>0 ? (fixo/fat) : 0;
+  }
+}
+
+function getDNApercentTotal(){
+  const loja=getLoja(); if(!loja) return 0;
+  const ano=+selAno.value, mes=+selMes.value;
+  const cfBase=document.getElementById('cfBase').value;
+  const cfPct = getCFPercent(loja, ano, mes, cfBase);
+  const cart = toNum(document.getElementById('dnaCartoes').value)/100;
+  const vouch= toNum(document.getElementById('dnaVoucher').value)/100;
+  const imp  = toNum(document.getElementById('dnaImposto').value)/100;
+  const roy  = toNum(document.getElementById('dnaRoyalties').value)/100;
+  const mkt  = toNum(document.getElementById('dnaMarketing').value)/100;
+  return { cfPct, dnaTotal: (cfPct + cart + vouch + imp + roy + mkt) };
+}
+
+function updateDnaResumo(){
+  const {cfPct, dnaTotal} = getDNApercentTotal();
+  const s = `CF%: ${(cfPct*100).toFixed(2)}% | DNA Total: ${(dnaTotal*100).toFixed(2)}% (CF% + Cartões + Voucher + Imposto + Royalties + Marketing)`;
+  document.getElementById('dnaResumo').textContent = s;
+}
+
+function calcPV(){
+  const ficha = getFichaAtual(); if(!ficha) return notify('Selecione uma ficha válida.');
+  const cmv = toNum(ficha.custoTotal);
+  const lucroPct = toNum(document.getElementById('lucroAlvo').value)/100;
+
+  // DNA%
+  const {cfPct, dnaTotal} = getDNApercentTotal();
+
+  // PV Loja (gross-up margem + DNA%)
+  const denomLoja = 1 - (dnaTotal + lucroPct);
+  const pvLoja_raw = denomLoja>0? (cmv/denomLoja) : Infinity;
+
+  // Canais
+  const ifTaxa = toNum(document.getElementById('ifoodTaxa').value)/100;
+  const ifEnt  = toNum(document.getElementById('ifoodEntrega').value);
+  const ifCamp = toNum(document.getElementById('ifoodCampanha').value);
+
+  const nTaxa = toNum(document.getElementById('n99Taxa').value)/100;
+  const nEnt  = toNum(document.getElementById('n99Entrega').value);
+  const nCamp = toNum(document.getElementById('n99Campanha').value);
+
+  // gross-up do canal (sua planilha): PV_app = (PV_loja + entrega - campanha) / (1 - taxaApp)
+  const pvIfood_raw = (pvLoja_raw + ifEnt - ifCamp) / (1 - ifTaxa);
+  const pv99_raw    = (pvLoja_raw + nEnt - nCamp) / (1 - nTaxa);
+
+  // arredondamento
+  const rule = document.getElementById('roundRule').value;
+  const dir  = document.getElementById('roundDir').value;
+  const pvLoja = arredonda(pvLoja_raw, rule, dir);
+  const pvIfood= arredonda(pvIfood_raw, rule, dir);
+  const pv99   = arredonda(pv99_raw, rule, dir);
+
+  // margens efetivas (após taxas)
+  const margemLoja = pvLoja>0 ? ((pvLoja*(1 - dnaTotal) - cmv)/pvLoja) : 0;
+  const margemIfood= pvIfood>0? ((pvIfood*(1 - (dnaTotal + ifTaxa)) - (cmv + ifEnt - ifCamp))/pvIfood) : 0;
+  const margem99   = pv99>0   ? ((pv99*(1 - (dnaTotal + nTaxa)) - (cmv + nEnt - nCamp))/pv99) : 0;
+
+  render({
+    cmv, cfPct, dnaTotal, lucroPct,
+    pvLoja_raw, pvLoja, pvIfood_raw, pvIfood, pv99_raw, pv99,
+    ifTaxa, ifEnt, ifCamp, nTaxa, nEnt, nCamp,
+    margemLoja, margemIfood, margem99
+  });
+}
+
+function render(r){
+  const tb=document.getElementById('tb'); tb.innerHTML='';
+  const add=(k,v)=>{ const tr=document.createElement('tr');const a=document.createElement('td');a.textContent=k;const b=document.createElement('td');b.className='mono';b.textContent=v;tr.append(a,b);tb.appendChild(tr); };
+
+  add('CMV + Embalagem', fmt(r.cmv));
+  add('CF% do mês', (r.cfPct*100).toFixed(2)+'%');
+  add('DNA Total (%)', (r.dnaTotal*100).toFixed(2)+'%');
+  add('Lucro alvo (%)', (r.lucroPct*100).toFixed(2)+'%');
+  add('PV Loja (antes do arred.)', fmt(r.pvLoja_raw));
+  add('PV Loja (após arred.)', fmt(r.pvLoja));
+
+  add('—','');
+
+  add('iFood — taxa', (r.ifTaxa*100).toFixed(2)+'%');
+  add('iFood — entrega (R$)', fmt(r.ifEnt));
+  add('iFood — campanha (R$)', fmt(r.ifCamp));
+  add('PV iFood (antes)', fmt(r.pvIfood_raw));
+  add('PV iFood (após arred.)', fmt(r.pvIfood));
+  add('Margem efetiva iFood', (r.margemIfood*100).toFixed(2)+'%');
+
+  add('—','');
+
+  add('99Food — taxa', (r.nTaxa*100).toFixed(2)+'%');
+  add('99Food — entrega (R$)', fmt(r.nEnt));
+  add('99Food — campanha (R$)', fmt(r.nCamp));
+  add('PV 99Food (antes)', fmt(r.pv99_raw));
+  add('PV 99Food (após arred.)', fmt(r.pv99));
+  add('Margem efetiva 99Food', (r.margem99*100).toFixed(2)+'%');
+
+  add('—','');
+
+  add('Margem efetiva Loja', (r.margemLoja*100).toFixed(2)+'%');
+}
+
+document.getElementById('btnCalcular').addEventListener('click', calcPV);
+
+document.getElementById('btnSalvar').addEventListener('click', ()=>{
+  const l=getLoja(); if(!l) return;
+  l.dnaPadrao={
+    cartoesPercent: toNum(dnaCartoes.value),
+    voucherPercent: toNum(dnaVoucher.value),
+    impostoPercent: toNum(dnaImposto.value),
+    royaltiesPercent: toNum(dnaRoyalties.value),
+    marketingPercent: toNum(dnaMarketing.value),
+    cfBase: document.getElementById('cfBase').value
+  };
+  l.canaisPadrao={
+    ifood:{ taxaPercent:toNum(ifoodTaxa.value), entrega:toNum(ifoodEntrega.value), campanha:toNum(ifoodCampanha.value) },
+    n99:{   taxaPercent:toNum(n99Taxa.value),   entrega:toNum(n99Entrega.value),   campanha:toNum(n99Campanha.value) }
+  };
+  l.lucroPadraoPercent = toNum(lucroAlvo.value);
+  saveState(); notify('Padrões salvos para esta loja.');
+});
+
+function notify(msg){ const el=document.getElementById('status'); el.textContent=msg; setTimeout(()=>el.textContent='',2000); }
+
+/* ===========================
+   Importadores CSV (fixos, faturamento, fichas)
+   =========================== */
+function parseCSVArea(areaId){
+  const raw=document.getElementById(areaId).value.trim(); if(!raw) return [];
+  const rows = raw.split(/\r?\n/).map(l=> l.split(',').map(s=>s.trim()));
+  const head = rows.shift(); const idx = Object.fromEntries(head.map((h,i)=>[h,i]));
+  return rows.map(r=>({ row:r, idx }));
+}
+
+document.getElementById('btnImpFixos').addEventListener('click', ()=>{
+  const data=parseCSVArea('csvFixos'); const loja=getLoja();
+  data.forEach(d=>{
+    const r=d.row, i=d.idx;
+    const rec={ ano:+r[i.ano]||0, mes:+r[i.mes]||0, totalFixosMes: toNum(r[i.totalFixosMes]||0) };
+    loja.fixos = (loja.fixos||[]).filter(x=> !(+x.ano===rec.ano && +x.mes===rec.mes));
+    loja.fixos.push(rec);
+  });
+  saveState(); updateHints(); notify('Fixos importados.');
+});
+document.getElementById('btnImpFat').addEventListener('click', ()=>{
+  const data=parseCSVArea('csvFat'); const loja=getLoja();
+  data.forEach(d=>{
+    const r=d.row, i=d.idx;
+    const rec={ ano:+r[i.ano]||0, mes:+r[i.mes]||0, receitaBruta: toNum(r[i.receitaBruta]||0) };
+    loja.faturamento = (loja.faturamento||[]).filter(x=> !(+x.ano===rec.ano && +x.mes===rec.mes));
+    loja.faturamento.push(rec);
+  });
+  saveState(); updateHints(); notify('Faturamento importado.');
+});
+document.getElementById('btnImpFichas').addEventListener('click', ()=>{
+  const data=parseCSVArea('csvFichas');
+  data.forEach(d=>{
+    const r=d.row, i=d.idx;
+    const rec={ id:r[i.id], nome:r[i.nome], custoTotal: toNum(r[i.custoTotal]||0) };
+    state.fichas = (state.fichas||[]).filter(x=> x.id!==rec.id); state.fichas.push(rec);
+  });
+  saveState(); hydrateSelectors(); notify('Fichas importadas.');
+});
+
+/* ===========================
+   Gancho de integração com seu app
+   =========================== */
+window.injectData = function(payload){
+  if(payload?.lojas) state.lojas = payload.lojas;
+  if(payload?.fichas) state.fichas = payload.fichas;
+  saveState(); hydrateSelectors(); notify('Dados injetados.');
+};
 </script>
 </body>
 </html>
+``
