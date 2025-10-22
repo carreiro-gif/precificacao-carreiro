@@ -105,7 +105,7 @@
       display:none;
     }
 
-    /* ====== TABELA (Insumos) ====== */
+    /* ====== TABELA (Insumos / Fichas) ====== */
     .table-wrap{ overflow:hidden }
     .table-scroll{ overflow:auto }
     .table{ width:100%; border-collapse: collapse; min-width: 760px; }
@@ -140,8 +140,7 @@
   <header class="app-header">
     <div class="brand">
       <!-- Logo SVG embutida -->
-      <img class="logo" alt="Logo"
-           src="data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?.org/2000/svg'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%236a3bf1'/><stop offset='100%' stop-color='%238a5bff'/></linearGradient></defs><rect rx='14' ry='14' width='64' height='64' fill='url(%23g)'/><path d='M18 40c8-2 12-10 14-18 2 8 6 16 14 18-6 2-10 4-14 8-4-4-8-6-14-8z' fill='white' opacity='.9'/></svg>">
+      data:image/svg+xml;utf8,<?xml version=<svg width='48' height='48' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%236a3bf1'/><stop offset='100%' stop-color='%238a5bff'/></linearGradient></defs><rect rx='14' ry='14' width='64' height='64' fill='url(%23g)'/><path d='M18 40c8-2 12-10 14-18 2 8 6 16 14 18-6 2-10 4-14 8-4-4-8-6-14-8z' fill='white' opacity='.9'/></svg>">
       <div class="title-wrap">
         <h1>Precificação Carreiro</h1>
         <span class="subtitle">Gestão de custos e preços — hamburgueria</span>
@@ -228,7 +227,7 @@
           </div>
         </div>
 
-        <!-- Formulário -->
+        <!-- Formulário de Insumos -->
         <form id="formInsumo" onsubmit="return salvarInsumo(event)" class="card" style="margin-bottom:12px;">
           <input type="hidden" id="insumoId">
           <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
@@ -271,7 +270,7 @@
           </div>
         </div>
 
-        <!-- Tabela -->
+        <!-- Tabela de Insumos -->
         <div class="card table-wrap">
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
             <strong>Lista de insumos</strong>
@@ -296,10 +295,100 @@
         </div>
       </section>
 
-      <!-- FICHA TÉCNICA -->
+      <!-- FICHA TÉCNICA (CRUD) -->
       <section id="ficha" class="tab-panel">
-        <h3>Ficha Técnica</h3>
-        <p>(próximo passo) Montar receitas usando os insumos para calcular custo por lanche.</p>
+        <div class="panel-header" style="justify-content:space-between; gap:12px;">
+          <h3 style="margin:0">Ficha Técnica</h3>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn" onclick="novaFicha()">+ Nova ficha</button>
+          </div>
+        </div>
+
+        <!-- Form de Ficha -->
+        <form id="formFicha" onsubmit="return salvarFicha(event)" class="card" style="margin-bottom:12px;">
+          <input type="hidden" id="fichaId">
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px;">
+            <div>
+              <label>Nome da ficha</label>
+              <input id="fichaNome" required placeholder="Ex.: Cheeseburger" class="store-name">
+            </div>
+            <div>
+              <label>Rendimento (porções)</label>
+              <input id="fichaRendimento" required inputmode="decimal" value="1" class="store-name">
+            </div>
+            <div>
+              <label>Custo total (R$)</label>
+              <input id="fichaCustoTotal" disabled class="store-name" title="Calculado automaticamente">
+            </div>
+          </div>
+
+          <hr style="border:0;border-top:1px solid var(--border); margin:12px 0">
+
+          <!-- Adicionar item -->
+          <div style="display:grid; grid-template-columns: 1fr 160px 140px; gap:10px; align-items:center;">
+            <div>
+              <label>Insumo</label>
+              <input id="fItemInsumo" list="listaInsumosDatalist" placeholder="Digite e selecione..." class="store-name">
+              <datalist id="listaInsumosDatalist"></datalist>
+            </div>
+            <div>
+              <label>Quantidade</label>
+              <input id="fItemQtd" inputmode="decimal" placeholder="Ex.: 90" class="store-name">
+            </div>
+            <div style="align-self:end;">
+              <button class="btn" type="button" onclick="adicionarItemFicha()">Adicionar item</button>
+            </div>
+          </div>
+
+          <div class="card table-wrap" style="margin-top:12px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <strong>Itens da ficha</strong>
+              <small style="color:#b6add3">Custo item = custo unitário do insumo × quantidade</small>
+            </div>
+            <div class="table-scroll">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Insumo</th>
+                    <th style="text-align:right;">Unid</th>
+                    <th style="text-align:right;">Qtd</th>
+                    <th style="text-align:right;">Custo unit. (R$)</th>
+                    <th style="text-align:right;">Custo item (R$)</th>
+                    <th style="width:120px;">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="tbodyFichaItens"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
+            <button class="btn primary" type="submit">Salvar ficha</button>
+            <button class="btn" type="button" onclick="limparFormFicha()">Limpar</button>
+          </div>
+        </form>
+
+        <!-- Lista de Fichas -->
+        <div class="card table-wrap">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+            <strong>Fichas cadastradas</strong>
+            <input id="buscaFicha" class="store-name" placeholder="Buscar ficha por nome..." style="max-width:320px">
+          </div>
+          <div class="table-scroll">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th style="text-align:right;">Rend.</th>
+                  <th style="text-align:right;">Itens</th>
+                  <th style="text-align:right;">Custo total (R$)</th>
+                  <th style="width:220px;">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyFichas"></tbody>
+            </table>
+          </div>
+        </div>
       </section>
 
       <!-- PV -->
@@ -325,7 +414,7 @@
     <div class="modal">
       <h4>Colar da planilha (Excel/Google Sheets)</h4>
       <div class="row">
-        <small>Cole aqui linhas com **cabeçalho**. Separadores aceitos: TAB, ponto e vírgula (;) ou vírgula (,).</small>
+        <small>Cole aqui linhas com <b>cabeçalho</b>. Separadores aceitos: TAB, ponto e vírgula (;) ou vírgula (,).</small>
       </div>
       <textarea id="textareaColar" placeholder="Exemplo:
 Nome;Unidade;CustoCompra;QtdCompra;Perda
@@ -345,7 +434,7 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
       </div>
       <div class="row">
         <small>Campos reconhecidos (cabeçalho): <code>Nome</code>, <code>Unidade</code>, <code>CustoCompra</code>, <code>QtdCompra</code>, <code>Perda</code>.<br>
-        Sinônimos aceitos: Nome|Insumo · Unidade|Unid · Custo|ValorCompra|Preco|Preço · Qtd|Quantidade · Perda|Perdas|%Perda.</small>
+        Sinônimos: Nome|Insumo · Unidade|Unid · Custo|ValorCompra|Preco|Preço · Qtd|Quantidade · Perda|Perdas|%Perda.</small>
       </div>
     </div>
   </div>
@@ -382,12 +471,11 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
       function setLojaAtiva(id){ state.lojaAtivaId = id; saveState(state); render(); }
       function fmtData(iso){ return iso ? new Date(iso).toLocaleString('pt-BR') : '—' }
 
-      /* ====== FUNÇÕES GLOBAIS (botões topo e tabs) ====== */
+      /* ====== FUNÇÕES GLOBAIS BASE ====== */
       window.novaloja = function(){
         const id = uid();
         state.lojas.push({ id, nome: `Loja ${state.lojas.length + 1}`, logo: null, dna:{}, faturamento:{}, insumos:[], fichas:[], pv:{}, combos:[] });
-        state.lojaAtivaId = id;
-        saveState(state); render();
+        state.lojaAtivaId = id; saveState(state); render();
       };
       window.duplicar = function(){
         const atual = getLojaAtiva();
@@ -395,9 +483,7 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
         const id = uid();
         const clone = JSON.parse(JSON.stringify(atual));
         clone.id = id; clone.nome = `${atual.nome} (cópia)`;
-        state.lojas.push(clone);
-        state.lojaAtivaId = id;
-        saveState(state); render();
+        state.lojas.push(clone); state.lojaAtivaId = id; saveState(state); render();
       };
       window.salvarNome = function(){
         const atual = getLojaAtiva();
@@ -411,10 +497,7 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
       window.voltar = function(){ window.showSection('dashboard'); };
       window.showSection = function(sectionId){
         document.querySelectorAll('.tab').forEach(tab => tab.classList.toggle('active', tab.dataset.tab === sectionId));
-        document.querySelectorAll('.tab-panel').forEach(p => {
-          const match = p.id === sectionId || p.id === `tab-${sectionId}`;
-          p.classList.toggle('active', match);
-        });
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === sectionId || p.id === `tab-${sectionId}`));
       };
       window.abrirLoja = function(id){ setLojaAtiva(id); };
       window.alterarLogo = function(input){
@@ -432,17 +515,16 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
         return parseFloat(String(v).replace(/\./g,'').replace(',', '.')) || 0;
       }
       function money(v){ return (v ?? 0).toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); }
+      function normaliza(s){ return String(s||'').toLowerCase(); }
 
-      /* ====== INSUMOS (CRUD) ====== */
+      /* ====== INSUMOS (CRUD + import) ====== */
       function getInsumos(){
         const loja = getLojaAtiva();
         return loja ? (loja.insumos || []) : [];
       }
       function setInsumos(arr){
-        const loja = getLojaAtiva();
-        if(!loja) return;
-        loja.insumos = arr;
-        saveState(state);
+        const loja = getLojaAtiva(); if(!loja) return;
+        loja.insumos = arr; saveState(state);
       }
       function custoUnitario(ins){
         const perdaFator = 1 - (toNumber(ins.perda)/100);
@@ -451,33 +533,23 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
       }
       window.salvarInsumo = function(e){
         if(e) e.preventDefault();
-        const loja = getLojaAtiva();
-        if(!loja){ alert('Nenhuma loja selecionada.'); return false; }
-
+        const loja = getLojaAtiva(); if(!loja){ alert('Nenhuma loja selecionada.'); return false; }
         const id = document.getElementById('insumoId').value || null;
         const nome = document.getElementById('insumoNome').value.trim();
         const unidade = document.getElementById('insumoUnidade').value;
         const custoCompra = toNumber(document.getElementById('insumoCustoCompra').value);
         const qtdCompra = toNumber(document.getElementById('insumoQtdCompra').value);
         const perda = Math.min(100, Math.max(0, toNumber(document.getElementById('insumoPerda').value||0)));
-
         if(!nome){ alert('Informe o nome.'); return false; }
         if(!qtdCompra || qtdCompra<=0){ alert('Quantidade da compra precisa ser > 0.'); return false; }
-
         const insumos = getInsumos();
         if(id){
           const i = insumos.findIndex(x => x.id === id);
-          if(i>=0){
-            insumos[i] = { ...insumos[i], nome, unidade, custoCompra, qtdCompra, perda };
-          }
+          if(i>=0) insumos[i] = { ...insumos[i], nome, unidade, custoCompra, qtdCompra, perda };
         }else{
-          const novo = { id: uid(), nome, unidade, custoCompra, qtdCompra, perda };
-          insumos.push(novo);
+          insumos.push({ id: uid(), nome, unidade, custoCompra, qtdCompra, perda });
         }
-        setInsumos(insumos);
-        renderInsumos();
-        limparFormInsumo();
-        return false;
+        setInsumos(insumos); renderInsumos(); limparFormInsumo(); return false;
       };
       window.limparFormInsumo = function(){
         document.getElementById('insumoId').value = '';
@@ -488,8 +560,7 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
         document.getElementById('insumoPerda').value = '';
       };
       window.editarInsumo = function(id){
-        const ins = getInsumos().find(x => x.id === id);
-        if(!ins) return;
+        const ins = getInsumos().find(x => x.id === id); if(!ins) return;
         document.getElementById('insumoId').value = ins.id;
         document.getElementById('insumoNome').value = ins.nome;
         document.getElementById('insumoUnidade').value = ins.unidade;
@@ -501,31 +572,24 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
       };
       window.removerInsumo = function(id){
         if(!confirm('Excluir este insumo?')) return;
-        const arr = getInsumos().filter(x => x.id !== id);
-        setInsumos(arr);
+        setInsumos(getInsumos().filter(x => x.id !== id));
         renderInsumos();
       };
       window.duplicarInsumo = function(id){
-        const ins = getInsumos().find(x => x.id === id);
-        if(!ins) return;
+        const ins = getInsumos().find(x => x.id === id); if(!ins) return;
         const copia = { ...ins, id: uid(), nome: ins.nome + ' (cópia)' };
-        const arr = getInsumos();
-        arr.push(copia);
-        setInsumos(arr);
-        renderInsumos();
+        const arr = getInsumos(); arr.push(copia); setInsumos(arr); renderInsumos();
       };
 
-      /* ====== BUSCA/FILTRO ====== */
+      /* Busca insumos */
       let termoBusca = '';
-      function normaliza(s){ return String(s||'').toLowerCase(); }
       function aplicaBusca(arr){
         if(!termoBusca) return arr;
         const t = normaliza(termoBusca);
         return arr.filter(x => normaliza(x.nome).includes(t) || normaliza(x.unidade).includes(t));
       }
 
-      /* ====== IMPORTAÇÃO ====== */
-      // CSV simples (separador ; , ou TAB), com cabeçalho e sinônimos
+      /* Importação CSV/Colagem */
       function detectarSep(linha){
         if(linha.includes('\t')) return '\t';
         if((linha.match(/;/g)||[]).length >= (linha.match(/,/g)||[]).length) return ';';
@@ -562,20 +626,15 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
         }
         return out;
       }
-
       window.importarCSV = function(input){
-        const file = input?.files?.[0];
-        if(!file) return;
+        const file = input?.files?.[0]; if(!file) return;
         const reader = new FileReader();
-        reader.onload = ()=>{
-          const itens = parseTabela(reader.result);
+        reader.onload = ()=>{ const itens = parseTabela(reader.result);
           if(itens.length===0){ alert('Nada para importar. Verifique o cabeçalho e os separadores.'); return; }
           mesclarInsumos(itens, false);
         };
         reader.readAsText(file, 'utf-8');
       };
-
-      // Modal de colagem
       const mask = document.getElementById('maskColar');
       const txtColar = document.getElementById('textareaColar');
       window.abrirModalColar = function(){ txtColar.value=''; mask.style.display='flex'; }
@@ -586,26 +645,18 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
         if(itens.length===0){ alert('Nada para importar. Confira cabeçalho/valores.'); return; }
         mesclarInsumos(itens, substituir);
       };
-
       function mesclarInsumos(novos, substituir){
         const arr = getInsumos();
         if(substituir){
-          // Substitui por nome (case-insensitive)
           novos.forEach(n=>{
             const i = arr.findIndex(a => normaliza(a.nome) === normaliza(n.nome));
             if(i>=0) arr[i] = { ...n, id: arr[i].id }; else arr.push(n);
           });
         }else{
-          // Apenas acrescenta
           arr.push(...novos);
         }
-        setInsumos(arr);
-        renderInsumos();
-        fecharModalColar();
-        showSection('insumos');
-        alert(`Importados ${novos.length} insumos.`);
+        setInsumos(arr); renderInsumos(); fecharModalColar(); showSection('insumos'); alert(`Importados ${novos.length} insumos.`);
       }
-
       window.baixarModeloCSV = function(){
         const csv = [
           'Nome;Unidade;CustoCompra;QtdCompra;Perda',
@@ -619,11 +670,8 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
           'Molho especial;ml;20,00;1000;0'
         ].join('\n');
         const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'modelo-insumos.csv';
-        document.body.appendChild(a);
-        a.click(); a.remove();
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'modelo-insumos.csv';
+        document.body.appendChild(a); a.click(); a.remove();
       };
 
       /* ====== EXPORTAR/IMPORTAR JSON ====== */
@@ -633,35 +681,174 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
         const dt = new Date().toISOString().slice(0,10);
         a.href = URL.createObjectURL(blob);
         a.download = `precificacao-carreiro-backup-${dt}.json`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
+        document.body.appendChild(a); a.click(); a.remove();
       };
       window.importarJSON = function(input){
-        const file = input?.files?.[0];
-        if(!file) return;
+        const file = input?.files?.[0]; if(!file) return;
         const reader = new FileReader();
         reader.onload = () => {
           try{
             const data = JSON.parse(reader.result);
-            if(!data || typeof data !== 'object' || !Array.isArray(data.lojas)){
-              alert('Arquivo inválido.');
-              return;
-            }
-            state = data;
-            saveState(state);
-            render();
-            showSection('insumos');
-            alert('Dados importados com sucesso!');
-          }catch(e){
-            console.error(e);
-            alert('Falha ao ler o JSON.');
-          }
+            if(!data || typeof data !== 'object' || !Array.isArray(data.lojas)){ alert('Arquivo inválido.'); return; }
+            state = data; saveState(state); render(); showSection('insumos'); alert('Dados importados com sucesso!');
+          }catch(e){ console.error(e); alert('Falha ao ler o JSON.'); }
         };
         reader.readAsText(file);
       };
 
+      /* ====== FICHA TÉCNICA (CRUD) ====== */
+      function getFichas(){
+        const loja = getLojaAtiva(); return loja ? (loja.fichas || []) : [];
+      }
+      function setFichas(arr){
+        const loja = getLojaAtiva(); if(!loja) return; loja.fichas = arr; saveState(state);
+      }
+      function getInsumoByNameCaseInsensitive(nome){
+        const t = normaliza(nome);
+        return getInsumos().find(i => normaliza(i.nome) === t) || null;
+      }
+      function custoItem(ins, qtd){ return custoUnitario(ins) * toNumber(qtd); }
+      function custoTotalFicha(itens){
+        return itens.reduce((acc, it)=>{
+          const ins = getInsumoById(it.insumoId); if(!ins) return acc;
+          return acc + custoItem(ins, it.qtd);
+        }, 0);
+      }
+      function getInsumoById(id){ return getInsumos().find(x => x.id === id) || null; }
+
+      /* Form de Ficha (estado no DOM) */
+      window.novaFicha = function(){
+        limparFormFicha(); showSection('ficha'); document.getElementById('fichaNome').focus();
+      };
+      window.limparFormFicha = function(){
+        document.getElementById('fichaId').value = '';
+        document.getElementById('fichaNome').value = '';
+        document.getElementById('fichaRendimento').value = '1';
+        document.getElementById('fichaCustoTotal').value = '';
+        document.getElementById('fItemInsumo').value = '';
+        document.getElementById('fItemQtd').value = '';
+        document.getElementById('tbodyFichaItens').innerHTML = '';
+        atualizarCustoTotalForm();
+      };
+      function adicionarLinhaItem(insumoId, nome, unidade, qtd){
+        const tbody = document.getElementById('tbodyFichaItens');
+        const ins = getInsumoById(insumoId); if(!ins) return;
+        const custoU = custoUnitario(ins);
+        const custoI = custoU * toNumber(qtd);
+        const tr = document.createElement('tr');
+        tr.dataset.insumoId = insumoId;
+        tr.dataset.qtd = String(qtd);
+        tr.innerHTML = `
+          <td>${nome}</td>
+          <td style="text-align:right">${unidade}</td>
+          <td style="text-align:right">${toNumber(qtd).toLocaleString('pt-BR')}</td>
+          <td style="text-align:right">${money(custoU)}</td>
+          <td style="text-align:right">${money(custoI)}</td>
+          <td>
+            <div class="actions">
+              <button class="btn" type="button" onclick="editarItemFicha(this)">Editar</button>
+              <button class="btn" type="button" onclick="removerItemFicha(this)">Remover</button>
+            </div>
+          </td>`;
+        tbody.appendChild(tr);
+        atualizarCustoTotalForm();
+      }
+      function atualizarCustoTotalForm(){
+        const tbody = document.getElementById('tbodyFichaItens');
+        let total = 0;
+        [...tbody.querySelectorAll('tr')].forEach(tr=>{
+          const ins = getInsumoById(tr.dataset.insumoId); if(!ins) return;
+          total += custoItem(ins, toNumber(tr.dataset.qtd));
+        });
+        document.getElementById('fichaCustoTotal').value = money(total);
+      }
+      window.adicionarItemFicha = function(){
+        const nome = document.getElementById('fItemInsumo').value.trim();
+        const qtd = toNumber(document.getElementById('fItemQtd').value);
+        if(!nome){ alert('Informe o nome do insumo.'); return; }
+        if(!qtd || qtd<=0){ alert('Informe uma quantidade > 0.'); return; }
+        const ins = getInsumoByNameCaseInsensitive(nome);
+        if(!ins){ alert('Insumo não encontrado. Use um nome igual ao cadastrado em Insumos.'); return; }
+        adicionarLinhaItem(ins.id, ins.nome, ins.unidade, qtd);
+        document.getElementById('fItemInsumo').value = ''; document.getElementById('fItemQtd').value = '';
+      };
+      window.removerItemFicha = function(btn){
+        const tr = btn.closest('tr'); tr.remove(); atualizarCustoTotalForm();
+      };
+      window.editarItemFicha = function(btn){
+        const tr = btn.closest('tr');
+        const ins = getInsumoById(tr.dataset.insumoId); if(!ins) return;
+        document.getElementById('fItemInsumo').value = ins.nome;
+        document.getElementById('fItemQtd').value = tr.dataset.qtd;
+        tr.remove(); atualizarCustoTotalForm();
+      };
+
+      window.salvarFicha = function(e){
+        if(e) e.preventDefault();
+        const id = document.getElementById('fichaId').value || null;
+        const nome = document.getElementById('fichaNome').value.trim();
+        const rendimento = Math.max(1, toNumber(document.getElementById('fichaRendimento').value || 1));
+        if(!nome){ alert('Informe o nome da ficha.'); return false; }
+        const itens = [];
+        document.querySelectorAll('#tbodyFichaItens tr').forEach(tr=>{
+          itens.push({ insumoId: tr.dataset.insumoId, qtd: toNumber(tr.dataset.qtd) });
+        });
+        if(itens.length===0){ if(!confirm('A ficha está sem itens. Deseja salvar assim mesmo?')) return false; }
+        const fichas = getFichas();
+        if(id){
+          const i = fichas.findIndex(f => f.id === id);
+          if(i>=0) fichas[i] = { ...fichas[i], nome, rendimento, itens };
+        }else{
+          fichas.push({ id: uid(), nome, rendimento, itens });
+        }
+        setFichas(fichas); renderFichas(); limparFormFicha(); alert('Ficha salva!');
+        return false;
+      };
+
+      window.editarFicha = function(id){
+        const f = getFichas().find(x => x.id === id); if(!f) return;
+        limparFormFicha();
+        document.getElementById('fichaId').value = f.id;
+        document.getElementById('fichaNome').value = f.nome;
+        document.getElementById('fichaRendimento').value = f.rendimento ?? 1;
+        // preencher itens
+        f.itens?.forEach(it=>{
+          const ins = getInsumoById(it.insumoId);
+          if(ins) adicionarLinhaItem(it.insumoId, ins.nome, ins.unidade, it.qtd);
+        });
+        showSection('ficha');
+      };
+
+      window.removerFicha = function(id){
+        if(!confirm('Excluir esta ficha técnica?')) return;
+        setFichas(getFichas().filter(x => x.id !== id));
+        renderFichas();
+      };
+
+      window.duplicarFicha = function(id){
+        const f = getFichas().find(x => x.id === id); if(!f) return;
+        const copia = { ...f, id: uid(), nome: f.nome + ' (cópia)' };
+        const arr = getFichas(); arr.push(copia); setFichas(arr); renderFichas();
+      };
+
+      function calcCustoTotalFichaObj(f){
+        const itens = f.itens || [];
+        return itens.reduce((acc, it)=>{
+          const ins = getInsumoById(it.insumoId); if(!ins) return acc;
+          return acc + custoItem(ins, toNumber(it.qtd));
+        }, 0);
+      }
+
       /* ====== RENDER ====== */
+      function popularDatalistInsumos(){
+        const dl = document.getElementById('listaInsumosDatalist'); if(!dl) return;
+        dl.innerHTML = '';
+        getInsumos().forEach(i=>{
+          const opt = document.createElement('option');
+          opt.value = i.nome; dl.appendChild(opt);
+        });
+      }
+
       function render(){
         // Lojas
         const ul = document.getElementById('listaLojas');
@@ -684,23 +871,28 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
         const nomeInput = document.getElementById('nomeLoja'); if(nomeInput) nomeInput.value = loja?.nome || '';
         const logoEl = document.querySelector('.logo'); if(logoEl && loja?.logo) logoEl.src = loja.logo;
 
-        // Busca
+        // Busca Insumos
         const busca = document.getElementById('buscaInsumo');
         if(busca && !busca._wired){
           busca._wired = true;
-          busca.addEventListener('input', ()=>{
-            termoBusca = busca.value;
-            renderInsumos();
-          });
+          busca.addEventListener('input', ()=>{ termoBusca = busca.value; renderInsumos(); });
         }
 
-        // Tabela de insumos
+        // Busca Fichas
+        const buscaF = document.getElementById('buscaFicha');
+        if(buscaF && !buscaF._wired){
+          buscaF._wired = true;
+          buscaF.addEventListener('input', ()=> renderFichas());
+        }
+
         renderInsumos();
+        renderFichas();
+        popularDatalistInsumos();
+        atualizarCustoTotalForm();
       }
 
       window.renderInsumos = function(){
-        const tbody = document.getElementById('tbodyInsumos');
-        if(!tbody) return;
+        const tbody = document.getElementById('tbodyInsumos'); if(!tbody) return;
         const arr = aplicaBusca(getInsumos());
         tbody.innerHTML = '';
         arr.forEach(ins => {
@@ -718,11 +910,34 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
                 <button class="btn" onclick="duplicarInsumo('${ins.id}')">Duplicar</button>
                 <button class="btn" onclick="removerInsumo('${ins.id}')">Excluir</button>
               </div>
-            </td>
-          `;
+            </td>`;
           tbody.appendChild(tr);
         });
       };
+
+      function renderFichas(){
+        const tbody = document.getElementById('tbodyFichas'); if(!tbody) return;
+        const termo = normaliza(document.getElementById('buscaFicha')?.value || '');
+        const arr = getFichas().filter(f => !termo || normaliza(f.nome).includes(termo));
+        tbody.innerHTML = '';
+        arr.forEach(f=>{
+          const total = calcCustoTotalFichaObj(f);
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${f.nome}</td>
+            <td style="text-align:right">${(f.rendimento ?? 1)}</td>
+            <td style="text-align:right">${(f.itens?.length || 0)}</td>
+            <td style="text-align:right">${money(total)}</td>
+            <td>
+              <div class="actions">
+                <button class="btn" onclick="editarFicha('${f.id}')">Editar</button>
+                <button class="btn" onclick="duplicarFicha('${f.id}')">Duplicar</button>
+                <button class="btn" onclick="removerFicha('${f.id}')">Excluir</button>
+              </div>
+            </td>`;
+          tbody.appendChild(tr);
+        });
+      }
 
       document.addEventListener('DOMContentLoaded', ()=>{
         if(state.lojas.length === 0){
@@ -732,7 +947,7 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
         }else{
           if(!getLojaAtiva()){ state.lojaAtivaId = state.lojas[0].id; saveState(state); }
         }
-        // Tabs com addEventListener (além do onclick)
+        // Tabs com listener (além do onclick)
         document.querySelectorAll('.tab').forEach(btn=>{
           btn.addEventListener('click', ()=> window.showSection(btn.dataset.tab));
         });
