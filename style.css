@@ -1,68 +1,93 @@
+/* ====== Tema roxo/branco com acabamento de UI ====== */
 :root{
-  --bg:#0f0b1b; --panel:#17122a; --muted:#a99fcc; --text:#ffffff;
-  --primary:#6a3bf1; --primary-2:#8a5bff; --border:#2a2242;
+  --bg:#0f0b1b; --panel:#17122a; --muted:#b6add3; --text:#ffffff;
+  --primary:#6a3bf1; --primary-2:#8a5bff; --border:#2a2242; --ring: rgba(138,91,255,.5);
 }
 *{ box-sizing:border-box }
 html,body{ height:100% }
 body{
-  margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-  background: radial-gradient(1100px 600px at -10% -10%, #2b1f52 0%, transparent 60%) , var(--bg);
+  margin:0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
   color:var(--text);
+  background:
+    radial-gradient(1100px 600px at -10% -10%, rgba(106,59,241,.18) 0%, transparent 60%),
+    radial-gradient(900px 500px at 120% 10%, rgba(138,91,255,.16) 0%, transparent 60%),
+    var(--bg);
 }
-.app-header{
-  display:flex; align-items:center; justify-content:space-between;
-  padding:16px 24px; border-bottom:1px solid var(--border);
-  background: rgba(23,18,42,.6); backdrop-filter: blur(8px); position: sticky; top:0; z-index:10;
-}
-.brand{ display:flex; gap:12px; align-items:center }
-.logo{ width:40px; height:40px; border-radius:8px; object-fit:cover; border:1px solid var(--border) }
-.title-wrap h1{ margin:0; font-size:1.25rem }
-.subtitle{ color:var(--muted); font-size:.85rem }
-.top-actions{ display:flex; gap:8px }
+:focus-visible{ outline:2px solid var(--ring); outline-offset:2px; border-radius:8px }
 
-.btn{
-  border:1px solid var(--border); background:rgba(255,255,255,.03);
-  padding:10px 14px; border-radius:10px; color:var(--text); cursor:pointer; font-weight:600; transition:.2s;
+/* Header */
+.app-header{
+  position:sticky; top:0; z-index:50;
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  padding:14px 22px;
+  background:linear-gradient(180deg, rgba(21,16,41,.85), rgba(21,16,41,.6));
+  border-bottom:1px solid var(--border); backdrop-filter: blur(8px);
 }
-.btn:hover{ border-color:#3a2f5c; transform: translateY(-1px) }
+.brand{ display:flex; align-items:center; gap:12px }
+.logo{ width:42px; height:42px; border-radius:10px; object-fit:cover; border:1px solid var(--border) }
+.title-wrap h1{ margin:0; font-size:1.15rem; letter-spacing:.2px }
+.subtitle{ color:var(--muted); font-size:.85rem }
+
+/* Botões */
+.btn{
+  appearance:none; border:1px solid var(--border); background:rgba(255,255,255,.06);
+  padding:10px 14px; border-radius:12px; color:var(--text); cursor:pointer; font-weight:600;
+  transition: transform .12s ease, box-shadow .12s ease, background .2s ease, border-color .2s ease;
+}
+.btn:hover{ transform: translateY(-1px); border-color:#3a2f5c; box-shadow: 0 10px 30px rgba(0,0,0,.25), 0 4px 10px rgba(106,59,241,.2) }
+.btn:active{ transform: translateY(0) scale(.99) }
 .btn.primary{ background:linear-gradient(135deg, var(--primary), var(--primary-2)); border:none }
-.btn.ghost{ background:rgba(255,255,255,.08) }
+.btn.ghost{ background:rgba(255,255,255,.1) }
 .file-btn{ position:relative; overflow:hidden }
 
-.app-main{ display:grid; grid-template-columns: 280px 1fr; min-height: calc(100vh - 74px) }
-.sidebar{ border-right:1px solid var(--border); background:linear-gradient(180deg, rgba(23,18,42,.5), rgba(23,18,42,.2)); padding:16px }
-.sidebar-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px }
-.lojas-list{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px }
-.lojas-list li{
-  border:1px solid var(--border); border-radius:10px; padding:10px 12px;
-  display:flex; justify-content:space-between; align-items:center; gap:8px;
-  background:rgba(255,255,255,.03);
+/* Layout principal */
+.app-main{ display:grid; grid-template-columns: 280px 1fr; min-height: calc(100vh - 72px) }
+.sidebar{
+  padding:16px; border-right:1px solid var(--border);
+  background:linear-gradient(180deg, rgba(21,16,41,.7), rgba(21,16,41,.3));
 }
-.lojas-list li.active{ outline:2px solid var(--primary) }
+.sidebar-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px }
+.lojas-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px }
+.lojas-list li{
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+  padding:10px 12px; border:1px solid var(--border); border-radius:12px;
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+}
+.lojas-list li.active{ outline:2px solid var(--primary); outline-offset:2px }
 .loja-actions{ display:flex; gap:6px }
 .loja-actions .btn{ padding:6px 8px; font-size:.85rem }
 
-.content{ padding:16px 20px }
-.tabbar{ display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap }
+.content{ padding:18px 22px }
+.tabbar{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px }
 .tab{
-  border:1px solid var(--border); background:rgba(255,255,255,.03); color:var(--text);
-  padding:10px 12px; border-radius:999px; cursor:pointer; transition:.2s;
+  border:1px solid var(--border); background:rgba(255,255,255,.05); color:var(--text);
+  padding:10px 14px; border-radius:999px; cursor:pointer; font-weight:600;
 }
 .tab.active{ background:linear-gradient(135deg, var(--primary), var(--primary-2)); border:none }
-.tab-panel{ display:none; border:1px solid var(--border); border-radius:14px; padding:16px; background:rgba(255,255,255,.03) }
+.tab-panel{
+  display:none; border:1px solid var(--border); border-radius:16px; padding:16px;
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+}
 .tab-panel.active{ display:block }
 
 .panel-header{ display:flex; gap:10px; align-items:center; margin-bottom:12px }
 .store-name{
-  flex:1; background:rgba(255,255,255,.06); color:var(--text);
-  border:1px solid var(--border); border-radius:10px; padding:10px 12px; font-size:1rem;
+  flex:1; border:1px solid var(--border); border-radius:10px; padding:10px 12px;
+  background:rgba(255,255,255,.08); color:var(--text); font-size:1rem;
 }
-.cards{ display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:12px }
+
+.cards{ display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:14px }
 .card{
-  border:1px solid var(--border); border-radius:14px; padding:14px;
-  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  border:1px solid var(--border); border-radius:16px; padding:14px;
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  box-shadow: 0 1px 0 rgba(255,255,255,.04) inset;
 }
-.app-footer{ border-top:1px solid var(--border); padding:12px 20px; color:var(--muted); background: rgba(23,18,42,.5) }
+
+.app-footer{
+  border-top:1px solid var(--border); padding:12px 22px; color:var(--muted);
+  background:linear-gradient(180deg, rgba(21,16,41,.6), rgba(21,16,41,.4));
+}
 
 @media (max-width: 900px){
   .app-main{ grid-template-columns: 1fr }
