@@ -1,21 +1,32 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Precificação Carreiro</title>
+
+  <!-- CSS do app -->
   style.css
+
+  <!-- JS do app -->
   script.js</script>
+
+  <!-- Prevenção básica de cache em atualizações -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
 </head>
 <body>
   <header class="app-header">
     <div class="brand">
-      assets/logo.png
+      <!-- Logo SVG embutida (não depende de arquivo externo) -->
+      data:image/svg+xml;utf8,<?xml version=<svg width='48' height='48' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%236a3bf1'/><stop offset='100%' stop-color='%238a5bff'/></linearGradient></defs><rect rx='14' ry='14' width='64' height='64' fill='url(%23g)'/><path d='M18 40c8-2 12-10 14-18 2 8 6 16 14 18-6 2-10 4-14 8-4-4-8-6-14-8z' fill='white' opacity='.9'/></svg>">
       <div class="title-wrap">
         <h1>Precificação Carreiro</h1>
-        <span class="subtitle">Gestão de custos e preços</span>
+        <span class="subtitle">Gestão de custos e preços — hamburgueria</span>
       </div>
     </div>
+
     <nav class="top-actions">
       <button class="btn primary" onclick="novaloja()">+ Nova loja</button>
       <button class="btn ghost" onclick="duplicar()">Duplicar loja</button>
@@ -45,10 +56,12 @@
         <button class="tab" data-tab="combos" onclick="showSection('combos')">Combos</button>
       </div>
 
+      <!-- DASHBOARD -->
       <section id="dashboard" class="tab-panel active">
         <div class="panel-header">
-          <input id="nomeLoja" class="store-name" placeholder="Nome da loja">
+          <input id="nomeLoja" class="store-name" placeholder="Nome da loja" />
           <button class="btn primary" onclick="salvarNome()">Salvar nome</button>
+          <button class="btn" onclick="voltar()">Voltar</button>
         </div>
         <div class="cards">
           <article class="card">
@@ -56,15 +69,49 @@
             <p>Total de lojas: <strong id="totalLojas">0</strong></p>
             <p>Última atualização: <strong id="ultimaAtualizacao">—</strong></p>
           </article>
+
+          <article class="card">
+            <h3>Margem</h3>
+            <p>Margem média: <strong id="margemMedia">—</strong></p>
+          </article>
         </div>
       </section>
 
-      <section id="dna" class="tab-panel"><h3>DNA</h3></section>
-      <section id="faturamento" class="tab-panel"><h3>Faturamento</h3></section>
-      <section id="insumos" class="tab-panel"><h3>Insumos</h3></section>
-      <section id="ficha" class="tab-panel"><h3>Ficha técnica</h3></section>
-      <section id="pv" class="tab-panel"><h3>PV</h3></section>
-      <section id="combos" class="tab-panel"><h3>Combos</h3></section>
+      <!-- DNA -->
+      <section id="dna" class="tab-panel">
+        <h3>DNA</h3>
+        <p>Cadastre custos fixos por mês (aluguel, salários, energia, gás, internet etc.) e custos variáveis.</p>
+      </section>
+
+      <!-- FATURAMENTO -->
+      <section id="faturamento" class="tab-panel">
+        <h3>Faturamento</h3>
+        <p>Resumo mensal, ticket médio, crescimento, % delivery vs balcão (em breve).</p>
+      </section>
+
+      <!-- INSUMOS -->
+      <section id="insumos" class="tab-panel">
+        <h3>Insumos</h3>
+        <p>Adicione insumos com unidade (g/ml/un), custo e rendimento. (em breve)</p>
+      </section>
+
+      <!-- FICHA TÉCNICA -->
+      <section id="ficha" class="tab-panel">
+        <h3>Ficha Técnica</h3>
+        <p>Monte as receitas ligando aos insumos para calcular custo por lanche. (em breve)</p>
+      </section>
+
+      <!-- PV -->
+      <section id="pv" class="tab-panel">
+        <h3>Preço de Venda (PV)</h3>
+        <p>Calcule PV com base em custo + margem alvo (markup) ou margem líquida. (em breve)</p>
+      </section>
+
+      <!-- COMBOS -->
+      <section id="combos" class="tab-panel">
+        <h3>Combos</h3>
+        <p>Monte combos (1 hambúrguer + 1 batata + 1 refri) puxando custos e sugerindo PV. (em breve)</p>
+      </section>
     </section>
   </main>
 
@@ -73,3 +120,4 @@
   </footer>
 </body>
 </html>
+``
