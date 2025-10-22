@@ -115,7 +115,7 @@
     .table .actions{ display:flex; gap:8px; flex-wrap:wrap }
     .table .actions .btn{ padding:6px 8px; font-size:.85rem }
 
-    /* ====== MODAL DE COLAR PLANILHA ====== */
+    /* ====== MODAIS ====== */
     .modal-mask{
       position:fixed; inset:0; background:rgba(0,0,0,.45);
       display:none; align-items:center; justify-content:center; z-index:1000;
@@ -134,6 +134,12 @@
     }
     .modal .row{ display:flex; gap:8px; align-items:center; justify-content:space-between; flex-wrap:wrap; margin:8px 0 }
     .modal small{ color:var(--muted) }
+
+    @media (max-width: 900px){
+      .app-main{ grid-template-columns: 1fr }
+      .sidebar{ order:2 }
+      .content{ order:1 }
+    }
   </style>
 </head>
 <body>
@@ -324,11 +330,14 @@
 
           <hr style="border:0;border-top:1px solid var(--border); margin:12px 0">
 
-          <!-- Adicionar item -->
+          <!-- Adicionar item (com botão Seleção de ingredientes) -->
           <div style="display:grid; grid-template-columns: 1fr 160px 140px; gap:10px; align-items:center;">
             <div>
               <label>Insumo</label>
-              <input id="fItemInsumo" list="listaInsumosDatalist" placeholder="Digite e selecione..." class="store-name">
+              <div style="display:flex; gap:8px; align-items:center;">
+                <input id="fItemInsumo" list="listaInsumosDatalist" placeholder="Digite e selecione..." class="store-name" style="flex:1">
+                <button class="btn ghost" type="button" onclick="abrirSelecaoIngredientes()">Selecionar ingrediente</button>
+              </div>
               <datalist id="listaInsumosDatalist"></datalist>
             </div>
             <div>
@@ -439,6 +448,35 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
     </div>
   </div>
 
+  <!-- Modal: Seleção de ingredientes -->
+  <div id="maskSelIng" class="modal-mask">
+    <div class="modal">
+      <h4>Seleção de ingredientes</h4>
+      <div class="row" style="justify-content:space-between;">
+        <input id="buscaSelIng" class="store-name" placeholder="Digite parte do nome (ex.: pão, cheddar, bacon)" style="flex:1; min-width:260px">
+        <button class="btn" type="button" onclick="fecharSelecaoIngredientes()">Fechar</button>
+      </div>
+      <div class="table-wrap" style="margin-top:8px;">
+        <div class="table-scroll" style="max-height:360px;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Nome do insumo</th>
+                <th style="text-align:right;">Unid</th>
+                <th style="text-align:right;">Custo unit. (R$)</th>
+                <th style="width:120px;">Ação</th>
+              </tr>
+            </thead>
+            <tbody id="tbodySelIng"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <small>Dica: digite parte do nome (ex.: <b>pão</b>) para ver todos os pães cadastrados e clique em <b>Selecionar</b>.</small>
+      </div>
+    </div>
+  </div>
+
   <!-- Aviso caso abra no github.com (preview sem JS) -->
   <div id="warn" class="warning"></div>
 
@@ -449,11 +487,7 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
       if(location.host.includes('github.com')){
         warn.style.display = 'block';
         warn.innerHTML = '⚠️ Você está vendo a <b>pré-visualização do GitHub (github.com)</b>. '
-          + 'Abra o site publicado em https://github.io</a> para interatividade.';
-      }
-
-      /* ====== ESTADO (localStorage) ====== */
-      const STORAGE_KEY = 'carreiro.precificacao.v1';
+          + 'Abra o site publicado em <a style="color:#9ecbff" target="_blank" href="https://'+location.hostname.replace('github.com','github.io')+location.pathname.replace('/blobcificacao.v1';
       function loadState(){
         try{
           const raw = localStorage.getItem(STORAGE_KEY);
@@ -703,20 +737,20 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
       function setFichas(arr){
         const loja = getLojaAtiva(); if(!loja) return; loja.fichas = arr; saveState(state);
       }
+      function getInsumoById(id){ return getInsumos().find(x => x.id === id) || null; }
       function getInsumoByNameCaseInsensitive(nome){
         const t = normaliza(nome);
         return getInsumos().find(i => normaliza(i.nome) === t) || null;
       }
       function custoItem(ins, qtd){ return custoUnitario(ins) * toNumber(qtd); }
-      function custoTotalFicha(itens){
+      function calcCustoTotalFichaObj(f){
+        const itens = f.itens || [];
         return itens.reduce((acc, it)=>{
           const ins = getInsumoById(it.insumoId); if(!ins) return acc;
-          return acc + custoItem(ins, it.qtd);
+          return acc + custoItem(ins, toNumber(it.qtd));
         }, 0);
       }
-      function getInsumoById(id){ return getInsumos().find(x => x.id === id) || null; }
 
-      /* Form de Ficha (estado no DOM) */
       window.novaFicha = function(){
         limparFormFicha(); showSection('ficha'); document.getElementById('fichaNome').focus();
       };
@@ -811,7 +845,6 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
         document.getElementById('fichaId').value = f.id;
         document.getElementById('fichaNome').value = f.nome;
         document.getElementById('fichaRendimento').value = f.rendimento ?? 1;
-        // preencher itens
         f.itens?.forEach(it=>{
           const ins = getInsumoById(it.insumoId);
           if(ins) adicionarLinhaItem(it.insumoId, ins.nome, ins.unidade, it.qtd);
@@ -831,13 +864,67 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
         const arr = getFichas(); arr.push(copia); setFichas(arr); renderFichas();
       };
 
-      function calcCustoTotalFichaObj(f){
-        const itens = f.itens || [];
-        return itens.reduce((acc, it)=>{
-          const ins = getInsumoById(it.insumoId); if(!ins) return acc;
-          return acc + custoItem(ins, toNumber(it.qtd));
-        }, 0);
+      /* ====== MODAL Seleção de ingredientes ====== */
+      const maskSelIng = document.getElementById('maskSelIng');
+      const buscaSelIng = document.getElementById('buscaSelIng');
+      const tbodySelIng = document.getElementById('tbodySelIng');
+
+      window.abrirSelecaoIngredientes = function(){
+        if(!maskSelIng) return;
+        maskSelIng.style.display = 'flex';
+        buscaSelIng.value = '';
+        renderSelecaoIngredientes('');
+        setTimeout(()=>buscaSelIng?.focus(), 50);
+      };
+      window.fecharSelecaoIngredientes = function(){
+        if(!maskSelIng) return; maskSelIng.style.display = 'none';
+      };
+
+      if(buscaSelIng && !buscaSelIng._wired){
+        buscaSelIng._wired = true;
+        buscaSelIng.addEventListener('input', ()=>{
+          renderSelecaoIngredientes(buscaSelIng.value);
+        });
       }
+
+      function renderSelecaoIngredientes(termo){
+        if(!tbodySelIng) return;
+        const t = (termo||'').toLowerCase().trim();
+        const todos = getInsumos();
+        const filtrados = t ? todos.filter(i => (i.nome||'').toLowerCase().includes(t)) : todos;
+
+        tbodySelIng.innerHTML = '';
+        filtrados.forEach(ins=>{
+          const tr = document.createElement('tr');
+          const custoU = money(custoUnitario(ins));
+          tr.innerHTML = `
+            <td>${ins.nome}</td>
+            <td style="text-align:right">${ins.unidade}</td>
+            <td style="text-align:right">${custoU}</td>
+            <td>
+              <div class="actions">
+                <button class="btn" type="button" onclick="selecionarIngrediente('${ins.id}')">Selecionar</button>
+              </div>
+            </td>`;
+          tbodySelIng.appendChild(tr);
+        });
+
+        if(filtrados.length === 0){
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td colspan="4" style="color:#b6add3">Nenhum insumo encontrado para “${termo}”.</td>`;
+          tbodySelIng.appendChild(tr);
+        }
+      }
+
+      window.selecionarIngrediente = function(insumoId){
+        const ins = getInsumoById(insumoId);
+        if(!ins) return;
+        const inputInsumo = document.getElementById('fItemInsumo');
+        inputInsumo.value = ins.nome;
+        fecharSelecaoIngredientes();
+        const inputQtd = document.getElementById('fItemQtd');
+        inputQtd?.focus();
+      };
 
       /* ====== RENDER ====== */
       function popularDatalistInsumos(){
