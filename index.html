@@ -1,26 +1,119 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Precificação Carreiro</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+  <meta http-equiv="Pragma" content="no-cache"/>
+  <meta http-equiv="Expires" content="0"/>
+  <style>
+    /* ====== CSS EMBUTIDO (tema roxo/branco) ====== */
+    :root{
+      --bg:#0f0b1b; --panel:#17122a; --muted:#b6add3; --text:#ffffff;
+      --primary:#6a3bf1; --primary-2:#8a5bff; --border:#2a2242; --ring: rgba(138,91,255,.5);
+    }
+    *{ box-sizing:border-box }
+    html,body{ height:100% }
+    body{
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:
+        radial-gradient(1100px 600px at -10% -10%, rgba(106,59,241,.18) 0%, transparent 60%),
+        radial-gradient(900px 500px at 120% 10%, rgba(138,91,255,.16) 0%, transparent 60%),
+        var(--bg);
+    }
+    :focus-visible{ outline:2px solid var(--ring); outline-offset:2px; border-radius:8px }
 
-  <!-- CSS do app -->
-  style.css?v=2 
+    .app-header{
+      position:sticky; top:0; z-index:50;
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+      padding:14px 22px;
+      background:linear-gradient(180deg, rgba(21,16,41,.85), rgba(21,16,41,.6));
+      border-bottom:1px solid var(--border); backdrop-filter: blur(8px);
+    }
+    .brand{ display:flex; align-items:center; gap:12px }
+    .logo{ width:42px; height:42px; border-radius:10px; object-fit:cover; border:1px solid var(--border) }
+    .title-wrap h1{ margin:0; font-size:1.15rem; letter-spacing:.2px }
+    .subtitle{ color:var(--muted); font-size:.85rem }
 
-  <!-- JS do app -->
-  script.js?v=2
+    .btn{
+      appearance:none; border:1px solid var(--border); background:rgba(255,255,255,.06);
+      padding:10px 14px; border-radius:12px; color:var(--text); cursor:pointer; font-weight:600;
+      transition: transform .12s ease, box-shadow .12s ease, background .2s ease, border-color .2s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); border-color:#3a2f5c; box-shadow: 0 10px 30px rgba(0,0,0,.25), 0 4px 10px rgba(106,59,241,.2) }
+    .btn:active{ transform: translateY(0) scale(.99) }
+    .btn.primary{ background:linear-gradient(135deg, var(--primary), var(--primary-2)); border:none }
+    .btn.ghost{ background:rgba(255,255,255,.1) }
+    .file-btn{ position:relative; overflow:hidden }
 
-  <!-- Prevenção básica de cache em atualizações -->
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
+    .app-main{ display:grid; grid-template-columns: 280px 1fr; min-height: calc(100vh - 72px) }
+    .sidebar{
+      padding:16px; border-right:1px solid var(--border);
+      background:linear-gradient(180deg, rgba(21,16,41,.7), rgba(21,16,41,.3));
+    }
+    .sidebar-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px }
+    .lojas-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px }
+    .lojas-list li{
+      display:flex; align-items:center; justify-content:space-between; gap:8px;
+      padding:10px 12px; border:1px solid var(--border); border-radius:12px;
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+    }
+    .lojas-list li.active{ outline:2px solid var(--primary); outline-offset:2px }
+    .loja-actions{ display:flex; gap:6px }
+    .loja-actions .btn{ padding:6px 8px; font-size:.85rem }
+
+    .content{ padding:18px 22px }
+    .tabbar{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px }
+    .tab{
+      border:1px solid var(--border); background:rgba(255,255,255,.05); color:var(--text);
+      padding:10px 14px; border-radius:999px; cursor:pointer; font-weight:600;
+    }
+    .tab.active{ background:linear-gradient(135deg, var(--primary), var(--primary-2)); border:none }
+    .tab-panel{
+      display:none; border:1px solid var(--border); border-radius:16px; padding:16px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+    }
+    .tab-panel.active{ display:block }
+
+    .panel-header{ display:flex; gap:10px; align-items:center; margin-bottom:12px }
+    .store-name{
+      flex:1; border:1px solid var(--border); border-radius:10px; padding:10px 12px;
+      background:rgba(255,255,255,.08); color:var(--text); font-size:1rem;
+    }
+
+    .cards{ display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:14px }
+    .card{
+      border:1px solid var(--border); border-radius:16px; padding:14px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      box-shadow: 0 1px 0 rgba(255,255,255,.04) inset;
+    }
+
+    .app-footer{
+      border-top:1px solid var(--border); padding:12px 22px; color:var(--muted);
+      background:linear-gradient(180deg, rgba(21,16,41,.6), rgba(21,16,41,.4));
+    }
+
+    .warning{
+      position:fixed; left:16px; right:16px; bottom:16px; z-index:9999;
+      background:#2b1f52; color:#fff; padding:12px 14px; border:1px solid #3a2f5c; border-radius:10px;
+      display:none;
+    }
+
+    @media (max-width: 900px){
+      .app-main{ grid-template-columns: 1fr }
+      .sidebar{ order:2 }
+      .content{ order:1 }
+    }
+  </style>
 </head>
 <body>
   <header class="app-header">
     <div class="brand">
-      <!-- Logo SVG embutida (não depende de arquivo externo) -->
-      data:image/svg+xml;utf8,<?xml version=<svg width='48' height='48' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%236a3bf1'/><stop offset='100%' stop-color='%238a5bff'/></linearGradient></defs><rect rx='14' ry='14' width='64' height='64' fill='url(%23g)'/><path d='M18 40c8-2 12-10 14-18 2 8 6 16 14 18-6 2-10 4-14 8-4-4-8-6-14-8z' fill='white' opacity='.9'/></svg>">
+      <img class="logo" alt="Logo"
+           src="data:image/svg+xml8' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%236a3bf1'/><stop offset='100%' stop-color='%238a5bff'/></linearGradient></defs><rect rx='14' ry='14' width='64' height='64' fill='url(%23g)'/><path d='M18 40c8-2 12-10 14-18 2 8 6 16 14 18-6 2-10 4-14 8-4-4-8-6-14-8z' fill='white' opacity='.9'/></svg>">
       <div class="title-wrap">
         <h1>Precificação Carreiro</h1>
         <span class="subtitle">Gestão de custos e preços — hamburgueria</span>
@@ -56,10 +149,9 @@
         <button class="tab" data-tab="combos" onclick="showSection('combos')">Combos</button>
       </div>
 
-      <!-- DASHBOARD -->
       <section id="dashboard" class="tab-panel active">
         <div class="panel-header">
-          <input id="nomeLoja" class="store-name" placeholder="Nome da loja" />
+          <input id="nomeLoja" class="store-name" placeholder="Nome da loja"/>
           <button class="btn primary" onclick="salvarNome()">Salvar nome</button>
           <button class="btn" onclick="voltar()">Voltar</button>
         </div>
@@ -69,7 +161,6 @@
             <p>Total de lojas: <strong id="totalLojas">0</strong></p>
             <p>Última atualização: <strong id="ultimaAtualizacao">—</strong></p>
           </article>
-
           <article class="card">
             <h3>Margem</h3>
             <p>Margem média: <strong id="margemMedia">—</strong></p>
@@ -77,47 +168,124 @@
         </div>
       </section>
 
-      <!-- DNA -->
-      <section id="dna" class="tab-panel">
-        <h3>DNA</h3>
-        <p>Cadastre custos fixos por mês (aluguel, salários, energia, gás, internet etc.) e custos variáveis.</p>
-      </section>
-
-      <!-- FATURAMENTO -->
-      <section id="faturamento" class="tab-panel">
-        <h3>Faturamento</h3>
-        <p>Resumo mensal, ticket médio, crescimento, % delivery vs balcão (em breve).</p>
-      </section>
-
-      <!-- INSUMOS -->
-      <section id="insumos" class="tab-panel">
-        <h3>Insumos</h3>
-        <p>Adicione insumos com unidade (g/ml/un), custo e rendimento. (em breve)</p>
-      </section>
-
-      <!-- FICHA TÉCNICA -->
-      <section id="ficha" class="tab-panel">
-        <h3>Ficha Técnica</h3>
-        <p>Monte as receitas ligando aos insumos para calcular custo por lanche. (em breve)</p>
-      </section>
-
-      <!-- PV -->
-      <section id="pv" class="tab-panel">
-        <h3>Preço de Venda (PV)</h3>
-        <p>Calcule PV com base em custo + margem alvo (markup) ou margem líquida. (em breve)</p>
-      </section>
-
-      <!-- COMBOS -->
-      <section id="combos" class="tab-panel">
-        <h3>Combos</h3>
-        <p>Monte combos (1 hambúrguer + 1 batata + 1 refri) puxando custos e sugerindo PV. (em breve)</p>
-      </section>
+      <section id="dna" class="tab-panel"><h3>DNA</h3><p>Cadastre custos fixos por mês (aluguel, salários, energia, gás, internet etc.).</p></section>
+      <section id="faturamento" class="tab-panel"><h3>Faturamento</h3><p>Resumo mensal, ticket médio, % delivery vs balcão.</p></section>
+      <section id="insumos" class="tab-panel"><h3>Insumos</h3><p>Adicione insumos com unidade, custo e rendimento.</p></section>
+      <section id="ficha" class="tab-panel"><h3>Ficha Técnica</h3><p>Monte receitas ligando aos insumos para custo por lanche.</p></section>
+      <section id="pv" class="tab-panel"><h3>PV</h3><p>Calcule PV com markup/margem alvo.</p></section>
+      <section id="combos" class="tab-panel"><h3>Combos</h3><p>Monte combos e calcule custo total.</p></section>
     </section>
   </main>
 
   <footer class="app-footer">
     <span>© Espaço Carreiro Lanches</span>
   </footer>
+
+  <!-- Aviso se estiver vendo no github.com (preview) e não no github.io -->
+  <div id="warn" class="warning"></div>
+
+  <script>
+    // ====== JS EMBUTIDO (funções globais e estado) ======
+    (function(){
+      const warn = document.getElementById('warn');
+      if(location.host.includes('github.com')){
+        warn.style.display = 'block';
+        warn.innerHTML = '⚠️ Você está vendo a <b>pré-visualização do GitHub (github.com)</b>. '
+          + 'Abra o site publicado em https://github.io</a> para interatividade.';
+      }
+
+      const STORAGE_KEY = 'carreiro.precificacao.v1';
+      function loadState(){
+        try{
+          const raw = localStorage.getItem(STORAGE_KEY);
+          return raw ? JSON.parse(raw) : { lojas: [], lojaAtivaId: null, ultimaAtualizacao: null };
+        }catch(e){ return { lojas: [], lojaAtivaId: null, ultimaAtualizacao: null }; }
+      }
+      function saveState(s){
+        s.ultimaAtualizacao = new Date().toISOString();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+      }
+      let state = loadState();
+
+      function uid(){ return (crypto?.randomUUID?.() || Math.random().toString(36).slice(2)) }
+      function getLojaAtiva(){ return state.lojas.find(l => l.id === state.lojaAtivaId) || null }
+      function setLojaAtiva(id){ state.lojaAtivaId = id; saveState(state); render(); }
+      function fmtData(iso){ return iso ? new Date(iso).toLocaleString('pt-BR') : '—' }
+
+      // Expondo as funções no escopo global (para onclick inline)
+      window.novaloja = function(){
+        const id = uid();
+        state.lojas.push({ id, nome: `Loja ${state.lojas.length + 1}`, logo: null, dna:{}, faturamento:{}, insumos:[], fichas:[], pv:{}, combos:[] });
+        state.lojaAtivaId = id;
+        saveState(state); render();
+      };
+      window.duplicar = function(){
+        const atual = getLojaAtiva();
+        if(!atual){ alert('Nenhuma loja selecionada.'); return; }
+        const id = uid();
+        const clone = JSON.parse(JSON.stringify(atual));
+        clone.id = id; clone.nome = `${atual.nome} (cópia)`;
+        state.lojas.push(clone);
+        state.lojaAtivaId = id;
+        saveState(state); render();
+      };
+      window.salvarNome = function(){
+        const atual = getLojaAtiva();
+        if(!atual){ alert('Nenhuma loja selecionada.'); return; }
+        const input = document.getElementById('nomeLoja');
+        if(!input){ alert('Campo de nome não encontrado'); return; }
+        const novo = input.value.trim();
+        if(novo) atual.nome = novo;
+        saveState(state); render();
+      };
+      window.voltar = function(){ window.showSection('dashboard'); };
+      window.showSection = function(sectionId){
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.toggle('active', tab.dataset.tab === sectionId));
+        document.querySelectorAll('.tab-panel').forEach(p => {
+          const match = p.id === sectionId || p.id === `tab-${sectionId}`;
+          p.classList.toggle('active', match);
+        });
+      };
+      window.abrirLoja = function(id){ setLojaAtiva(id); };
+      window.alterarLogo = function(input){
+        const file = input?.files?.[0]; const atual = getLojaAtiva();
+        if(!file || !atual) return;
+        const reader = new FileReader();
+        reader.onload = () => { atual.logo = reader.result; saveState(state); render(); };
+        reader.readAsDataURL(file);
+      };
+
+      function render(){
+        const ul = document.getElementById('listaLojas');
+        if(ul){
+          ul.innerHTML = '';
+          state.lojas.forEach(l=>{
+            const li = document.createElement('li');
+            li.className = l.id === state.lojaAtivaId ? 'active' : '';
+            li.innerHTML = `<span>${l.nome}</span>
+              <span class="loja-actions"><button class="btn" onclick="abrirLoja('${l.id}')">Abrir</button></span>`;
+            ul.appendChild(li);
+          });
+        }
+        const total = document.getElementById('totalLojas'); if(total) total.textContent = state.lojas.length;
+        const ultima = document.getElementById('ultimaAtualizacao'); if(ultima) ultima.textContent = fmtData(state.ultimaAtualizacao);
+        const loja = getLojaAtiva();
+        const nomeInput = document.getElementById('nomeLoja'); if(nomeInput) nomeInput.value = loja?.nome || '';
+        const logoEl = document.querySelector('.logo'); if(logoEl && loja?.logo) logoEl.src = loja.logo;
+      }
+
+      document.addEventListener('DOMContentLoaded', ()=>{
+        if(state.lojas.length === 0){
+          const id = uid();
+          state.lojas.push({ id, nome: 'Loja 1', logo: null, dna:{}, faturamento:{}, insumos:[], fichas:[], pv:{}, combos:[] });
+          state.lojaAtivaId = id; saveState(state);
+        }else{
+          if(!getLojaAtiva()){ state.lojaAtivaId = state.lojas[0].id; saveState(state); }
+        }
+        render();
+      });
+    })();
+  </script>
 </body>
 </html>
 ``
