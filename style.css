@@ -1,52 +1,71 @@
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background: #f9fafc;
-  margin: 0;
-  padding: 0;
+:root{
+  --bg:#0f0b1b; --panel:#17122a; --muted:#a99fcc; --text:#ffffff;
+  --primary:#6a3bf1; --primary-2:#8a5bff; --border:#2a2242;
 }
-header {
-  background: #4f46e5;
-  color: white;
-  padding: 15px;
-  text-align: center;
+*{ box-sizing:border-box }
+html,body{ height:100% }
+body{
+  margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  background: radial-gradient(1100px 600px at -10% -10%, #2b1f52 0%, transparent 60%) , var(--bg);
+  color:var(--text);
 }
-button {
-  background: #6366f1;
-  color: white;
-  border: none;
-  padding: 10px;
-  margin: 5px;
-  border-radius: 6px;
-  cursor: pointer;
+.app-header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 24px; border-bottom:1px solid var(--border);
+  background: rgba(23,18,42,.6); backdrop-filter: blur(8px); position: sticky; top:0; z-index:10;
 }
-button:hover {
-  background: #4338ca;
+.brand{ display:flex; gap:12px; align-items:center }
+.logo{ width:40px; height:40px; border-radius:8px; object-fit:cover; border:1px solid var(--border) }
+.title-wrap h1{ margin:0; font-size:1.25rem }
+.subtitle{ color:var(--muted); font-size:.85rem }
+.top-actions{ display:flex; gap:8px }
+
+.btn{
+  border:1px solid var(--border); background:rgba(255,255,255,.03);
+  padding:10px 14px; border-radius:10px; color:var(--text); cursor:pointer; font-weight:600; transition:.2s;
 }
-section {
-  display: none;
-  padding: 20px;
+.btn:hover{ border-color:#3a2f5c; transform: translateY(-1px) }
+.btn.primary{ background:linear-gradient(135deg, var(--primary), var(--primary-2)); border:none }
+.btn.ghost{ background:rgba(255,255,255,.08) }
+.file-btn{ position:relative; overflow:hidden }
+
+.app-main{ display:grid; grid-template-columns: 280px 1fr; min-height: calc(100vh - 74px) }
+.sidebar{ border-right:1px solid var(--border); background:linear-gradient(180deg, rgba(23,18,42,.5), rgba(23,18,42,.2)); padding:16px }
+.sidebar-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px }
+.lojas-list{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px }
+.lojas-list li{
+  border:1px solid var(--border); border-radius:10px; padding:10px 12px;
+  display:flex; justify-content:space-between; align-items:center; gap:8px;
+  background:rgba(255,255,255,.03);
 }
-section.active {
-  display: block;
+.lojas-list li.active{ outline:2px solid var(--primary) }
+.loja-actions{ display:flex; gap:6px }
+.loja-actions .btn{ padding:6px 8px; font-size:.85rem }
+
+.content{ padding:16px 20px }
+.tabbar{ display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap }
+.tab{
+  border:1px solid var(--border); background:rgba(255,255,255,.03); color:var(--text);
+  padding:10px 12px; border-radius:999px; cursor:pointer; transition:.2s;
 }
-.aba {
-  display: none;
+.tab.active{ background:linear-gradient(135deg, var(--primary), var(--primary-2)); border:none }
+.tab-panel{ display:none; border:1px solid var(--border); border-radius:14px; padding:16px; background:rgba(255,255,255,.03) }
+.tab-panel.active{ display:block }
+
+.panel-header{ display:flex; gap:10px; align-items:center; margin-bottom:12px }
+.store-name{
+  flex:1; background:rgba(255,255,255,.06); color:var(--text);
+  border:1px solid var(--border); border-radius:10px; padding:10px 12px; font-size:1rem;
 }
-.aba.active {
-  display: block;
+.cards{ display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:12px }
+.card{
+  border:1px solid var(--border); border-radius:14px; padding:14px;
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
 }
-input {
-  margin: 5px;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-#lista-lojas div {
-  background: #fff;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 6px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.app-footer{ border-top:1px solid var(--border); padding:12px 20px; color:var(--muted); background: rgba(23,18,42,.5) }
+
+@media (max-width: 900px){
+  .app-main{ grid-template-columns: 1fr }
+  .sidebar{ order:2 }
+  .content{ order:1 }
 }
