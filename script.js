@@ -267,6 +267,52 @@ document.getElementById('kpi_99').textContent      = money(r4);
     initIfPresent();
   }
 })();
+/* === PV KPI SYNC (ADDON) === */
+/* Atualiza os quadrinhos de resumo com base nos resultados do cálculo */
+
+function atualizarKPIs(resultados) {
+  // resultados: objeto retornado por calcular(), com as chaves esperadas
+  const kpiMap = {
+    kpi_cmv: resultados.cmv,
+    kpi_dna: resultados.dna,
+    kpi_lucro: resultados.lucro,
+    kpi_pvloja: resultados.pvLoja,
+    kpi_ifood: resultados.pvIFood,
+    kpi_ifoodci: resultados.pvIFoodCI,
+    kpi_99: resultados.pv99,
+  };
+
+  for (const [id, valor] of Object.entries(kpiMap)) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+
+    if (typeof valor === "number") {
+      if (id === "kpi_dna" || id === "kpi_lucro") {
+        el.textContent = valor.toFixed(2) + "%";
+      } else {
+        el.textContent = "R$ " + valor.toFixed(2).replace(".", ",");
+      }
+    } else {
+      el.textContent = "--";
+    }
+  }
+}
+
+/* Exemplo de uso: dentro da função calcular() existente,
+   após obter r1..r4 (resultados finais), adicione esta linha:
+
+   atualizarKPIs({
+     cmv: cmv,
+     dna: dnaPct * 100,
+     lucro: lucroPct * 100,
+     pvLoja: pvLoja,
+     pvIFood: pvIFood,
+     pvIFoodCI: pvIFoodCI,
+     pv99: pv99
+   });
+
+   (isso deve ficar logo antes de montar a tabela no PV MODULE)
+*/
  /* ================= PV MODULE (END) ================= */
 /* =============== FATURAMENTO MODULE (START) =============== */
 (function FaturamentoModule(){
