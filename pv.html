@@ -1,493 +1,328 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Precificação Carreiro — PV (espelho da planilha)</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PV — Preço de Venda (Carreiro)</title>
 <style>
-  :root{
-    --bg:#0d0f14; --card:#141826; --line:#232840; --muted:#94a0bf;
-    --text:#eaf0ff; --acc:#7c5cff; --ok:#2ecc71; --warn:#f1c40f; --danger:#ff6b81;
-  }
-  html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
-  .wrap{max-width:1200px;margin:24px auto;padding:0 16px}
-  h1{font-size:22px;margin:0 0 6px} h2{font-size:18px;margin:20px 0 8px;color:#d7def4}
-  .muted{color:var(--muted)}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0}
-  .row{display:flex;gap:12px;flex-wrap:wrap} .col{flex:1 1 260px;min-width:260px}
-  label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
-  input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:#0e1220;color:var(--text)}
-  textarea{min-height:110px;font-family:ui-monospace,Menlo,monospace}
-  .btn{background:var(--acc);border:0;color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer}
-  .btn.ghost{background:transparent;border:1px solid var(--line)}
-  .btn.alt{background:#2a2f47}
-  .btn.ok{background:var(--ok)} .btn.warn{background:var(--warn);color:#111} .btn.danger{background:var(--danger)}
-  table{width:100%;border-collapse:collapse} th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right}
-  th:first-child,td:first-child{text-align:left}
-  .mono{font-family:ui-monospace,Menlo,monospace}
-  .pill{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:#1a1f34;color:#cbd6ff;font-size:12px}
-  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-  @media (max-width:800px){ .grid{grid-template-columns:1fr} }
+  :root{--bg:#0f1220;--card:#171a2b;--mut:#98a2b3;--txt:#e6e7ee;--pri:#7c5cff;--ok:#22c55e;--warn:#f59e0b;--err:#ef4444;--line:#23263a}
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,Segoe UI,Roboto,Arial}
+  header{display:flex;gap:10px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}
+  header h1{margin:0;font-weight:900;font-size:18px}
+  .sp{flex:1}
+  .btn{background:var(--pri);color:#fff;border:0;border-radius:10px;padding:9px 12px;font-weight:700;cursor:pointer;text-decoration:none}
+  .btn.ghost{background:#243055}
+  main{max-width:1150px;margin:18px auto;padding:0 14px 110px}
+  .grid{display:grid;gap:14px}
+  .g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+  label{display:block;font-size:12px;color:var(--mut);margin-bottom:6px}
+  input,select,textarea{width:100%;background:#0e1120;color:var(--txt);border:1px solid #2a2e45;border-radius:10px;padding:9px 10px;outline:none}
+  input[readonly]{opacity:.85}
+  .title{font-weight:800;letter-spacing:.06em;font-size:12px;color:#c7c9d9;text-transform:uppercase;margin-bottom:6px}
+  .mini{font-size:12px;color:var(--mut)}
+  table{width:100%;border-collapse:collapse} th,td{padding:8px;border-bottom:1px solid #252941;font-size:14px}
+  th{text-align:left;color:#cbd5e1} .right{text-align:right}
+  .footer{position:fixed;left:0;right:0;bottom:0;background:rgba(15,18,32,.9);backdrop-filter:blur(6px);border-top:1px solid var(--line);padding:10px 14px;display:flex;gap:10px;align-items:center}
+  .pill{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid var(--line);background:#0f142a;color:#cbd5e1;font-size:12px}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>PV — Espelho da Planilha</h1>
-  <div class="muted">DNA% por mês (CF% do mês + cartões + voucher + impostos + royalties + marketing) → PV Loja; canais com gross-up (taxa %) e Entrega/Campanha (R$).</div>
+<header>
+  <h1>💰 PV — Preço de Venda</h1>
+  <span class="pill">Espelha sua planilha • iFood / iFood CI / 99Food</span>
+  <div class="sp"></div>
+  ./index.html← Voltar</a>
+</header>
 
-  <!-- CONTEXTO / SELETORES -->
-  <div class="card">
-    <div class="row">
-      <div class="col">
-        <label>Loja</label>
-        <select id="lojaSelect"></select>
-      </div>
-      <div class="col">
-        <label>Mês/Ano</label>
-        <div class="row" style="gap:8px">
-          <select id="mesSelect"></select>
-          <select id="anoSelect"></select>
+<main>
+  <div class="grid g3">
+    <!-- CONTEXTO -->
+    <div class="card">
+      <div class="title">Contexto</div>
+      <label>Loja</label>
+      <select id="loja"></select>
+
+      <label style="margin-top:10px">Ficha Técnica</label>
+      <select id="ficha"></select>
+
+      <div class="grid g2" style="margin-top:10px">
+        <div>
+          <label>Mês/Ano</label>
+          <input type="month" id="mesano"/>
         </div>
-        <div class="muted" id="cfHint" style="margin-top:6px"></div>
+        <div>
+          <label>CMV + Embalagem (R$) <span class="mini">(auto da Ficha)</span></label>
+          <input id="cmv" type="number" step="0.0001" min="0" readonly/>
+        </div>
       </div>
-      <div class="col">
-        <label>Ficha Técnica (CMV + Embalagem)</label>
-        <select id="fichaSelect"></select>
-        <div class="muted" id="fichaInfo" style="margin-top:6px"></div>
+    </div>
+
+    <!-- DNA PERCENTUAL -->
+    <div class="card">
+      <div class="title">DNA por Percentual (igual à planilha)</div>
+      <div class="grid g2">
+        <div>
+          <label>Faturamento do mês (R$)</label>
+          <input id="fatMes" type="number" step="0.01" min="0"/>
+        </div>
+        <div>
+          <label>Total Custo Fixo do mês (R$)</label>
+          <input id="cfMes" type="number" step="0.01" min="0"/>
+        </div>
       </div>
-      <div class="col">
-        <label>Lucro estimado (margem alvo, % do PV)</label>
-        <input id="lucroAlvo" type="number" step="0.01" value="20">
+      <div class="grid g3" style="margin-top:8px">
+        <div>
+          <label>Custo Fixo (%) <span class="mini">(auto)</span></label>
+          <input id="cfPct" type="number" step="0.0001" min="0" readonly/>
+        </div>
+        <div>
+          <label>Média Cartões (%)</label>
+          <input id="cartoesPct" type="number" step="0.01" min="0" value="3.64"/>
+        </div>
+        <div>
+          <label>Voucher (%)</label>
+          <input id="voucherPct" type="number" step="0.01" min="0" value="7.99"/>
+        </div>
+      </div>
+      <div class="grid g3" style="margin-top:8px">
+        <div>
+          <label>Imposto (%)</label>
+          <input id="impostoPct" type="number" step="0.01" min="0" value="0"/>
+        </div>
+        <div>
+          <label>Royalties (%)</label>
+          <input id="royaltyPct" type="number" step="0.01" min="0" value="0"/>
+        </div>
+        <div>
+          <label>Marketing (%)</label>
+          <input id="mktPct" type="number" step="0.01" min="0" value="0"/>
+        </div>
+      </div>
+      <div class="grid g2" style="margin-top:8px">
+        <div>
+          <label>DNA Total (%) <span class="mini">(auto)</span></label>
+          <input id="dnaPct" type="number" step="0.0001" min="0" readonly/>
+        </div>
+        <div>
+          <label>Lucro alvo (%)</label>
+          <input id="lucroPct" type="number" step="0.01" min="0" value="20"/>
+        </div>
+      </div>
+
+      <details style="margin-top:8px">
+        <summary class="mini">Comparativo: Rateio por porção</summary>
+        <div class="grid g3" style="margin-top:8px">
+          <div><label>Porções no mês</label><input id="porcoesMes" type="number" min="0" step="1"/></div>
+          <div><label>DNA Total (R$/mês)</label><input id="dnaReaisMes" type="number" min="0" step="0.01"/></div>
+          <div><label>DNA por porção (R$)</label><input id="dnaPorcao" type="number" min="0" step="0.01" readonly/></div>
+        </div>
+      </details>
+    </div>
+
+    <!-- CANAIS -->
+    <div class="card">
+      <div class="title">Canais & Preferências (tudo editável)</div>
+      <div class="grid g3">
+        <div>
+          <label>iFood (%)</label>
+          <input id="ifoodPct" type="number" step="0.01" min="0" value="17"/>
+        </div>
+        <div>
+          <label>Entrega iFood (R$)</label>
+          <input id="entregaIFR" type="number" step="0.01" min="0" value="9"/>
+        </div>
+        <div>
+          <label>CI (R$) — Invest. da Loja</label>
+          <input id="ciIFR" type="number" step="0.01" value="5"/>
+        </div>
+      </div>
+      <div class="grid g3" style="margin-top:8px">
+        <div>
+          <label>99Food (%)</label>
+          <input id="nfoodPct" type="number" step="0.01" min="0" value="12.1"/>
+        </div>
+        <div>
+          <label>Entrega 99Food (R$)</label>
+          <input id="entrega99R" type="number" step="0.01" min="0" value="0"/>
+        </div>
+        <div>
+          <label>Arredondamento</label>
+          <select id="roundRule">
+            <option value="none">Sem arredondamento</option>
+            <option value="99">Terminar em ,99</option>
+            <option value="90">Terminar em ,90</option>
+            <option value="0.50">Múltiplos de 0,50</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn" id="btnCalc">Calcular</button>
+        <button class="btn ghost" id="btnPuxarMes">Puxar CF/Faturamento do mês</button>
+        <button class="btn ghost" id="btnSalvarPrefs">Salvar como padrão da loja</button>
+      </div>
+      <div class="mini" style="margin-top:6px">
+        Dica: você pode colocar valores negativos em CI (R$) se, no futuro, quiser simular desconto/subsídio direto no PV.
       </div>
     </div>
   </div>
 
-  <!-- DNA (conforme sua aba 3.DNA_Empresa) -->
-  <div class="card">
-    <h2>DNA da Empresa (porcentagens que incidem sobre o PV)</h2>
-    <div class="grid">
-      <div><label>Taxa Cartões — Média Débito/Crédito (%)</label><input id="dnaCartoes" type="number" step="0.01" value="3.64"></div>
-      <div><label>Voucher/Cashback (%)</label><input id="dnaVoucher" type="number" step="0.01" value="7.99"></div>
-      <div><label>Imposto (%)</label><input id="dnaImposto" type="number" step="0.01" value="0"></div>
-      <div><label>Royalties (%)</label><input id="dnaRoyalties" type="number" step="0.01" value="0"></div>
-      <div><label>Marketing (%)</label><input id="dnaMarketing" type="number" step="0.01" value="0"></div>
-      <div>
-        <label>Cálculo do Custo Fixo (%)</label>
-        <select id="cfBase">
-          <option value="mes">Custo Fixo do mês / Faturamento do mês</option>
-          <option value="media">Média (se disponível/importada)</option>
-        </select>
-      </div>
-    </div>
-    <div class="muted" style="margin-top:8px" id="dnaResumo"></div>
-  </div>
-
-  <!-- Canais -->
-  <div class="card">
-    <h2>Parâmetros por Canal</h2>
-    <div class="row">
-      <div class="col">
-        <h3 class="muted">Loja</h3>
-        <div class="muted">PV Loja = CMV/(1 - (DNA% + Lucro%))</div>
-      </div>
-      <div class="col">
-        <h3 class="muted">iFood</h3>
-        <label>Taxa iFood (%)</label><input id="ifoodTaxa" type="number" step="0.01" value="17">
-        <label>Entrega (R$)</label><input id="ifoodEntrega" type="number" step="0.01" value="9">
-        <label>Campanha/Cupom (R$)</label><input id="ifoodCampanha" type="number" step="0.01" value="0">
-      </div>
-      <div class="col">
-        <h3 class="muted">99Food</h3>
-        <label>Taxa 99Food (%)</label><input id="n99Taxa" type="number" step="0.01" value="15">
-        <label>Entrega (R$)</label><input id="n99Entrega" type="number" step="0.01" value="0">
-        <label>Campanha/Cupom (R$)</label><input id="n99Campanha" type="number" step="0.01" value="0">
-      </div>
-      <div class="col">
-        <h3 class="muted">Arredondamento</h3>
-        <label>Regra</label>
-        <select id="roundRule">
-          <option value="end_99">Terminar em ,99</option>
-          <option value="end_90">Terminar em ,90</option>
-          <option value="step_0_50">Degrau R$ 0,50</option>
-          <option value="none">Sem arredondamento</option>
-        </select>
-        <label>Direção</label>
-        <select id="roundDir">
-          <option value="up">Para cima</option>
-          <option value="nearest">Mais próximo</option>
-          <option value="down">Para baixo</option>
-        </select>
-      </div>
-    </div>
-    <div class="row" style="margin-top:8px">
-      <button class="btn" id="btnCalcular">Calcular</button>
-      <button class="btn ghost" id="btnSalvar">Salvar como padrão da loja</button>
-      <span id="status" class="pill"></span>
-    </div>
-  </div>
-
-  <!-- Resultado -->
-  <div class="card">
-    <h2>Resultado & Breakdown</h2>
+  <!-- RESULTADOS -->
+  <div class="card" style="margin-top:14px">
+    <div class="title">Resultados</div>
     <table>
-      <thead><tr><th>Campo</th><th class="mono">Valor</th></tr></thead>
-      <tbody id="tb"></tbody>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th class="right">CMV (R$)</th>
+          <th class="right">DNA% + Lucro%</th>
+          <th class="right">PV Loja</th>
+          <th class="right">PV iFood</th>
+          <th class="right">PV iFood (CI)</th>
+          <th class="right">PV 99Food</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
     </table>
-  </div>
-
-  <!-- Importadores rápidos (CSV/Colar) -->
-  <div class="card">
-    <h2>Importar dados (CSV/colagem)</h2>
-    <div class="row">
-      <div class="col">
-        <label>Despesas Fixas do mês (colunas: ano,mes,loja,totalFixosMes)</label>
-        <textarea id="csvFixos" placeholder="ano,mes,loja,totalFixosMes&#10;2025,9,Espaço Carreiro Lanches,4951.12"></textarea>
-        <button class="btn warn" id="btnImpFixos">Importar Fixos</button>
-      </div>
-      <div class="col">
-        <label>Faturamento do mês (colunas: ano,mes,loja,receitaBruta)</label>
-        <textarea id="csvFat" placeholder="ano,mes,loja,receitaBruta&#10;2025,9,Espaço Carreiro Lanches,18037.58"></textarea>
-        <button class="btn warn" id="btnImpFat">Importar Faturamento</button>
-      </div>
-      <div class="col">
-        <label>Fichas (colunas: id,nome,custoTotal)</label>
-        <textarea id="csvFichas" placeholder="id,nome,custoTotal&#10;carreirinho,CARREIRINHO,4.22265825"></textarea>
-        <button class="btn warn" id="btnImpFichas">Importar Fichas</button>
-      </div>
-    </div>
-    <div class="muted" style="margin-top:8px">
-      Integração direta com seu app: <span class="mono">window.injectData({ lojas:[...], fichas:[...] })</span>
+    <div class="mini" style="margin-top:6px">
+      Fórmulas: PV Loja = CMV / (1 − DNA% − Lucro%). PV iFood = (PV Loja + Entrega) / (1 − iFood%). PV iFood (CI) = (PV Loja + Entrega + CI) / (1 − iFood%). PV 99Food = (PV Loja + Entrega 99) / (1 − 99Food%).
     </div>
   </div>
 
-  <div class="muted" style="margin:16px 0">
-    Obs.: DNA% segue sua planilha (CF% do mês + cartões + voucher + impostos + royalties + marketing). Canais aplicam gross-up da taxa (%)
-    e “brutalização” da entrega/campanha no numerador, idêntico ao modelo. 
-  </div>
+  <!-- IMPORTADORES -->
+  <details class="card" style="margin-top:14px">
+    <summary><b>Importar Custo Fixo & Faturamento por colagem (CSV)</b></summary>
+    <div class="grid g2" style="margin-top:8px">
+      <div>
+        <label>CF do mês — formato: <code>ano,mes,totalCF</code></label>
+        <textarea id="csvCF" rows="6" placeholder="2025,09,4951.12"></textarea>
+        <button class="btn ghost" id="btnImpCF" style="margin-top:8px;">Importar CF</button>
+      </div>
+      <div>
+        <label>Faturamento do mês — formato: <code>ano,mes,faturamento</code></label>
+        <textarea id="csvFat" rows="6" placeholder="2025,09,18037.58"></textarea>
+        <button class="btn ghost" id="btnImpFat" style="margin-top:8px;">Importar Faturamento</button>
+      </div>
+    </div>
+  </details>
+</main>
+
+<div class="footer">
+  <span class="mini">Estado salvo no <code>localStorage</code>. Este arquivo não altera seu <code>index.html</code>.</span>
+  <div class="sp"></div>
+  <span id="status" class="mini"></span>
 </div>
 
 <script>
-/* ===========================
-   Estado inicial
-   =========================== */
-const LS_KEY = 'pv_state_v48';
+/* ======== Estado & util ======== */
+const STORAGE_KEYS = { state:['precificacaoState','carreiroState','pricingState'], ctx:'pv_context' };
+const $ = s => document.querySelector(s);
+const money = v => isFinite(v)? v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}) : '—';
+const pctfmt = v => isFinite(v)? (v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'%' : '—';
+const setStatus = t => { $('#status').textContent=t||''; setTimeout(()=>$('#status').textContent='',3000); };
 
-const defaultState = {
-  lojas: [
-    {
-      id:'loja1', nome:'Espaço Carreiro Lanches',
-      fixos: [ /* {ano,mes,totalFixosMes} */ ],
-      faturamento: [ /* {ano,mes,receitaBruta} */ ],
-      dnaPadrao: {
-        cartoesPercent: 3.64, voucherPercent: 7.99, impostoPercent: 0, royaltiesPercent: 0, marketingPercent: 0,
-        cfBase: 'mes' // 'mes' ou 'media'
-      },
-      canaisPadrao: {
-        ifood: { taxaPercent:17, entrega:9, campanha:0 },
-        n99:   { taxaPercent:15, entrega:0, campanha:0 }
-      },
-      lucroPadraoPercent: 20
+function loadState(){
+  for(const k of STORAGE_KEYS.state){
+    const raw = localStorage.getItem(k);
+    if(raw){ try{ const obj=JSON.parse(raw); obj.__key=k; return obj; }catch(e){} }
+  }
+  return null;
+}
+function saveState(s){ const k=s?.__key||STORAGE_KEYS.state[0]; const c={...s}; delete c.__key; localStorage.setItem(k, JSON.stringify(c)); }
+function loadCtx(){ try{return JSON.parse(localStorage.getItem(STORAGE_KEYS.ctx)||'{}')}catch(e){return{}} }
+function saveCtx(o){ localStorage.setItem(STORAGE_KEYS.ctx, JSON.stringify(o||{})); }
+function parseMonth(){ if(!$('#mesano').value) return null; const [y,m] = $('#mesano').value.split('-').map(n=>parseInt(n,10)); return {ano:y,mes:m}; }
+function parseCSV(t){ return t.trim().split(/\r?\n/).map(l=>l.split(',').map(s=>s.trim())); }
+
+let app = loadState();
+if(!app){
+  // fallback mínimo (apenas para teste rápido)
+  app = { lojas:[{ id:'lojax', nome:'Loja Demo',
+    fichas:[{id:'carreirinho',nome:'CARREIRINHO',custoTotal:4.222658250449939}],
+    dna:[{ano:2025,mes:9,totalFixosMes:4951.12}],
+    faturamento:[{ano:2025,mes:9,faturamento:18037.58}],
+    variaveis:{ prefs:{margemAlvoPercent:20,regraArred:'none'}, taxaMarketplacePercent:17, entregaReais:9 }
+  }]};
+  app.__key = STORAGE_KEYS.state[0]; saveState(app);
+}
+
+function getLoja(){ const id=$('#loja').value; return (app.lojas||[]).find(l=>l.id===id) || app.lojas?.[0]; }
+
+/* ======== UI init ======== */
+function initLojaSelect(){
+  const sel=$('#loja'); sel.innerHTML='';
+  (app.lojas||[]).forEach(l=>{ const o=document.createElement('option'); o.value=l.id; o.textContent=l.nome||l.id; sel.appendChild(o); });
+  const ctx=loadCtx(); if(ctx?.lojaId && (app.lojas||[]).some(l=>l.id===ctx.lojaId)) sel.value = ctx.lojaId;
+  sel.addEventListener('change', ()=>{ saveCtx({lojaId: sel.value}); initFichas(); });
+}
+function initFichas(){
+  const loja=getLoja(); const fs=loja?.fichas||[]; const sel=$('#ficha'); sel.innerHTML='';
+  fs.forEach(f=>{ const o=document.createElement('option'); o.value=f.id; o.textContent=f.nome||f.id; sel.appendChild(o); });
+  updateCMV();
+}
+function updateCMV(){
+  const loja=getLoja(); const fId=$('#ficha').value; const ficha=(loja?.fichas||[]).find(x=>x.id===fId);
+  let custo = Number(ficha?.custoTotal ?? 0);
+  if(!ficha?.custoTotal && ficha?.itens && loja?.insumos){
+    const map = new Map((loja.insumos||[]).map(i=>[i.id,i]));
+    custo = 0;
+    for(const it of (ficha.itens||[])){
+      const ins = map.get(it.insumoId); if(!ins) continue;
+      const custoCompra=Number(ins.custoCompra||0), qtdCompra=Number(ins.qtdCompra||1), perda=(Number(ins.perdaPercent||ins.perda||0)/100);
+      const unit = qtdCompra>0 ? (custoCompra/qtdCompra)/(1-perda) : 0;
+      custo += unit * Number(it.qtd||it.quantidade||0);
     }
-  ],
-  fichas: [
-    // Exemplos / você pode importar os seus:
-    { id:'carreirinho', nome:'CARREIRINHO', custoTotal:4.22265825 },
-    { id:'duplo-carreirinho', nome:'DUPLO CARREIRINHO', custoTotal:5.11640825 }
-  ]
-};
-
-let state = loadState();
-
-/* ===========================
-   UI - seletores
-   =========================== */
-const selLoja = document.getElementById('lojaSelect');
-const selMes  = document.getElementById('mesSelect');
-const selAno  = document.getElementById('anoSelect');
-const selFicha= document.getElementById('fichaSelect');
-
-function hydrateSelectors(){
-  selLoja.innerHTML='';
-  state.lojas.forEach(l=>{
-    const o=document.createElement('option'); o.value=l.id; o.textContent=l.nome; selLoja.appendChild(o);
-  });
-  selMes.innerHTML='';
-  for(let m=1;m<=12;m++){const o=document.createElement('option');o.value=m;o.textContent=String(m).padStart(2,'0');selMes.appendChild(o);}
-  selAno.innerHTML='';
-  const y=new Date().getFullYear(); for(let a=y-2;a<=y+1;a++){const o=document.createElement('option');o.value=a;o.textContent=a;selAno.appendChild(o);}
-  selFicha.innerHTML='';
-  state.fichas.forEach(f=>{ const o=document.createElement('option'); o.value=f.id; o.textContent=`${f.nome}`; selFicha.appendChild(o); });
-
-  if(state.lojas.length) selLoja.value=state.lojas[0].id;
-  selMes.value = (new Date().getMonth()+1);
-  selAno.value = new Date().getFullYear();
-  if(state.fichas.length) selFicha.value=state.fichas[0].id;
-
-  applyDefaultsFromLoja();
-  updateHints();
-}
-hydrateSelectors();
-
-function applyDefaultsFromLoja(){
-  const l=getLoja();
-  if(!l) return;
-  document.getElementById('dnaCartoes').value = l.dnaPadrao.cartoesPercent ?? 0;
-  document.getElementById('dnaVoucher').value = l.dnaPadrao.voucherPercent ?? 0;
-  document.getElementById('dnaImposto').value = l.dnaPadrao.impostoPercent ?? 0;
-  document.getElementById('dnaRoyalties').value = l.dnaPadrao.royaltiesPercent ?? 0;
-  document.getElementById('dnaMarketing').value = l.dnaPadrao.marketingPercent ?? 0;
-  document.getElementById('cfBase').value = l.dnaPadrao.cfBase ?? 'mes';
-
-  document.getElementById('ifoodTaxa').value = l.canaisPadrao.ifood?.taxaPercent ?? 17;
-  document.getElementById('ifoodEntrega').value = l.canaisPadrao.ifood?.entrega ?? 9;
-  document.getElementById('ifoodCampanha').value = l.canaisPadrao.ifood?.campanha ?? 0;
-
-  document.getElementById('n99Taxa').value = l.canaisPadrao.n99?.taxaPercent ?? 15;
-  document.getElementById('n99Entrega').value = l.canaisPadrao.n99?.entrega ?? 0;
-  document.getElementById('n99Campanha').value = l.canaisPadrao.n99?.campanha ?? 0;
-
-  document.getElementById('lucroAlvo').value = l.lucroPadraoPercent ?? 20;
-
-  updateFichaInfo();
-}
-
-selLoja.addEventListener('change', ()=>{ applyDefaultsFromLoja(); updateHints(); });
-selMes.addEventListener('change', updateHints); selAno.addEventListener('change', updateHints);
-selFicha.addEventListener('change', updateFichaInfo);
-
-function updateHints(){
-  const l=getLoja(); if(!l) return;
-  const ano=+selAno.value, mes=+selMes.value;
-  const fixo = l.fixos.find(x=>+x.ano===ano && +x.mes===mes)?.totalFixosMes ?? 0;
-  const fat  = l.faturamento.find(x=>+x.ano===ano && +x.mes===mes)?.receitaBruta ?? 0;
-  const cfPct = fat>0 ? (fixo/fat) : 0;
-  document.getElementById('cfHint').textContent = `CF% do mês: ${(cfPct*100).toFixed(2)}%  (fixos ${fmt(fixo)} / faturamento ${fmt(fat)})`;
-  updateDnaResumo();
-}
-function updateFichaInfo(){
-  const f=getFichaAtual();
-  document.getElementById('fichaInfo').textContent = f ? `CMV+Emb: ${fmt(f.custoTotal)}` : '—';
-}
-
-/* ===========================
-   Helpers
-   =========================== */
-function loadState(){ try{ const raw=localStorage.getItem(LS_KEY); return raw? JSON.parse(raw): structuredClone(defaultState);}catch(e){ return structuredClone(defaultState);} }
-function saveState(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
-function getLoja(){ return state.lojas.find(l=> l.id===selLoja.value); }
-function getFichaAtual(){ return state.fichas.find(f=> f.id===selFicha.value); }
-function toNum(x){ const n=parseFloat(String(x).replace(',','.')); return isFinite(n)? n:0; }
-const fmt = (v)=> (isFinite(v)? v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}) : '—');
-
-function arredonda(preco, rule, dir){
-  const pennies = (x)=> Math.round(x*100)/100;
-  if(rule==='none') return pennies(preco);
-
-  if(rule==='end_99' || rule==='end_90'){
-    const end = rule==='end_99'? 0.99 : 0.90;
-    const base = Math.floor(preco);
-    let cand = base + end;
-    if(dir==='up' && cand<preco) cand = base+1+end;
-    if(dir==='down' && cand>preco) cand = Math.max(0, base-1+end);
-    if(dir==='nearest'){
-      const up = base+1+end, down=Math.max(0,base-1+end);
-      cand = (Math.abs(up-preco)<Math.abs(preco-down))? up : down;
-    }
-    return pennies(cand);
   }
-  if(rule==='step_0_50'){
-    const step=0.50;
-    const f=dir==='up'? Math.ceil : dir==='down'? Math.floor : Math.round;
-    return pennies(f(preco/step)*step);
-  }
-  return pennies(preco);
+  $('#cmv').value = (Math.round(custo*1e6)/1e6) || 0;
 }
 
-/* ===========================
-   DNA & PV (fórmulas da planilha)
-   =========================== */
-function getCFPercent(loja, ano, mes, base){
-  const arrCF = loja.fixos||[], arrFat = loja.faturamento||[];
-  if(base==='media'){
-    // média simples dos registros existentes
-    const sCF=arrCF.reduce((a,b)=>a+toNum(b.totalFixosMes||0),0);
-    const sFat=arrFat.reduce((a,b)=>a+toNum(b.receitaBruta||0),0);
-    return sFat>0? sCF/sFat : 0;
-  }else{
-    const fixo = arrCF.find(x=>+x.ano===ano && +x.mes===mes)?.totalFixosMes ?? 0;
-    const fat  = arrFat.find(x=>+x.ano===ano && +x.mes===mes)?.receitaBruta ?? 0;
-    return fat>0 ? (fixo/fat) : 0;
+/* ======== DNA % ======== */
+function puxarMes(){
+  const loja=getLoja(); const mm=parseMonth(); if(!mm) return;
+  const cf=(loja?.dna||[]).find(d=>d.ano===mm.ano&&d.mes===mm.mes);
+  const fat=(loja?.faturamento||[]).find(f=>f.ano===mm.ano&&f.mes===mm.mes);
+  if(cf) $('#cfMes').value = Number(cf.totalFixosMes ?? cf.total ?? 0);
+  if(fat) $('#fatMes').value = Number(fat.faturamento ?? fat.receitaBruta ?? 0);
+  calcCFPct(); setStatus('Valores do mês carregados.');
+}
+function calcCFPct(){ const cf=Number($('#cfMes').value||0), fat=Number($('#fatMes').value||0); $('#cfPct').value = fat>0? (cf/fat*100).toFixed(6) : ''; calcDNAPct(); }
+function calcDNAPct(){
+  const cf=Number($('#cfPct').value||0), c=Number($('#cartoesPct').value||0), v=Number($('#voucherPct').value||0), i=Number($('#impostoPct').value||0), r=Number($('#royaltyPct').value||0), m=Number($('#mktPct').value||0);
+  $('#dnaPct').value = (cf + c + v + i + r + m).toFixed(6);
+}
+function calcRateio(){ const por=Number($('#porcoesMes').value||0), dn=Number($('#dnaReaisMes').value||0); $('#dnaPorcao').value = por>0 ? (dn/por).toFixed(2) : ''; }
+
+/* ======== Arredondamento ======== */
+function ceilRule(valor, regra){
+  const cents = v=>Math.round(v*100)/100, ceilTo=(v,m)=>Math.ceil(v/m)*m;
+  if(!isFinite(valor)) return NaN;
+  switch(regra){
+    case '99':{ const i=Math.floor(valor), cand=i+0.99; return cents(cand>=valor?cand:i+1+0.99); }
+    case '90':{ const i=Math.floor(valor), cand=i+0.90; return cents(cand>=valor?cand:i+1+0.90); }
+    case '0.50': return cents(ceilTo(valor,0.50));
+    default: return cents(valor);
   }
 }
 
-function getDNApercentTotal(){
-  const loja=getLoja(); if(!loja) return 0;
-  const ano=+selAno.value, mes=+selMes.value;
-  const cfBase=document.getElementById('cfBase').value;
-  const cfPct = getCFPercent(loja, ano, mes, cfBase);
-  const cart = toNum(document.getElementById('dnaCartoes').value)/100;
-  const vouch= toNum(document.getElementById('dnaVoucher').value)/100;
-  const imp  = toNum(document.getElementById('dnaImposto').value)/100;
-  const roy  = toNum(document.getElementById('dnaRoyalties').value)/100;
-  const mkt  = toNum(document.getElementById('dnaMarketing').value)/100;
-  return { cfPct, dnaTotal: (cfPct + cart + vouch + imp + roy + mkt) };
-}
+/* ======== Cálculos PV ======== */
+function calcular(){
+  calcCFPct(); calcDNAPct();
 
-function updateDnaResumo(){
-  const {cfPct, dnaTotal} = getDNApercentTotal();
-  const s = `CF%: ${(cfPct*100).toFixed(2)}% | DNA Total: ${(dnaTotal*100).toFixed(2)}% (CF% + Cartões + Voucher + Imposto + Royalties + Marketing)`;
-  document.getElementById('dnaResumo').textContent = s;
-}
+  const cmv = Number($('#cmv').value||0);
+  const dna = Number($('#dnaPct').value||0)/100;
+  const lucro = Number($('#lucroPct').value||0)/100;
 
-function calcPV(){
-  const ficha = getFichaAtual(); if(!ficha) return notify('Selecione uma ficha válida.');
-  const cmv = toNum(ficha.custoTotal);
-  const lucroPct = toNum(document.getElementById('lucroAlvo').value)/100;
+  const ifood = Number($('#ifoodPct').value||0)/100;
+  const entIF = Number($('#entregaIFR').value||0);
+  const ciIF  = Number($('#ciIFR').value||0);
 
-  // DNA%
-  const {cfPct, dnaTotal} = getDNApercentTotal();
+  const nfood = Number($('#nfoodPct').value||0)/100;
+  const ent99 = Number($('#entrega99R').value||0);
 
-  // PV Loja (gross-up margem + DNA%)
-  const denomLoja = 1 - (dnaTotal + lucroPct);
-  const pvLoja_raw = denomLoja>0? (cmv/denomLoja) : Infinity;
+  const denom = 1 - dna - lucro;
+  const pvLoja = (cmv>0 && denom>0) ? (cmv/denom) : NaN;
 
-  // Canais
-  const ifTaxa = toNum(document.getElementById('ifoodTaxa').value)/100;
-  const ifEnt  = toNum(document.getElementById('ifoodEntrega').value);
-  const ifCamp = toNum(document.getElementById('ifoodCampanha').value);
-
-  const nTaxa = toNum(document.getElementById('n99Taxa').value)/100;
-  const nEnt  = toNum(document.getElementById('n99Entrega').value);
-  const nCamp = toNum(document.getElementById('n99Campanha').value);
-
-  // gross-up do canal (sua planilha): PV_app = (PV_loja + entrega - campanha) / (1 - taxaApp)
-  const pvIfood_raw = (pvLoja_raw + ifEnt - ifCamp) / (1 - ifTaxa);
-  const pv99_raw    = (pvLoja_raw + nEnt - nCamp) / (1 - nTaxa);
-
-  // arredondamento
-  const rule = document.getElementById('roundRule').value;
-  const dir  = document.getElementById('roundDir').value;
-  const pvLoja = arredonda(pvLoja_raw, rule, dir);
-  const pvIfood= arredonda(pvIfood_raw, rule, dir);
-  const pv99   = arredonda(pv99_raw, rule, dir);
-
-  // margens efetivas (após taxas)
-  const margemLoja = pvLoja>0 ? ((pvLoja*(1 - dnaTotal) - cmv)/pvLoja) : 0;
-  const margemIfood= pvIfood>0? ((pvIfood*(1 - (dnaTotal + ifTaxa)) - (cmv + ifEnt - ifCamp))/pvIfood) : 0;
-  const margem99   = pv99>0   ? ((pv99*(1 - (dnaTotal + nTaxa)) - (cmv + nEnt - nCamp))/pv99) : 0;
-
-  render({
-    cmv, cfPct, dnaTotal, lucroPct,
-    pvLoja_raw, pvLoja, pvIfood_raw, pvIfood, pv99_raw, pv99,
-    ifTaxa, ifEnt, ifCamp, nTaxa, nEnt, nCamp,
-    margemLoja, margemIfood, margem99
-  });
-}
-
-function render(r){
-  const tb=document.getElementById('tb'); tb.innerHTML='';
-  const add=(k,v)=>{ const tr=document.createElement('tr');const a=document.createElement('td');a.textContent=k;const b=document.createElement('td');b.className='mono';b.textContent=v;tr.append(a,b);tb.appendChild(tr); };
-
-  add('CMV + Embalagem', fmt(r.cmv));
-  add('CF% do mês', (r.cfPct*100).toFixed(2)+'%');
-  add('DNA Total (%)', (r.dnaTotal*100).toFixed(2)+'%');
-  add('Lucro alvo (%)', (r.lucroPct*100).toFixed(2)+'%');
-  add('PV Loja (antes do arred.)', fmt(r.pvLoja_raw));
-  add('PV Loja (após arred.)', fmt(r.pvLoja));
-
-  add('—','');
-
-  add('iFood — taxa', (r.ifTaxa*100).toFixed(2)+'%');
-  add('iFood — entrega (R$)', fmt(r.ifEnt));
-  add('iFood — campanha (R$)', fmt(r.ifCamp));
-  add('PV iFood (antes)', fmt(r.pvIfood_raw));
-  add('PV iFood (após arred.)', fmt(r.pvIfood));
-  add('Margem efetiva iFood', (r.margemIfood*100).toFixed(2)+'%');
-
-  add('—','');
-
-  add('99Food — taxa', (r.nTaxa*100).toFixed(2)+'%');
-  add('99Food — entrega (R$)', fmt(r.nEnt));
-  add('99Food — campanha (R$)', fmt(r.nCamp));
-  add('PV 99Food (antes)', fmt(r.pv99_raw));
-  add('PV 99Food (após arred.)', fmt(r.pv99));
-  add('Margem efetiva 99Food', (r.margem99*100).toFixed(2)+'%');
-
-  add('—','');
-
-  add('Margem efetiva Loja', (r.margemLoja*100).toFixed(2)+'%');
-}
-
-document.getElementById('btnCalcular').addEventListener('click', calcPV);
-
-document.getElementById('btnSalvar').addEventListener('click', ()=>{
-  const l=getLoja(); if(!l) return;
-  l.dnaPadrao={
-    cartoesPercent: toNum(dnaCartoes.value),
-    voucherPercent: toNum(dnaVoucher.value),
-    impostoPercent: toNum(dnaImposto.value),
-    royaltiesPercent: toNum(dnaRoyalties.value),
-    marketingPercent: toNum(dnaMarketing.value),
-    cfBase: document.getElementById('cfBase').value
-  };
-  l.canaisPadrao={
-    ifood:{ taxaPercent:toNum(ifoodTaxa.value), entrega:toNum(ifoodEntrega.value), campanha:toNum(ifoodCampanha.value) },
-    n99:{   taxaPercent:toNum(n99Taxa.value),   entrega:toNum(n99Entrega.value),   campanha:toNum(n99Campanha.value) }
-  };
-  l.lucroPadraoPercent = toNum(lucroAlvo.value);
-  saveState(); notify('Padrões salvos para esta loja.');
-});
-
-function notify(msg){ const el=document.getElementById('status'); el.textContent=msg; setTimeout(()=>el.textContent='',2000); }
-
-/* ===========================
-   Importadores CSV (fixos, faturamento, fichas)
-   =========================== */
-function parseCSVArea(areaId){
-  const raw=document.getElementById(areaId).value.trim(); if(!raw) return [];
-  const rows = raw.split(/\r?\n/).map(l=> l.split(',').map(s=>s.trim()));
-  const head = rows.shift(); const idx = Object.fromEntries(head.map((h,i)=>[h,i]));
-  return rows.map(r=>({ row:r, idx }));
-}
-
-document.getElementById('btnImpFixos').addEventListener('click', ()=>{
-  const data=parseCSVArea('csvFixos'); const loja=getLoja();
-  data.forEach(d=>{
-    const r=d.row, i=d.idx;
-    const rec={ ano:+r[i.ano]||0, mes:+r[i.mes]||0, totalFixosMes: toNum(r[i.totalFixosMes]||0) };
-    loja.fixos = (loja.fixos||[]).filter(x=> !(+x.ano===rec.ano && +x.mes===rec.mes));
-    loja.fixos.push(rec);
-  });
-  saveState(); updateHints(); notify('Fixos importados.');
-});
-document.getElementById('btnImpFat').addEventListener('click', ()=>{
-  const data=parseCSVArea('csvFat'); const loja=getLoja();
-  data.forEach(d=>{
-    const r=d.row, i=d.idx;
-    const rec={ ano:+r[i.ano]||0, mes:+r[i.mes]||0, receitaBruta: toNum(r[i.receitaBruta]||0) };
-    loja.faturamento = (loja.faturamento||[]).filter(x=> !(+x.ano===rec.ano && +x.mes===rec.mes));
-    loja.faturamento.push(rec);
-  });
-  saveState(); updateHints(); notify('Faturamento importado.');
-});
-document.getElementById('btnImpFichas').addEventListener('click', ()=>{
-  const data=parseCSVArea('csvFichas');
-  data.forEach(d=>{
-    const r=d.row, i=d.idx;
-    const rec={ id:r[i.id], nome:r[i.nome], custoTotal: toNum(r[i.custoTotal]||0) };
-    state.fichas = (state.fichas||[]).filter(x=> x.id!==rec.id); state.fichas.push(rec);
-  });
-  saveState(); hydrateSelectors(); notify('Fichas importadas.');
-});
-
-/* ===========================
-   Gancho de integração com seu app
-   =========================== */
-window.injectData = function(payload){
-  if(payload?.lojas) state.lojas = payload.lojas;
-  if(payload?.fichas) state.fichas = payload.fichas;
-  saveState(); hydrateSelectors(); notify('Dados injetados.');
-};
-</script>
-</body>
-</html>
+  const pvIFood     = isFinite(pvLoja) && (1-ifood)>0 ? ((pvLoja + entIF)      / (1 - ifood)) : NaN;
+  const pvIFood_CI  = isFinite(pvLoja) && (1-ifood)>0 ? ((pvLoja + entIF + ciIF) / (1 - ifood)) : NaN;
+  const pv99Food    = isFinite(pvLoja
