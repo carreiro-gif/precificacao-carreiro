@@ -94,3 +94,20 @@ body{
   .sidebar{ order:2 }
   .content{ order:1 }
 }
+/* ===== PV styles (addon) ===== */
+.lbl{ display:block; font-size:.85rem; color:var(--muted); margin-bottom:6px }
+input, select, textarea{
+  width:100%; background:rgba(255,255,255,.08); color:var(--text);
+  border:1px solid var(--border); border-radius:10px; padding:9px 10px; outline:none;
+}
+input[readonly]{ opacity:.85 }
+.grid{ display:grid; gap:12px }
+.g2{ grid-template-columns: repeat(2, minmax(0,1fr)) }
+.g3{ grid-template-columns: repeat(3, minmax(0,1fr)) }
+@media (max-width: 780px){ .g2,.g3{ grid-template-columns: 1fr } }
+.table-wrap{ overflow:auto }
+.pv-table{ width:100%; border-collapse:collapse; }
+.pv-table th, .pv-table td{ padding:8px 10px; border-bottom:1px solid var(--border); font-size:.95rem }
+.pv-table th{ text-align:left; color:var(--muted) }
+.right{ text-align:right }
+.muted{ color:var(--muted); font-size:.9rem }
