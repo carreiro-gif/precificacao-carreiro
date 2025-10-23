@@ -498,225 +498,155 @@
       <!-- PV: START -->
 <section class="tab-panel" id="pv">
   <!-- PV (RELAYOUT): START -->
+  <!-- PV (RELAYOUT): START -->
+<section class="tab-panel" id="pv">
   <div class="pv-layout">
-    <!-- COLUNA ESQUERDA — PARÂMETROS -->
+
+    <!-- COLUNA ESQUERDA -->
     <div class="pv-left">
+
       <!-- CONTEXTO -->
-      <div class="card pv-card">
-        <div class="pv-card-header">
-          <h3>Contexto</h3>
-        </div>
-        <div class="pv-field">
-          <label class="lbl">Loja</label>
-          <select id="pv_loja"></select>
-        </div>
-        <div class="pv-field">
-          <label class="lbl">Ficha Técnica</label>
-          <select id="pv_ficha"></select>
-        </div>
-        <div class="pv-grid-2">
-          <div class="pv-field">
-            <label class="lbl">Mês/Ano</label>
-            <input type="month" id="pv_mesano"/>
-          </div>
-          <div class="pv-field">
-            <label class="lbl">CMV + Embalagem (R$) <span class="muted">(auto da ficha)</span></label>
-            <input id="pv_cmv" type="number" step="0.0001" min="0" readonly/>
-          </div>
-        </div>
+      <div class="pv-card">
+        <h3>Contexto</h3>
+        <label>Loja:</label>
+        <input id="pv_loja" class="w-full" placeholder="Nome da loja" />
+        <label>Ficha Técnica:</label>
+        <input id="pv_ficha" class="w-full" placeholder="Nome do lanche" />
+        <label>Mês/Ano:</label>
+        <input id="pv_mesano" type="month" class="w-full" />
+        <label>CMV:</label>
+        <input id="pv_cmv" type="number" step="0.0001" class="w-full" placeholder="Custo do lanche (R$)" />
       </div>
 
       <!-- DNA -->
-      <details class="card pv-card" open>
-        <summary class="pv-card-header">
-          <h3>DNA por Percentual</h3>
-          <span class="pv-help">Igual à planilha: CF% + Cartões% + Voucher% + Imposto% + Royalties% + Marketing%</span>
-        </summary>
-        <div class="pv-body">
-          <div class="pv-grid-2">
-            <div class="pv-field">
-              <label class="lbl">Faturamento do mês (R$)</label>
-              <input id="pv_fatMes" type="number" step="0.01" min="0"/>
-            </div>
-            <div class="pv-field">
-              <label class="lbl">Total Custo Fixo do mês (R$)</label>
-              <input id="pv_cfMes" type="number" step="0.01" min="0"/>
-            </div>
-          </div>
-          <div class="pv-grid-3">
-            <div class="pv-field">
-              <label class="lbl">Custo Fixo (%) <span class="muted">(auto)</span></label>
-              <input id="pv_cfPct" type="number" step="0.0001" min="0" readonly/>
-            </div>
-            <div class="pv-field">
-              <label class="lbl">Média Cartões (%)</label>
-              <input id="pv_cartoesPct" type="number" step="0.01" min="0" value="3.64"/>
-            </div>
-            <div class="pv-field">
-              <label class="lbl">Voucher (%)</label>
-              <input id="pv_voucherPct" type="number" step="0.01" min="0" value="7.99"/>
-            </div>
-          </div>
-          <div class="pv-grid-3">
-            <div class="pv-field">
-              <label class="lbl">Imposto (%)</label>
-              <input id="pv_impostoPct" type="number" step="0.01" min="0" value="0"/>
-            </div>
-            <div class="pv-field">
-              <label class="lbl">Royalties (%)</label>
-              <input id="pv_royaltyPct" type="number" step="0.01" min="0" value="0"/>
-            </div>
-            <div class="pv-field">
-              <label class="lbl">Marketing (%)</label>
-              <input id="pv_mktPct" type="number" step="0.01" min="0" value="0"/>
-            </div>
-          </div>
-          <div class="pv-grid-2">
-            <div class="pv-field">
-              <label class="lbl">DNA Total (%) <span class="muted">(auto)</span></label>
-              <input id="pv_dnaPct" type="number" step="0.0001" min="0" readonly/>
-            </div>
-            <div class="pv-field">
-              <label class="lbl">Lucro alvo (%)</label>
-              <input id="pv_lucroPct" type="number" step="0.01" min="0" value="20"/>
-            </div>
-          </div>
-
-          <details class="pv-subdetails">
-            <summary>Comparativo (opcional): Rateio por porção</summary>
-            <div class="pv-grid-3">
-              <div class="pv-field">
-                <label class="lbl">Porções no mês</label>
-                <input id="pv_porcoesMes" type="number" min="0" step="1"/>
-              </div>
-              <div class="pv-field">
-                <label class="lbl">DNA Total (R$/mês)</label>
-                <input id="pv_dnaReaisMes" type="number" min="0" step="0.01"/>
-              </div>
-              <div class="pv-field">
-                <label class="lbl">DNA por porção (R$)</label>
-                <input id="pv_dnaPorcao" type="number" min="0" step="0.01" readonly/>
-              </div>
-            </div>
-          </details>
+      <details class="pv-card" open>
+        <summary><strong>DNA do Negócio</strong></summary>
+        <div class="pv-dna">
+          <label>Faturamento Mês (R$):</label>
+          <input id="pv_fatMes" type="number" />
+          <label>Custo Fixo Mês (R$):</label>
+          <input id="pv_cfMes" type="number" />
+          <label>CF%:</label>
+          <input id="pv_cfPct" type="number" step="0.01" placeholder="Ex: 25" />
+          <label>Cartões (%):</label>
+          <input id="pv_cartoesPct" type="number" step="0.01" />
+          <label>Voucher (%):</label>
+          <input id="pv_voucherPct" type="number" step="0.01" />
+          <label>Imposto (%):</label>
+          <input id="pv_impostoPct" type="number" step="0.01" />
+          <label>Royalties (%):</label>
+          <input id="pv_royaltyPct" type="number" step="0.01" />
+          <label>Marketing (%):</label>
+          <input id="pv_mktPct" type="number" step="0.01" />
+          <label>Total DNA (%):</label>
+          <input id="pv_dnaPct" type="number" step="0.01" readonly />
+          <label>Lucro (%):</label>
+          <input id="pv_lucroPct" type="number" step="0.01" />
         </div>
       </details>
 
       <!-- CANAIS -->
-      <details class="card pv-card" open>
-        <summary class="pv-card-header">
-          <h3>Canais & Preferências</h3>
-          <span class="pv-help">Tudo editável. CI é o investimento da loja (R$) na campanha.</span>
-        </summary>
-        <div class="pv-body">
-          <div class="pv-grid-3">
-            <div class="pv-field">
-              <label class="lbl">iFood (%)</label>
-              <input id="pv_ifoodPct" type="number" step="0.01" min="0" value="17"/>
-            </div>
-            <div class="pv-field">
-              <label class="lbl">Entrega iFood (R$)</label>
-              <input id="pv_entregaIFR" type="number" step="0.01" min="0" value="9"/>
-            </div>
-            <div class="pv-field">
-              <label class="lbl">CI (R$) — Invest. da Loja</label>
-              <input id="pv_ciIFR" type="number" step="0.01" value="5"/>
-            </div>
-          </div>
-          <div class="pv-grid-3">
-            <div class="pv-field">
-              <label class="lbl">99Food (%)</label>
-              <input id="pv_nfoodPct" type="number" step="0.01" min="0" value="12.1"/>
-            </div>
-            <div class="pv-field">
-              <label class="lbl">Entrega 99Food (R$)</label>
-              <input id="pv_entrega99R" type="number" step="0.01" min="0" value="0"/>
-            </div>
-            <div class="pv-field">
-              <label class="lbl">Arredondamento</label>
-              <select id="pv_roundRule">
-                <option value="none">Sem arredondamento</option>
-                <option value="99">Terminar em ,99</option>
-                <option value="90">Terminar em ,90</option>
-                <option value="0.50">Múltiplos de 0,50</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="pv-actions">
-            <button class="btn primary" id="pv_btnCalc">Calcular</button>
-            <button class="btn" id="pv_btnPuxarMes">Puxar CF/Faturamento do mês</button>
-            <button class="btn" id="pv_btnSalvarPrefs">Salvar como padrão da loja</button>
-          </div>
+      <details class="pv-card" open>
+        <summary><strong>Canais de Venda</strong></summary>
+        <div class="pv-canais">
+          <label>iFood (%):</label>
+          <input id="pv_ifoodPct" type="number" step="0.01" />
+          <label>Entrega iFood (R$):</label>
+          <input id="pv_entregaIFR" type="number" step="0.01" />
+          <label>CI iFood (R$):</label>
+          <input id="pv_ciIFR" type="number" step="0.01" value="5" />
+          <label>99Food (%):</label>
+          <input id="pv_nfoodPct" type="number" step="0.01" value="12.1" />
+          <label>Entrega 99 (R$):</label>
+          <input id="pv_entrega99R" type="number" step="0.01" />
+          <label>Arredondamento:</label>
+          <select id="pv_roundRule">
+            <option value="none">Nenhum</option>
+            <option value=",99">Terminar em ,99</option>
+            <option value=",90">Terminar em ,90</option>
+            <option value="0.50">Múltiplos de 0,50</option>
+          </select>
         </div>
       </details>
 
-      <!-- IMPORTADORES -->
-      <details class="card pv-card">
-        <summary class="pv-card-header">
-          <h3>Importar CF & Faturamento (CSV)</h3>
-          <span class="pv-help">Formatos: <code>ano,mes,totalCF</code> e <code>ano,mes,faturamento</code></span>
-        </summary>
-        <div class="pv-body">
-          <div class="pv-grid-2">
-            <div class="pv-field">
-              <label class="lbl">CF do mês</label>
-              <textarea id="pv_csvCF" rows="4" placeholder="2025,09,4951.12"></textarea>
-              <button class="btn" id="pv_btnImpCF" style="margin-top:6px">Importar CF</button>
-            </div>
-            <div class="pv-field">
-              <label class="lbl">Faturamento do mês</label>
-              <textarea id="pv_csvFat" rows="4" placeholder="2025,09,18037.58"></textarea>
-              <button class="btn" id="pv_btnImpFat" style="margin-top:6px">Importar Faturamento</button>
-            </div>
-          </div>
-        </div>
-      </details>
+      <!-- AÇÕES -->
+      <div class="pv-card">
+        <h3>Ações</h3>
+        <button id="pv_btnCalc" class="pv-btn w-full">Calcular PV</button>
+        <button id="pv_btnPuxarMes" class="pv-btn w-full mt-2">Puxar Mês</button>
+        <button id="pv_btnSalvarPrefs" class="pv-btn w-full mt-2">Salvar Preferências</button>
+        <button id="pv_btnImpCF" class="pv-btn w-full mt-2">Importar CF</button>
+        <button id="pv_btnImpFat" class="pv-btn w-full mt-2">Importar Faturamento</button>
+      </div>
+
     </div>
 
-    <!-- COLUNA DIREITA — RESUMO & RESULTADOS -->
+    <!-- COLUNA DIREITA -->
     <div class="pv-right">
-      <div class="card pv-card pv-sticky">
-        <div class="pv-card-header">
-          <h3>Resumo</h3>
-          <span class="pv-help">Espelho da planilha</span>
-        </div>
-        <!-- KPIs -->
-        <div class="pv-kpis">
-          <div class="kpi"><div class="kpi-label">CMV</div><div class="kpi-value" id="kpi_cmv">—</div></div>
-          <div class="kpi"><div class="kpi-label">DNA%</div><div class="kpi-value" id="kpi_dna">—</div></div>
-          <div class="kpi"><div class="kpi-label">Lucro%</div><div class="kpi-value" id="kpi_lucro">—</div></div>
-          <div class="kpi"><div class="kpi-label">PV Loja</div><div class="kpi-value" id="kpi_pvloja">—</div></div>
-          <div class="kpi"><div class="kpi-label">iFood</div><div class="kpi-value" id="kpi_ifood">—</div></div>
-          <div class="kpi"><div class="kpi-label">iFood (CI)</div><div class="kpi-value" id="kpi_ifoodci">—</div></div>
-          <div class="kpi"><div class="kpi-label">99Food</div><div class="kpi-value" id="kpi_99">—</div></div>
-        </div>
 
-        <!-- TABELA -->
-        <div class="table-wrap" style="margin-top:10px">
-          <table class="pv-table">
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th class="right">CMV (R$)</th>
-                <th class="right">DNA% + Lucro%</th>
-                <th class="right">PV Loja</th>
-                <th class="right">PV iFood</th>
-                <th class="right">PV iFood (CI)</th>
-                <th class="right">PV 99Food</th>
-              </tr>
-            </thead>
-            <tbody id="pv_tbody"></tbody>
-          </table>
-          <div class="muted" style="margin-top:6px">
-            PV Loja = CMV / (1−DNA%−Lucro%). iFood = (PV Loja + Entrega) / (1−iFood%). iFood (CI) = (PV Loja + Entrega + CI)/(1−iFood%). 99Food = (PV Loja + Entrega99)/(1−99%).
+      <!-- KPIs -->
+      <div class="pv-card">
+        <h3>Resumo</h3>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-3">
+          <div class="pv-kpi">
+            <div class="pv-kpi-label">CMV</div>
+            <div id="kpi_cmv" class="pv-kpi-value">--</div>
+          </div>
+          <div class="pv-kpi">
+            <div class="pv-kpi-label">DNA</div>
+            <div id="kpi_dna" class="pv-kpi-value">--</div>
+          </div>
+          <div class="pv-kpi">
+            <div class="pv-kpi-label">Lucro</div>
+            <div id="kpi_lucro" class="pv-kpi-value">--</div>
+          </div>
+          <div class="pv-kpi">
+            <div class="pv-kpi-label">PV Loja</div>
+            <div id="kpi_pvloja" class="pv-kpi-value">--</div>
+          </div>
+          <div class="pv-kpi">
+            <div class="pv-kpi-label">PV iFood</div>
+            <div id="kpi_ifood" class="pv-kpi-value">--</div>
+          </div>
+          <div class="pv-kpi">
+            <div class="pv-kpi-label">PV iFood (CI)</div>
+            <div id="kpi_ifoodci" class="pv-kpi-value">--</div>
+          </div>
+          <div class="pv-kpi">
+            <div class="pv-kpi-label">PV 99Food</div>
+            <div id="kpi_99" class="pv-kpi-value">--</div>
           </div>
         </div>
-        <div class="muted" id="pv_status" style="margin-top:8px"></div>
       </div>
+
+      <!-- TABELA RESULTADOS -->
+      <div class="pv-card mt-4">
+        <h3>Tabela de Resultados</h3>
+        <table class="pv-table">
+          <thead>
+            <tr>
+              <th>Lanche</th>
+              <th>CMV</th>
+              <th>DNA%</th>
+              <th>Lucro%</th>
+              <th>PV Loja</th>
+              <th>iFood</th>
+              <th>iFood CI</th>
+              <th>99Food</th>
+            </tr>
+          </thead>
+          <tbody id="pv_tbody">
+            <tr><td colspan="8" class="pv-muted text-center">Nenhum cálculo ainda.</td></tr>
+          </tbody>
+        </table>
+        <div id="pv_status" class="pv-muted mt-2"></div>
+      </div>
+
     </div>
   </div>
+</section>
 <!-- PV (RELAYOUT): END -->
+
 </section>
 <!-- PV: END -->
 
