@@ -268,3 +268,223 @@ document.getElementById('kpi_99').textContent      = money(r4);
   }
 })();
  /* ================= PV MODULE (END) ================= */
+/* =============== FATURAMENTO MODULE (START) =============== */
+(function FaturamentoModule(){
+  const KEYS = { state: ['precificacaoState','carreiroState','pricingState'], ctx:'pv_context' };
+  const $ = s => document.querySelector(s);
+  const money = v => isFinite(v)? v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}) : '—';
+  const setText = (id, val) => { const el=document.getElementById(id); if(el) el.textContent = val; };
+
+  // ---- Estado (independente do PV) ----
+  function loadState(){
+    for(const k of KEYS.state){
+      const raw = localStorage.getItem(k);
+      if(raw){ try{ const o=JSON.parse(raw); o.__key=k; return o; }catch(e){} }
+    }
+    // fallback: maior JSON do localStorage
+    let best=null, bestK=null;
+    for(const k of Object.keys(localStorage)){
+      const raw=localStorage.getItem(k)||'';
+      if(raw.startsWith('{') && raw.length>(best?.length||0)){ best=raw; bestK=k; }
+    }
+    if(best){ try{ const o=JSON.parse(best); o.__key=bestK; return o; }catch(e){} }
+    return { lojas:[], __key: KEYS.state[0] };
+  }
+  function saveState(app){ const k=app?.__key||KEYS.state[0]; const c={...app}; delete c.__key; localStorage.setItem(k, JSON.stringify(c)); }
+  function getLoja(app){
+    const sel=$('#fat_loja'); const id=sel?.value;
+    return (app.lojas||[]).find(l=>l.id===id) || (app.lojas||[])[0];
+  }
+  const ymKey = (a,m)=> a*12 + (m-1);
+  function parseMonth(inp){ if(!inp?.value) return null; const [y,m]=inp.value.split('-').map(n=>parseInt(n,10)); return {ano:y,mes:m}; }
+  function toMonthStr(a,m){ return String(a).padStart(4,'0')+'-'+String(m).padStart(2,'0'); }
+
+  let app = loadState();
+
+  // ---- UI init ----
+  function initLojaSelect(){
+    const sel=$('#fat_loja'); if(!sel) return;
+    sel.innerHTML='';
+    (app.lojas||[]).forEach(l=>{ const o=document.createElement('option'); o.value=l.id; o.textContent=l.nome||l.id; sel.appendChild(o); });
+    // tenta manter mesma loja do PV
+    try{
+      const ctx=JSON.parse(localStorage.getItem(KEYS.ctx)||'{}');
+      if(ctx?.lojaId && (app.lojas||[]).some(l=>l.id===ctx.lojaId)) sel.value = ctx.lojaId;
+    }catch(e){}
+    sel.addEventListener('change', ()=>{ renderTudo(); });
+  }
+
+  // ---- CRUD ----
+  function listFat(loja){
+    const arr = (loja?.faturamento || []).map(x=>({ano:Number(x.ano),mes:Number(x.mes),faturamento:Number(x.faturamento)}));
+    // ordenar (mais recente primeiro)
+    arr.sort((a,b)=> ymKey(b.ano,b.mes)-ymKey(a.ano,a.mes));
+    return arr;
+  }
+  function upsertFat(loja, ano, mes, valor){
+    loja.faturamento = loja.faturamento || [];
+    const i = loja.faturamento.findIndex(x=>Number(x.ano)===ano && Number(x.mes)===mes);
+    const obj={ano,mes,faturamento:valor};
+    if(i>=0) loja.faturamento[i]=obj; else loja.faturamento.push(obj);
+    saveState(app);
+  }
+  function deleteFat(loja, ano, mes){
+    if(!loja?.faturamento) return;
+    const i = loja.faturamento.findIndex(x=>Number(x.ano)===ano && Number(x.mes)===mes);
+    if(i>=0){ loja.faturamento.splice(i,1); saveState(app); }
+  }
+
+  // ---- KPIs 12 meses ----
+  function calc12(loja){
+    const arr = listFat(loja);
+    if(arr.length===0) return { soma:0, media:0, mesSel:0 };
+    // pega os 12 mais recentes
+    const ult12 = arr.slice(0,12);
+    const soma = ult12.reduce((s,x)=> s + Number(x.faturamento||0), 0);
+    const media = soma / ult12.length;
+    return { soma, media };
+  }
+
+  // ---- Renderizações ----
+  function renderKPIs(loja){
+    const { soma, media } = calc12(loja);
+    setText('fat_kpi_bruto12', money(soma));
+    setText('fat_kpi_media12', money(media));
+
+    // mês selecionado (contexto)
+    const mm = parseMonth($('#fat_mesano'));
+    let val = 0;
+    if(mm && loja?.faturamento){
+      const f = loja.faturamento.find(x=>Number(x.ano)===mm.ano && Number(x.mes)===mm.mes);
+      val = Number(f?.faturamento || 0);
+    }
+    setText('fat_kpi_mesSel', money(val));
+    const inpMesVal=$('#fat_valorMes'); if(inpMesVal) inpMesVal.value = val || '';
+  }
+
+  function renderTabela(loja){
+    const tbody = $('#fat_tbody'); if(!tbody) return;
+    const arr = listFat(loja);
+    tbody.innerHTML='';
+    for(const x of arr){
+      const tr=document.createElement('tr');
+      const tdMes=document.createElement('td');
+      tdMes.textContent = toMonthStr(x.ano,x.mes);
+      const tdVal=document.createElement('td'); tdVal.className='right'; tdVal.textContent = money(x.faturamento);
+      const tdAcs=document.createElement('td'); tdAcs.className='right';
+      const btnE=document.createElement('button'); btnE.className='btn'; btnE.textContent='Editar';
+      btnE.addEventListener('click',()=>{
+        $('#fat_mesedit').value = toMonthStr(x.ano,x.mes);
+        $('#fat_valoredit').value = x.faturamento;
+        $('#fat_btnExcluir').disabled = false;
+        setStatus('Registro carregado para edição.');
+      });
+      const btnD=document.createElement('button'); btnD.className='btn'; btnD.textContent='Excluir';
+      btnD.addEventListener('click',()=>{
+        if(confirm('Confirma excluir '+toMonthStr(x.ano,x.mes)+'?')){
+          deleteFat(loja, x.ano, x.mes);
+          setStatus('Registro excluído.');
+          renderTudo();
+        }
+      });
+      tdAcs.appendChild(btnE);
+      tdAcs.appendChild(document.createTextNode(' '));
+      tdAcs.appendChild(btnD);
+
+      tr.appendChild(tdMes); tr.appendChild(tdVal); tr.appendChild(tdAcs);
+      tbody.appendChild(tr);
+    }
+  }
+
+  function setStatus(t){
+    const el=$('#fat_status'); if(!el) return;
+    el.textContent = t||''; if(!t) return;
+    setTimeout(()=>{ try{ el.textContent=''; }catch(e){} }, 3000);
+  }
+
+  // ---- Import/Export ----
+  function importCSV(loja){
+    const txt = $('#fat_csv')?.value || '';
+    const rows = txt.trim().split(/\r?\n/).filter(Boolean).map(l=>l.split(',').map(s=>s.trim()));
+    let n=0;
+    for(const r of rows){
+      const ano=Number(r[0]), mes=Number(r[1]), val=Number(r[2]);
+      if(ano && mes && isFinite(val)){ upsertFat(loja, ano, mes, val); n++; }
+    }
+    setStatus(`Importado(s) ${n} registro(s).`);
+    renderTudo();
+  }
+  function exportCSV(loja){
+    const arr=listFat(loja).map(x=>`${x.ano},${x.mes},${x.faturamento}`);
+    const blob = new Blob([arr.join('\n')], {type:'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a=document.createElement('a'); a.href=url; a.download='faturamento.csv'; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ---- Eventos ----
+  function bindEvents(){
+    $('#fat_loja')?.addEventListener('change', ()=>renderTudo());
+    $('#fat_mesano')?.addEventListener('change', ()=>renderKPIs(getLoja(app)));
+
+    $('#fat_btnSalvar')?.addEventListener('click', ()=>{
+      const loja=getLoja(app); if(!loja) return;
+      const mm = parseMonth($('#fat_mesedit'));
+      const val = Number($('#fat_valoredit')?.value||0);
+      if(!mm || !isFinite(val)){ setStatus('Preencha mês/ano e um valor numérico.'); return; }
+      upsertFat(loja, mm.ano, mm.mes, val);
+      setStatus('Faturamento salvo.');
+      $('#fat_btnExcluir').disabled = false;
+      renderTudo();
+    });
+
+    $('#fat_btnNovo')?.addEventListener('click', ()=>{
+      $('#fat_mesedit').value=''; $('#fat_valoredit').value='';
+      $('#fat_btnExcluir').disabled = true;
+      setStatus('');
+    });
+
+    $('#fat_btnExcluir')?.addEventListener('click', ()=>{
+      const loja=getLoja(app); if(!loja) return;
+      const mm = parseMonth($('#fat_mesedit')); if(!mm){ setStatus('Selecione um mês para excluir.'); return; }
+      if(confirm('Confirma exclusão?')){
+        deleteFat(loja, mm.ano, mm.mes);
+        setStatus('Faturamento excluído.');
+        $('#fat_btnExcluir').disabled = true;
+        renderTudo();
+      }
+    });
+
+    $('#fat_btnImp')?.addEventListener('click', ()=>{
+      const loja=getLoja(app); if(loja) importCSV(loja);
+    });
+    $('#fat_btnExp')?.addEventListener('click', ()=>{
+      const loja=getLoja(app); if(loja) exportCSV(loja);
+    });
+  }
+
+  // ---- Render pipeline ----
+  function renderTudo(){
+    const loja=getLoja(app); if(!loja) return;
+    renderKPIs(loja);
+    renderTabela(loja);
+  }
+
+  function initIfPresent(){
+    if(!document.getElementById('faturamento')) return;
+    initLojaSelect();
+    // mês atual default
+    const now=new Date(); const pad=n=>n<10?'0'+n:n;
+    const elMes=$('#fat_mesano'); if(elMes) elMes.value = now.getFullYear()+'-'+pad(now.getMonth()+1);
+    bindEvents();
+    renderTudo();
+    console.log('[FATURAMENTO] módulo inicializado');
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded', initIfPresent);
+  }else{
+    initIfPresent();
+  }
+})();
+ /* =============== FATURAMENTO MODULE (END) =============== */
