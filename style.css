@@ -1,7 +1,18 @@
 /* ====== Tema roxo/branco com acabamento de UI ====== */
-:root{
-  --bg:#0f0b1b; --panel:#17122a; --muted:#b6add3; --text:#ffffff;
-  --primary:#6a3bf1; --primary-2:#8a5bff; --border:#2a2242; --ring: rgba(138,91,255,.5);
+  :root{
+  --pv-primary: #0A66C2;        /* azul formal tipo LinkedIn */
+  --pv-primary-600: #084a8a;
+  --pv-card-bg: #ffffff;
+  --pv-ui-gray: #E5E7EB;
+  --pv-surface: linear-gradient(180deg,#F9FAFB 0%,#F3F4F6 100%);
+  --pv-accent: #4F46E5;
+  --pv-green: #059669;
+  --pv-yellow: #FBBF24;
+  --pv-red: #DC2626;
+  --pv-radius: 10px;
+  --pv-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  --pv-text: #1F2937;
+  --pv-muted: #6B7280;
 }
 *{ box-sizing:border-box }
 html,body{ height:100% }
