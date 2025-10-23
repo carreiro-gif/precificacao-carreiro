@@ -153,3 +153,26 @@ input[readonly]{ opacity:.85 }
 .right{ text-align:right }
 
 .pv-subdetails > summary{ cursor:pointer; color:var(--muted); padding:6px 0; }
+/* ======= FATURAMENTO RELAYOUT ======= */
+.fat-layout{ display:grid; grid-template-columns: 1.1fr .9fr; gap:16px; }
+@media (max-width: 1100px){ .fat-layout{ grid-template-columns: 1fr; } }
+.fat-left, .fat-right{ display:flex; flex-direction:column; gap:14px; }
+
+.fat-card{ border:1px solid var(--border); border-radius:16px; padding:14px;
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); }
+.fat-card-header{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.fat-card-header h3{ margin:0; font-size:1.05rem }
+.fat-help{ color:var(--muted); font-size:.85rem }
+.fat-body{ margin-top:8px }
+
+.fat-field{ display:flex; flex-direction:column; gap:6px; }
+.fat-grid-2{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:12px; }
+@media (max-width: 900px){ .fat-grid-2{ grid-template-columns: 1fr; } }
+
+.fat-actions{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px }
+.fat-sticky{ position:sticky; top:12px; }
+
+.fat-kpis{ display:grid; gap:10px; grid-template-columns: repeat(3, minmax(0,1fr)); }
+.kpi{ border:1px solid var(--border); border-radius:12px; padding:10px 12px; background:rgba(255,255,255,.05); }
+.kpi-label{ color:var(--muted); font-size:.8rem; margin-bottom:2px }
+.kpi-value{ font-weight:800; letter-spacing:.2px }
