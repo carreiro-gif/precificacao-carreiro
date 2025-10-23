@@ -1154,4 +1154,17 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
 })();
 </script>
 </body>
+  ./pv.htmlPV (Preço de Venda)</a>
+<script>
+  // Se você já tem seleção de loja no index, salvamos o contexto para o PV abrir na mesma loja
+  document.getElementById('btnPV')?.addEventListener('click', () => {
+    // Ajuste este seletor conforme sua página principal:
+    const lojaIdAtual =
+      window.app?.lojaSelecionadaId ||
+      document.querySelector('#lojaSelect')?.value ||
+      (JSON.parse(localStorage.getItem('precificacaoState')||'{}').lojas?.[0]?.id);
+
+    if (lojaIdAtual) localStorage.setItem('pv_context', JSON.stringify({ lojaId: lojaIdAtual }));
+  });
+</script>
 </html>
