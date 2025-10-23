@@ -204,8 +204,111 @@
 
       <!-- FATURAMENTO -->
       <section id="faturamento" class="tab-panel">
-        <h3>Faturamento</h3>
-        <p>Resumo mensal, ticket médio, % delivery vs balcão. (em breve)</p>
+       <!-- FATURAMENTO (RELAYOUT): START -->
+<div class="fat-layout">
+  <!-- COLUNA ESQUERDA — PARÂMETROS / FORM -->
+  <div class="fat-left">
+    <div class="card fat-card">
+      <div class="fat-card-header">
+        <h3>Faturamento — Contexto</h3>
+        <span class="fat-help">Selecione a loja e o mês para ver/editar os valores</span>
+      </div>
+      <div class="fat-field">
+        <label class="lbl">Loja</label>
+        <select id="fat_loja"></select>
+      </div>
+      <div class="fat-grid-2">
+        <div class="fat-field">
+          <label class="lbl">Mês/Ano (referência)</label>
+          <input type="month" id="fat_mesano"/>
+        </div>
+        <div class="fat-field">
+          <label class="lbl">Faturamento do mês (R$) <span class="muted">(se existir, carrega)</span></label>
+          <input type="number" step="0.01" min="0" id="fat_valorMes" readonly/>
+        </div>
+      </div>
+    </div>
+
+    <div class="card fat-card">
+      <div class="fat-card-header">
+        <h3>Novo / Editar Faturamento</h3>
+        <span class="fat-help">Informe o mês e o valor; as ações abaixo criam/atualizam ou excluem</span>
+      </div>
+      <div class="fat-grid-2">
+        <div class="fat-field">
+          <label class="lbl">Mês/Ano</label>
+          <input type="month" id="fat_mesedit"/>
+        </div>
+        <div class="fat-field">
+          <label class="lbl">Faturamento (R$)</label>
+          <input type="number" step="0.01" min="0" id="fat_valoredit"/>
+        </div>
+      </div>
+      <div class="fat-actions">
+        <button class="btn primary" id="fat_btnSalvar">Salvar</button>
+        <button class="btn" id="fat_btnNovo">Limpar</button>
+        <button class="btn" id="fat_btnExcluir" disabled>Excluir</button>
+      </div>
+      <div class="muted" id="fat_status" style="margin-top:8px"></div>
+    </div>
+
+    <details class="card fat-card">
+      <summary class="fat-card-header">
+        <h3>Importar por colagem (CSV)</h3>
+        <span class="fat-help">Formato: <code>ano,mes,faturamento</code> — um por linha</span>
+      </summary>
+      <div class="fat-body">
+        <textarea id="fat_csv" rows="5" placeholder="2025,09,18037.58&#10;2025,10,19220.00"></textarea>
+        <div class="fat-actions" style="margin-top:6px">
+          <button class="btn" id="fat_btnImp">Importar CSV</button>
+          <button class="btn" id="fat_btnExp">Exportar CSV</button>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- COLUNA DIREITA — KPI & TABELA -->
+  <div class="fat-right">
+    <div class="card fat-card fat-sticky">
+      <div class="fat-card-header">
+        <h3>Resumo (12 meses)</h3>
+        <span class="fat-help">Baseado nos últimos 12 registros, do mais recente para trás</span>
+      </div>
+      <div class="fat-kpis">
+        <div class="kpi">
+          <div class="kpi-label">Faturamento Bruto (12m)</div>
+          <div class="kpi-value" id="fat_kpi_bruto12">—</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Média 12m</div>
+          <div class="kpi-value" id="fat_kpi_media12">—</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Mês Selecionado</div>
+          <div class="kpi-value" id="fat_kpi_mesSel">—</div>
+        </div>
+      </div>
+
+      <div class="table-wrap" style="margin-top:10px">
+        <table class="pv-table">
+          <thead>
+            <tr>
+              <th>Mês/Ano</th>
+              <th class="right">Faturamento (R$)</th>
+              <th class="right">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="fat_tbody"></tbody>
+        </table>
+      </div>
+      <div class="muted" style="margin-top:8px">
+        Dica: edite diretamente via ações da tabela ou preencha no formulário “Novo/Editar” à esquerda.
+        O faturamento do mês é usado no DNA (CF% = Custo Fixo ÷ Faturamento).
+      </div>
+    </div>
+  </div>
+</div>
+<!-- FATURAMENTO (RELAYOUT): END -->
       </section>
 
       <!-- INSUMOS (CRUD + Import/Export + Busca + Duplicar) -->
