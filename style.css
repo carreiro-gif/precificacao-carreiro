@@ -176,3 +176,105 @@ input[readonly]{ opacity:.85 }
 .kpi{ border:1px solid var(--border); border-radius:12px; padding:10px 12px; background:rgba(255,255,255,.05); }
 .kpi-label{ color:var(--muted); font-size:.8rem; margin-bottom:2px }
 .kpi-value{ font-weight:800; letter-spacing:.2px }
+/* PV styles (addon) */
+/* Theme adapted from "Projeto Canva Versão 48" - safe to append at end of style.css */
+
+/* Core variables (override if needed) */
+:root{
+  --pv-primary: #2563EB;      /* azul principal */
+  --pv-primary-600: #1E40AF;
+  --pv-card-bg: #ffffff;
+  --pv-ui-gray: #E5E7EB;
+  --pv-surface: linear-gradient(180deg,#F8FAFC 0%,#EEF2FF 100%);
+  --pv-accent: #06B6D4;
+  --pv-green: #16A34A;
+  --pv-yellow: #F59E0B;
+  --pv-red: #DC2626;
+  --pv-radius: 10px;
+  --pv-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  --pv-text: #111827;
+  --pv-muted: #6B7280;
+}
+
+/* Page background */
+body {
+  background: var(--pv-surface);
+  color: var(--pv-text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* Generic card */
+.pv-card, .card, .dashboard-card {
+  background: var(--pv-card-bg) !important;
+  border-radius: var(--pv-radius) !important;
+  box-shadow: var(--pv-shadow) !important;
+  border: 1px solid var(--pv-ui-gray);
+  padding: 16px;
+}
+
+/* Header small logo */
+.pv-header-logo {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:8px;
+  padding:8px;
+  background: linear-gradient(135deg,var(--pv-primary),var(--pv-primary-600));
+  color: #fff;
+  font-weight:700;
+}
+
+/* KPI number style (keep IDs intact — use on elements like #kpi_pvloja etc.) */
+.pv-kpi {
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.pv-kpi .pv-kpi-label { color: var(--pv-muted); font-size:13px; font-weight:600; }
+.pv-kpi .pv-kpi-value { font-size:22px; font-weight:700; color:var(--pv-primary); }
+
+/* Buttons */
+.pv-btn {
+  background: var(--pv-primary);
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 14px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform .12s ease, background .12s ease;
+}
+.pv-btn:hover { transform: translateY(-2px); background: var(--pv-primary-600); }
+
+/* Accent badges */
+.pv-badge {
+  display:inline-block;padding:6px 10px;border-radius:999px;font-weight:700;font-size:12px;
+}
+.pv-badge--green { background:var(--pv-green); color:#fff; }
+.pv-badge--yellow { background:var(--pv-yellow); color:#111827; }
+.pv-badge--red { background:var(--pv-red); color:#fff; }
+
+/* Table improvements */
+.pv-table { width:100%; border-collapse:collapse; font-size:13px; }
+.pv-table th { text-align:left; font-size:11px; text-transform:uppercase; color:var(--pv-muted); padding:10px; border-bottom:1px solid #f3f4f6; }
+.pv-table td { padding:12px; border-bottom:1px solid #f8fafc; vertical-align:middle; }
+
+/* Responsive tweaks for PV two-column layout */
+.pv-layout { display:grid; grid-template-columns: 360px 1fr; gap:20px; align-items:start; }
+@media (max-width: 880px) {
+  .pv-layout { grid-template-columns: 1fr; }
+  nav.w-64 { width:64px !important; } /* keep sidebar narrow on mobile if used */
+}
+
+/* Small helpers */
+.pv-muted { color: var(--pv-muted); font-size:13px; }
+.pv-green { color: var(--pv-green); font-weight:700; }
+.pv-red { color: var(--pv-red); font-weight:700; }
+
+/* Notification */
+.pv-notif {
+  position: fixed; right:20px; top:20px; z-index:9999; padding:12px 18px; border-radius:10px; box-shadow:var(--pv-shadow); color:#fff;
+}
+.pv-notif.success { background:var(--pv-green); }
+.pv-notif.error { background:var(--pv-red); }
