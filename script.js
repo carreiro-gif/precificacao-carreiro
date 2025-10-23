@@ -175,6 +175,14 @@ console.log('script.js carregado e funções globais definidas.');
     const r3 = ceilRule(pvIFoodCI,regra);
     const r4 = ceilRule(pv99Food, regra);
 
+    // KPIs (preenche os cards da coluna direita)
+document.getElementById('kpi_cmv').textContent     = money(cmv);
+document.getElementById('kpi_dna').textContent     = pct(dna*100);
+document.getElementById('kpi_lucro').textContent   = pct(lucro*100);
+document.getElementById('kpi_pvloja').textContent  = money(r1);
+document.getElementById('kpi_ifood').textContent   = money(r2);
+document.getElementById('kpi_ifoodci').textContent = money(r3);
+document.getElementById('kpi_99').textContent      = money(r4);
     const loja=getLoja(); const fId=$('#pv_ficha')?.value;
     const ficha=(loja?.fichas||[]).find(x=>x.id===fId);
     const tbody=$('#pv_tbody'); if(!tbody) return;
