@@ -428,6 +428,18 @@ if (toggleBtn) {
 document.querySelectorAll(".tab-panel").forEach(sec=>{
   sec.style.transition = "opacity 0.25s ease";
 });
+/* === CDL THEME FIXER === */
+(function applyCdlTheme(){
+  try{
+    document.documentElement.style.setProperty('--pv-primary', getComputedStyle(document.documentElement).getPropertyValue('--cdl-primary') || '#153869');
+    document.documentElement.style.setProperty('--pv-primary-600', getComputedStyle(document.documentElement).getPropertyValue('--cdl-primary-600') || '#0b2540');
+    // Forçar cor do header buttons caso estejam sobrescritos
+    document.querySelectorAll('header button, .app-header button, .pv-header .pv-btn').forEach(b=>{
+      b.style.background = '#fff';
+      b.style.color = 'var(--pv-primary-600)';
+    });
+  }catch(e){ console.warn('CDL theme apply error', e); }
+})();
  /* ================= PV MODULE (END) ================= */
 /* =============== FATURAMENTO MODULE (START) =============== */
 (function FaturamentoModule(){
