@@ -834,3 +834,18 @@ body {
 
 /* Compacto */
 body.compacto .pv-card { padding: 10px; }
+/* Correção de contraste no cabeçalho */
+.pv-header {
+  background: linear-gradient(135deg, var(--pv-primary), var(--pv-primary-600));
+  color: #fff;
+}
+
+.pv-header .pv-btn {
+  background: #fff;
+  color: var(--pv-primary-600);
+}
+
+.pv-header .pv-btn:hover {
+  background: var(--pv-accent);
+  color: #000;
+}
