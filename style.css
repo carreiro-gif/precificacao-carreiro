@@ -381,3 +381,163 @@ body.compacto select {
 body.compacto .pv-header h2 {
   font-size: 17px;
 }
+/* === VISUAL PREMIUM THEME (by Alexandre Mendes Santos) === */
+
+:root{
+  --pv-primary: #1E3A8A;      /* Azul petróleo */
+  --pv-primary-600: #0F265A;  /* Azul mais escuro */
+  --pv-accent: #EAB308;       /* Dourado Premium */
+  --pv-green: #16A34A;        /* Sucesso */
+  --pv-red: #DC2626;          /* Erro */
+  --pv-card-bg: #ffffff;
+  --pv-ui-gray: #E5E7EB;
+  --pv-surface: #F8FAFC;
+  --pv-radius: 12px;
+  --pv-shadow: 0 6px 18px rgba(0,0,0,0.05);
+  --pv-text: #111827;
+  --pv-muted: #6B7280;
+}
+
+/* Fundo geral */
+body {
+  font-family: "Inter", "Poppins", "Segoe UI", sans-serif;
+  background: var(--pv-surface);
+  color: var(--pv-text);
+  transition: background 0.3s ease;
+}
+
+/* Cartões */
+.pv-card {
+  background: var(--pv-card-bg);
+  border-radius: var(--pv-radius);
+  box-shadow: var(--pv-shadow);
+  border: 1px solid #f1f5f9;
+  padding: 18px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.pv-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+}
+
+/* Cabeçalho */
+.pv-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, var(--pv-primary), var(--pv-primary-600));
+  color: #fff;
+  border-radius: var(--pv-radius);
+  padding: 16px 22px;
+  box-shadow: var(--pv-shadow);
+  margin-bottom: 22px;
+}
+.pv-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.pv-header small {
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+/* Botões */
+.pv-btn {
+  background: var(--pv-primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.pv-btn:hover {
+  background: var(--pv-primary-600);
+  transform: translateY(-1px);
+}
+.pv-btn:active {
+  transform: scale(0.97);
+}
+
+/* Destaque premium */
+.pv-accent-text { color: var(--pv-accent); font-weight: 700; }
+
+/* Inputs */
+.pv-card label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 8px;
+  color: var(--pv-muted);
+}
+.pv-card input,
+.pv-card select {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 7px 10px;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+.pv-card input:focus,
+.pv-card select:focus {
+  border-color: var(--pv-accent);
+  box-shadow: 0 0 0 2px var(--pv-accent);
+  outline: none;
+}
+
+/* KPIs */
+.pv-kpi-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--pv-primary);
+}
+.pv-kpi-label {
+  color: var(--pv-muted);
+  font-size: 13px;
+}
+
+/* Notificações */
+.pv-notif {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  z-index: 9999;
+  padding: 12px 18px;
+  border-radius: 10px;
+  box-shadow: var(--pv-shadow);
+  color: #fff;
+  animation: fadeInOut 2.5s ease forwards;
+}
+.pv-notif.success { background: var(--pv-green); }
+.pv-notif.error { background: var(--pv-red); }
+
+@keyframes fadeInOut {
+  0% {opacity: 0; transform: translateY(-10px);}
+  10%, 90% {opacity: 1; transform: translateY(0);}
+  100% {opacity: 0; transform: translateY(-10px);}
+}
+
+/* Detalhes e resumo */
+.pv-card summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--pv-primary);
+  padding-bottom: 6px;
+}
+
+/* Tabelas */
+.pv-table th {
+  background: #f9fafb;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+}
+.pv-table tr:hover {
+  background: #f3f4f6;
+}
+
+/* Compacto */
+body.compacto .pv-card { padding: 10px; }
