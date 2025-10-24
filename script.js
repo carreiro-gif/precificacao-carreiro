@@ -413,6 +413,21 @@ diagBtn.onclick = pvDiagnostico;
 document
   .querySelector(".pv-left .pv-card:last-child")
   ?.appendChild(diagBtn);
+/* === PV UI Toggle (ADDON) === */
+const toggleBtn = document.getElementById("pv_toggleCompact");
+if (toggleBtn) {
+  toggleBtn.addEventListener("click", () => {
+    document.body.classList.toggle("compacto");
+    const ativo = document.body.classList.contains("compacto");
+    toggleBtn.textContent = ativo ? "Modo Detalhado" : "Modo Compacto";
+    pvNotificar(ativo ? "Modo compacto ativado" : "Modo detalhado ativado");
+  });
+}
+
+/* Transição suave nas abas */
+document.querySelectorAll(".tab-panel").forEach(sec=>{
+  sec.style.transition = "opacity 0.25s ease";
+});
  /* ================= PV MODULE (END) ================= */
 /* =============== FATURAMENTO MODULE (START) =============== */
 (function FaturamentoModule(){
