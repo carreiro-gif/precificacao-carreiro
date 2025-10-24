@@ -849,3 +849,94 @@ body.compacto .pv-card { padding: 10px; }
   background: var(--pv-accent);
   color: #000;
 }
+/* === CÓDIGO DO LUCRO — FIX DE CONTRASTE & THEME OVERRIDES === */
+/* Cole este bloco no final de style.css (após todo o conteúdo existente) */
+
+:root{
+  --cdl-primary: #153869;     /* azul petróleo mais escuro */
+  --cdl-primary-600: #0b2540; /* hover */
+  --cdl-accent: #EAB308;      /* dourado suave */
+  --cdl-bg: #F5F7FA;          /* fundo geral */
+  --cdl-card: #FFFFFF;        /* cartão */
+  --cdl-text: #0F1724;        /* texto principal */
+  --cdl-muted: #475569;       /* texto secundário */
+  --cdl-success: #16A34A;
+  --cdl-danger: #DC2626;
+  --cdl-radius: 10px;
+  --cdl-shadow: 0 8px 22px rgba(9,30,66,0.06);
+}
+
+/* Fundo geral */
+body {
+  background: var(--cdl-bg) !important;
+  color: var(--cdl-text) !important;
+}
+
+/* Cabeçalho — força contraste (botões legíveis) */
+.app-header, .pv-header, header {
+  background: linear-gradient(90deg,var(--cdl-primary),var(--cdl-primary-600)) !important;
+  color: #fff !important;
+  box-shadow: var(--cdl-shadow) !important;
+}
+.app-header button, .pv-header .pv-btn, header button {
+  background: #fff !important;
+  color: var(--cdl-primary-600) !important;
+  border: 1px solid rgba(0,0,0,0.04) !important;
+}
+.app-header button:hover, .pv-header .pv-btn:hover, header button:hover {
+  background: var(--cdl-accent) !important;
+  color: #000 !important;
+}
+
+/* Força legibilidade em áreas escuras */
+.header-dark, .topbar, .sidebar, .nav-dark {
+  color: #fff !important;
+}
+
+/* Cartões e campos */
+.pv-card, .card, .dashboard-card, .pv-card {
+  background: var(--cdl-card) !important;
+  color: var(--cdl-text) !important;
+  border-radius: var(--cdl-radius) !important;
+  box-shadow: var(--cdl-shadow) !important;
+  border: 1px solid rgba(15,23,36,0.04) !important;
+}
+
+/* Inputs: garantir borda e placeholder legível */
+input, select, textarea {
+  color: var(--cdl-text) !important;
+  background: #fff !important;
+  border: 1px solid #E6EEF8 !important;
+}
+input::placeholder, textarea::placeholder {
+  color: #94A3B8 !important;
+}
+
+/* Tabelas e linhas */
+.pv-table th, table thead th {
+  background: #F1F5F9 !important;
+  color: var(--cdl-muted) !important;
+}
+.pv-table td, table tbody td {
+  color: var(--cdl-text) !important;
+}
+
+/* Botões primários globais */
+.pv-btn, .btn-primary, .btn {
+  background: var(--cdl-primary) !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+/* Notificações (forçar contraste) */
+.pv-notif, .notification {
+  color: #fff !important;
+}
+
+/* Responsivo: garanta padding no topo quando header fixo */
+main.flex-1 { padding-top: 24px !important; }
+
+/* Pequeno utilitário para texto claro sobre fundo escuro */
+.text-on-dark { color: #fff !important; }
+
+/* fim do bloco - CÓDIGO DO LUCRO overrides */
