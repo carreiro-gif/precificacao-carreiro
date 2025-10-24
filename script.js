@@ -313,6 +313,106 @@ function atualizarKPIs(resultados) {
 
    (isso deve ficar logo antes de montar a tabela no PV MODULE)
 */
+/* === PV UX (ADDON) === */
+/* Melhora a experiência visual e adiciona pequenos feedbacks */
+
+function pvNotificar(msg, tipo = "success") {
+  const div = document.createElement("div");
+  div.className = `pv-notif ${tipo}`;
+  div.textContent = msg;
+  document.body.appendChild(div);
+  setTimeout(() => div.remove(), 2500);
+}
+
+/* Ligação do botão Calcular PV */
+const btnCalc = document.getElementById("pv_btnCalc");
+if (btnCalc) {
+  btnCalc.addEventListener("click", () => {
+    try {
+      if (typeof calcular === "function") {
+        calcular(); // chama sua função original
+        pvNotificar("Cálculo concluído com sucesso!", "success");
+      } else {
+        pvNotificar("Função de cálculo não encontrada!", "error");
+      }
+    } catch (e) {
+      console.error(e);
+      pvNotificar("Erro ao calcular!", "error");
+    }
+  });
+}
+
+/* Tooltips automáticas */
+document.querySelectorAll("label").forEach(lbl => {
+  lbl.addEventListener("mouseenter", e => {
+    const texto = lbl.textContent.trim();
+    if (!texto) return;
+    const tip = document.createElement("div");
+    tip.textContent = texto;
+    tip.className = "pv-notif success";
+    tip.style.position = "fixed";
+    tip.style.left = e.pageX + "px";
+    tip.style.top = e.pageY - 35 + "px";
+    tip.style.fontSize = "11px";
+    tip.style.padding = "4px 8px";
+    tip.style.background = "#111827";
+    tip.style.color = "#fff";
+    tip.style.opacity = "0.9";
+    tip.style.borderRadius = "6px";
+    tip.style.pointerEvents = "none";
+    document.body.appendChild(tip);
+    lbl.addEventListener("mouseleave", () => tip.remove(), { once: true });
+  });
+});
+
+/* Copiar PV Loja */
+const kpiLoja = document.getElementById("kpi_pvloja");
+if (kpiLoja) {
+  kpiLoja.style.cursor = "pointer";
+  kpiLoja.title = "Clique para copiar o PV Loja";
+  kpiLoja.addEventListener("click", () => {
+    const valor = kpiLoja.textContent.trim();
+    if (valor && valor !== "--") {
+      navigator.clipboard.writeText(valor);
+      pvNotificar("PV Loja copiado!", "success");
+    }
+  });
+}
+
+/* Diagnóstico simples */
+function pvDiagnostico() {
+  const chaves = Object.keys(localStorage);
+  const maiores = chaves.sort(
+    (a, b) => (localStorage[b]?.length || 0) - (localStorage[a]?.length || 0)
+  );
+  const chaveUsada =
+    localStorage.precificacaoState ||
+    localStorage.carreiroState ||
+    localStorage.pricingState ||
+    localStorage[maiores[0]];
+
+  const info = [
+    "Diagnóstico PV",
+    "---------------------------",
+    "Chave detectada:",
+    maiores[0] || "Nenhuma",
+    "Tamanho do estado:",
+    (localStorage[maiores[0]]?.length || 0) + " caracteres",
+    "Data:",
+    new Date().toLocaleString("pt-BR"),
+  ].join("\n");
+
+  alert(info);
+}
+
+/* Botão Diagnóstico extra */
+const diagBtn = document.createElement("button");
+diagBtn.textContent = "Diagnóstico";
+diagBtn.className = "pv-btn w-full mt-2";
+diagBtn.onclick = pvDiagnostico;
+document
+  .querySelector(".pv-left .pv-card:last-child")
+  ?.appendChild(diagBtn);
  /* ================= PV MODULE (END) ================= */
 /* =============== FATURAMENTO MODULE (START) =============== */
 (function FaturamentoModule(){
