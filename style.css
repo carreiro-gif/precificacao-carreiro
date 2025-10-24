@@ -672,6 +672,21 @@ body.compacto .pv-card { padding: 10px; }
 
 /* === VISUAL PREMIUM THEME (by Alexandre Mendes Santos) === */
 
+:root {
+  --pv-primary: #1E3A8A;        /* azul escuro (marca) */
+  --pv-primary-600: #0F265A;    /* tom mais fechado */
+  --pv-accent: #FBBF24;         /* amarelo dourado suave */
+  --pv-green: #16A34A;          /* verde de sucesso */
+  --pv-red: #DC2626;            /* vermelho de erro */
+  --pv-card-bg: #F9FAFB;        /* fundo dos cartões mais suave */
+  --pv-ui-gray: #E5E7EB;
+  --pv-surface: #F3F4F6;        /* fundo geral cinza claro */
+  --pv-radius: 12px;
+  --pv-shadow: 0 4px 14px rgba(0,0,0,0.05);
+  --pv-text: #111827;           /* texto padrão (quase preto) */
+  --pv-muted: #4B5563;          /* texto secundário (cinza médio) */
+}
+
 :root{
   --pv-primary: #1E3A8A;
   --pv-primary-600: #0F265A;
