@@ -289,3 +289,95 @@ body {
 }
 .pv-notif.success { background:var(--pv-green); }
 .pv-notif.error { background:var(--pv-red); }
+/* PV styles (final polish) */
+/* Layout mais limpo e moderno */
+
+html, body {
+  font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+  font-size: 15px;
+  background: var(--pv-surface);
+}
+
+/* Cabeçalho superior da aba PV */
+.pv-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg,var(--pv-primary),var(--pv-primary-600));
+  color: #fff;
+  border-radius: 10px;
+  padding: 14px 20px;
+  box-shadow: var(--pv-shadow);
+  margin-bottom: 20px;
+}
+
+.pv-header h2 {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  margin: 0;
+}
+
+.pv-header small {
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+/* Labels e inputs */
+.pv-card label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 8px;
+  color: var(--pv-text);
+}
+
+.pv-card input,
+.pv-card select {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 6px 8px;
+  margin-top: 2px;
+  background: #fff;
+  transition: box-shadow 0.15s ease;
+}
+
+.pv-card input:focus,
+.pv-card select:focus {
+  box-shadow: 0 0 0 2px var(--pv-primary-600);
+  outline: none;
+}
+
+/* Details e summary */
+.pv-card summary {
+  cursor: pointer;
+  font-weight: 700;
+  padding: 4px 0;
+}
+
+.pv-card[open] summary {
+  color: var(--pv-primary);
+}
+
+/* Tabelas */
+.pv-table th {
+  background: #f9fafb;
+  font-weight: 700;
+}
+.pv-table tr:hover {
+  background: #f3f4f6;
+}
+
+/* Modo compacto */
+body.compacto .pv-card {
+  padding: 8px;
+}
+body.compacto input,
+body.compacto select {
+  padding: 4px 6px;
+  font-size: 13px;
+}
+body.compacto .pv-header h2 {
+  font-size: 17px;
+}
