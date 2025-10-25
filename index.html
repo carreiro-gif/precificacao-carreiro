@@ -36,19 +36,76 @@
 <body>
 
   <!-- MENU LATERAL PREMIUM -->
-  <aside class="sidebar">
-    <div class="sidebar-header">
-      <img src="logo-codigodolucro.svg" alt="Logo">
-      <h2>Código do Lucro</h2>
-    </div>
-    <button class="active">🏠 Dashboard</button>
-    <button>🧬 DNA</button>
-    <button>💰 Faturamento</button>
-    <button>📦 Insumos</button>
-    <button>📄 Ficha Técnica</button>
-    <button>💲 PV</button>
-    <button>🍔 Combos</button>
-  </aside>
+  <!-- MENU LATERAL PREMIUM -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <img src="logo-codigodolucro.svg" alt="Logo">
+    <h2>Código do Lucro</h2>
+    <button id="menuToggle" class="menu-toggle" aria-label="Abrir menu">☰</button>
+  </div>
+
+  <nav class="sidebar-nav">
+    <button class="active">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M3 12l2-2m0 0l7-7 7 7m-9 2v8m4-8v8m-9 4h18" />
+      </svg>
+      Dashboard
+    </button>
+
+    <button>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 8c-2.21 0-4 1.79-4 4m8 0c0-2.21-1.79-4-4-4zm0 0c1.104 0 2-.896 2-2s-.896-2-2-2zm0 0a2 2 0 10-4 0 2 2 0 004 0z" />
+      </svg>
+      DNA
+    </button>
+
+    <button>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 8c-2.21 0-4 1.79-4 4m8 0c0-2.21-1.79-4-4-4zm0 0c1.104 0 2-.896 2-2s-.896-2-2-2zm0 0a2 2 0 10-4 0 2 2 0 004 0z" />
+      </svg>
+      Faturamento
+    </button>
+
+    <button>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M3 7h18M3 12h18M3 17h18" />
+      </svg>
+      Insumos
+    </button>
+
+    <button>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M8 6h13M8 12h13m-7 6h7" />
+      </svg>
+      Ficha Técnica
+    </button>
+
+    <button>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-2" />
+      </svg>
+      PV
+    </button>
+
+    <button>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M4 8h16M4 16h16M4 12h16" />
+      </svg>
+      Combos
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">
+    v1.0 — Sistema Premium Carreiro
+  </div>
+</aside>
 
   <header class="app-header">
 
