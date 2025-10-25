@@ -207,3 +207,53 @@ footer {
   background-color: var(--cdl-bg);
   padding: 10px;
 }
+/* ===================================================
+   CÓDIGO DO LUCRO — Correção Final dos Botões de Abas
+   =================================================== */
+
+/* Abas de navegação superiores (Dashboard, DNA, etc.) */
+.tab-bar button,
+.tab-bar a,
+.tabs button,
+.tabs a {
+  background: var(--cdl-panel);
+  color: var(--cdl-text);
+  border: 1px solid var(--cdl-border);
+  border-radius: 30px;
+  padding: 8px 18px;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+/* Estado hover */
+.tab-bar button:hover,
+.tab-bar a:hover,
+.tabs button:hover,
+.tabs a:hover {
+  background: var(--cdl-primary-light);
+  color: #fff;
+  border-color: var(--cdl-primary-light);
+}
+
+/* Estado ativo */
+.tab-bar button.active,
+.tab-bar a.active,
+.tabs button.active,
+.tabs a.active {
+  background: var(--cdl-primary);
+  color: #fff;
+  border-color: var(--cdl-primary);
+}
+
+/* Ajuste de foco e contraste */
+.tab-bar,
+.tabs {
+  background: var(--cdl-bg);
+  padding: 10px;
+  border-radius: 12px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
