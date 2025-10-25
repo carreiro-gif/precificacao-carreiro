@@ -501,3 +501,55 @@ section.tab-panel ~ nav button,
   color: var(--cdl-muted);
   text-align: center;
 }
+/* ===================================================
+   CÓDIGO DO LUCRO — BLOCO H: ÍCONES E MODO MOBILE
+   =================================================== */
+
+/* Botão toggle (☰) */
+.menu-toggle {
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: var(--cdl-text);
+  display: none;
+}
+
+/* Ícones SVG no menu */
+.sidebar-nav button svg {
+  width: 20px;
+  height: 20px;
+  color: var(--cdl-muted);
+  transition: color .2s ease;
+}
+
+.sidebar-nav button:hover svg,
+.sidebar-nav button.active svg {
+  color: #fff;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .app-main {
+    grid-template-columns: 1fr;
+  }
+
+  .menu-toggle {
+    display: block;
+    margin-left: auto;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: -260px;
+    top: 0;
+    height: 100vh;
+    z-index: 999;
+    width: 250px;
+    transition: left 0.3s ease;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+}
