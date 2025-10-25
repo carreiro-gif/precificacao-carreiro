@@ -693,3 +693,33 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
+/* === CDL: Dashboard gráfico e KPIs === */
+document.addEventListener("DOMContentLoaded", () => {
+  const ctx = document.getElementById("dash_chart");
+  if (!ctx) return;
+
+  // Gráfico simples (usando Chart.js)
+  // Adiciona Chart.js dinamicamente
+  const script = document.createElement("script");
+  script.src = "https://cdn.jsdelivr.net/npm/chart.js";
+  script.onload = () => {
+    const chart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: ["Jun", "Jul", "Ago", "Set", "Out"],
+        datasets: [{
+          label: "Faturamento (R$)",
+          data: [9300, 10400, 11800, 12600, 12450],
+          borderColor: "#2563eb",
+          tension: 0.3,
+          fill: false
+        }]
+      },
+      options: {
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+  };
+  document.body.appendChild(script);
+});
