@@ -661,3 +661,25 @@ document.querySelectorAll(".tab-panel").forEach(sec=>{
   }
 })();
  /* =============== FATURAMENTO MODULE (END) =============== */
+/* === CDL: toggle visual de abas (adic. .active) - opcional === */
+(function(){
+  try{
+    const selectors = ['.tab-bar button','.tab-bar a','.tabs button','.tabs a'];
+    const elems = Array.from(document.querySelectorAll(selectors.join(',')));
+    if(!elems.length) return;
+
+    elems.forEach(el=>{
+      el.addEventListener('click', (e)=>{
+        // Remove .active de todos do mesmo container
+        const parent = el.closest('.tab-bar') || el.closest('.tabs') || document;
+        const group = parent.querySelectorAll('button, a');
+        group.forEach(g => g.classList.remove('active'));
+
+        // Marca o clicado
+        el.classList.add('active');
+      });
+    });
+  }catch(err){
+    console.warn('CDL toggle tabs error', err);
+  }
+})();
