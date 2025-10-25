@@ -1,0 +1,209 @@
+/* ===================================================
+   CÓDIGO DO LUCRO — Tema Premium (v1)
+/* ===================================================
+   CÓDIGO DO LUCRO — Ajustes de Navegação
+/* ===================================================
+   CÓDIGO DO LUCRO — Tema Premium (v1)
+   =================================================== */
+
+/* ===== Variáveis principais ===== */
+:root {
+  --cdl-bg: #f8fafc;            
+  --cdl-panel: #ffffff;         
+  --cdl-text: #1e293b;          
+  --cdl-muted: #64748b;         
+  --cdl-primary: #2563eb;       
+  --cdl-primary-light: #3b82f6;
+  --cdl-green: #16a34a;
+  --cdl-red: #dc2626;
+  --cdl-border: #e2e8f0;
+  --cdl-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  --cdl-radius: 12px;
+}
+
+/* ===== Reset global ===== */
+body {
+  font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+  background-color: var(--cdl-bg);
+  color: var(--cdl-text);
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+/* ===== Painéis / cartões ===== */
+.pv-card, .card, section {
+  background: var(--cdl-panel);
+  border-radius: var(--cdl-radius);
+  box-shadow: var(--cdl-shadow);
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  transition: all .2s ease;
+}
+
+.pv-card:hover, .card:hover {
+  transform: translateY(-2px);
+}
+
+/* ===== Títulos e subtítulos ===== */
+h1, h2, h3, h4 {
+  font-weight: 600;
+  color: var(--cdl-text);
+  margin-top: 0;
+}
+
+.subtitle, .muted {
+  color: var(--cdl-muted);
+}
+
+/* ===== Botões ===== */
+button, .btn {
+  background-color: var(--cdl-primary);
+  border: none;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color .2s ease;
+}
+
+button:hover, .btn:hover {
+  background-color: var(--cdl-primary-light);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===== Inputs e selects ===== */
+input, select {
+  border: 1px solid var(--cdl-border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 15px;
+  color: var(--cdl-text);
+  background: #fff;
+  transition: border-color .2s ease;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--cdl-primary);
+}
+
+/* ===== Tabelas ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th, td {
+  border-bottom: 1px solid var(--cdl-border);
+  padding: 10px 12px;
+  text-align: left;
+}
+
+th {
+  background-color: #f1f5f9;
+  font-weight: 600;
+  color: var(--cdl-text);
+}
+
+/* ===== Cabeçalho do App ===== */
+.app-header {
+  background: var(--cdl-primary);
+  color: white;
+  padding: 10px 20px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ===== KPI Cards ===== */
+.kpi-box {
+  display: inline-block;
+  padding: 12px 20px;
+  border-radius: 12px;
+  box-shadow: var(--cdl-shadow);
+  background: #fff;
+  text-align: center;
+  margin: 8px;
+  min-width: 120px;
+}
+
+.kpi-title {
+  color: var(--cdl-muted);
+  font-size: 13px;
+}
+
+.kpi-value {
+  color: var(--cdl-primary);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* ===== Footer / Créditos ===== */
+footer {
+  text-align: center;
+  padding: 16px;
+  color: var(--cdl-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--cdl-border);
+}
+
+
+/* ===================================================
+   CÓDIGO DO LUCRO — Ajustes de Navegação
+   =================================================== */
+
+/* Menu lateral (links / abas principais) */
+.nav-button, 
+.tab-button, 
+.sidebar button,
+.sidebar a {
+  display: block;
+  width: 100%;
+  background: var(--cdl-panel);
+  color: var(--cdl-text);
+  border: 1px solid var(--cdl-border);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 6px;
+}
+
+/* Efeito hover */
+.nav-button:hover,
+.tab-button:hover,
+.sidebar button:hover,
+.sidebar a:hover {
+  background: var(--cdl-primary-light);
+  color: #fff;
+  border-color: var(--cdl-primary-light);
+}
+
+/* Aba ativa (selecionada) */
+.nav-button.active,
+.tab-button.active,
+.sidebar button.active,
+.sidebar a.active {
+  background: var(--cdl-primary);
+  color: #fff;
+  border-color: var(--cdl-primary);
+}
+
+/* Ajuste de contraste para textos */
+.sidebar,
+.tabs,
+.tab-bar {
+  background-color: var(--cdl-bg);
+  padding: 10px;
+}
