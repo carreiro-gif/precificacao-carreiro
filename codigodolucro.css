@@ -553,3 +553,72 @@ section.tab-panel ~ nav button,
     left: 0;
   }
 }
+/* ===================================================
+   CÓDIGO DO LUCRO — BLOCO I: DASHBOARD PREMIUM
+   =================================================== */
+
+.dashboard {
+  padding: 30px;
+  background: var(--cdl-bg);
+  animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dash-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--cdl-primary);
+  margin-bottom: 4px;
+}
+
+.dash-header span {
+  color: var(--cdl-text);
+}
+
+.dash-header p {
+  color: var(--cdl-muted);
+  margin-bottom: 24px;
+  font-size: 15px;
+}
+
+/* KPIs */
+.dash-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.dash-card {
+  background: var(--cdl-panel);
+  border-radius: var(--cdl-radius);
+  padding: 14px 18px;
+  box-shadow: var(--cdl-shadow);
+  text-align: center;
+  transition: transform .2s;
+}
+.dash-card:hover { transform: translateY(-3px); }
+
+.dash-card h3 {
+  color: var(--cdl-muted);
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.dash-card p {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--cdl-primary);
+}
+
+/* Gráfico */
+#dash_chart {
+  background: #fff;
+  border-radius: var(--cdl-radius);
+  box-shadow: var(--cdl-shadow);
+  padding: 10px;
+}
