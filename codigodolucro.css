@@ -373,3 +373,34 @@ section.tab-panel ~ nav button,
 .tabs button {
   min-width: 80px;
 }
+/* ===================================================
+   CÓDIGO DO LUCRO — Ajuste final para botões .tab
+   =================================================== */
+
+.tabbar button.tab {
+  background: var(--cdl-primary) !important;  /* azul padrão */
+  color: #fff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 8px 16px !important;
+  font-weight: 600 !important;
+  font-family: "Inter", sans-serif !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+  transition: background 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 3px 8px rgba(37,99,235,0.15) !important;
+  margin-right: 6px;
+}
+
+/* Hover */
+.tabbar button.tab:hover {
+  background: var(--cdl-primary-light) !important;
+  transform: translateY(-2px);
+}
+
+/* Aba ativa */
+.tabbar button.tab.active {
+  background: var(--cdl-primary-light) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 14px rgba(37,99,235,0.25) !important;
+}
