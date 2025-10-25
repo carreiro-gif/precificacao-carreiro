@@ -404,3 +404,100 @@ section.tab-panel ~ nav button,
   color: #fff !important;
   box-shadow: 0 6px 14px rgba(37,99,235,0.25) !important;
 }
+/* ===================================================
+   CÓDIGO DO LUCRO — BLOCO G: MENU LATERAL PREMIUM
+   =================================================== */
+
+/* ===== Layout base do app ===== */
+.app-main {
+  display: grid;
+  grid-template-columns: 250px 1fr; /* sidebar + conteúdo */
+  min-height: 100vh;
+  background-color: var(--cdl-bg);
+}
+
+@media (max-width: 900px) {
+  .app-main {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  background: #ffffff;
+  border-right: 1px solid var(--cdl-border);
+  box-shadow: 4px 0 10px rgba(0,0,0,0.04);
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: all .25s ease;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.sidebar-header img {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+}
+
+.sidebar-header h2 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--cdl-primary);
+  margin: 0;
+}
+
+/* ===== Botões de menu ===== */
+.sidebar button,
+.sidebar a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  font-weight: 600;
+  color: var(--cdl-text);
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+  text-decoration: none;
+}
+
+.sidebar button:hover,
+.sidebar a:hover {
+  background: var(--cdl-primary-light);
+  color: #fff;
+}
+
+.sidebar button.active,
+.sidebar a.active {
+  background: var(--cdl-primary);
+  color: #fff;
+}
+
+/* ===== Ícones ===== */
+.sidebar button svg,
+.sidebar a svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  stroke-width: 2.3;
+}
+
+/* ===== Rodapé da sidebar ===== */
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--cdl-border);
+  font-size: 13px;
+  color: var(--cdl-muted);
+  text-align: center;
+}
