@@ -121,6 +121,35 @@
   </header>
 
   <main class="app-main">
+    <!-- DASHBOARD PREMIUM -->
+<section class="dashboard" id="dashboard">
+  <div class="dash-header">
+    <h1>Bem-vindo ao <span>Código do Lucro</span> 👋</h1>
+    <p>Veja abaixo um resumo rápido do desempenho da sua operação.</p>
+  </div>
+
+  <div class="dash-kpis">
+    <div class="dash-card">
+      <h3>CMV Médio</h3>
+      <p id="dash_cmv">R$ 4,22</p>
+    </div>
+    <div class="dash-card">
+      <h3>Lucro %</h3>
+      <p id="dash_lucro">20 %</p>
+    </div>
+    <div class="dash-card">
+      <h3>PV Loja Médio</h3>
+      <p id="dash_pv">R$ 10,32</p>
+    </div>
+    <div class="dash-card">
+      <h3>Faturamento Mês</h3>
+      <p id="dash_fat">R$ 12 450,00</p>
+    </div>
+  </div>
+
+  <canvas id="dash_chart" width="400" height="160"></canvas>
+</section>
+
     <aside class="sidebar">
       <div class="sidebar-header">
         <h2>Lojas</h2>
