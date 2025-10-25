@@ -257,3 +257,69 @@ footer {
   flex-wrap: wrap;
   justify-content: flex-start;
 }
+/* ===================================================
+   CÓDIGO DO LUCRO — Botões de aba: estilo igual aos de Exportar/Importar
+   Cole este bloco no FINAL de codigodolucro.css
+   =================================================== */
+
+/* Normaliza aparência dos botões de abas/menus superiores */
+.tab-bar button,
+.tab-bar a,
+.tabs button,
+.tabs a,
+nav .btn,         /* caso existam botões em nav sem classe */
+.header-buttons button,
+.header-buttons a {
+  background: var(--cdl-primary) !important;      /* botão preenchido azul */
+  color: #fff !important;                         /* texto branco */
+  border: none !important;
+  padding: 8px 14px !important;
+  border-radius: 999px !important;                /* pílula arredondada */
+  font-weight: 600 !important;
+  box-shadow: 0 6px 14px rgba(37,99,235,0.14) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px;
+  cursor: pointer;
+  transition: transform .12s ease, background .12s ease;
+}
+
+/* Versões pequenas (círculos) */
+.tab-bar .small,
+.tabs .small,
+.tab-bar button.small,
+.tabs button.small {
+  padding: 6px 10px !important;
+  width: auto;
+  min-width: 36px;
+}
+
+/* Hover/active */
+.tab-bar button:hover,
+.tab-bar a:hover,
+.tabs button:hover,
+.tabs a:hover,
+nav .btn:hover,
+.header-buttons button:hover {
+  background: var(--cdl-primary-light) !important;
+  transform: translateY(-2px);
+}
+
+/* Aba atualmente selecionada (caso já haja classe .active) */
+.tab-bar button.active,
+.tab-bar a.active,
+.tabs button.active,
+.tabs a.active {
+  background: var(--cdl-primary) !important;
+  color: #fff !important;
+  box-shadow: 0 10px 20px rgba(37,99,235,0.18) !important;
+}
+
+/* Se por acaso existirem botões com borda branca, forçar leitura */
+.tab-bar button,
+.tabs button {
+  outline: none !important;
+}
+
+/* Pequeno ajuste para espaçamento (garante alinhamento com header) */
+.tab-bar { padding: 8px 12px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
