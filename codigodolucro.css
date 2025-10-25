@@ -323,3 +323,53 @@ nav .btn:hover,
 
 /* Pequeno ajuste para espaçamento (garante alinhamento com header) */
 .tab-bar { padding: 8px 12px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+/* ===================================================
+   CÓDIGO DO LUCRO — Ajuste universal dos botões de abas
+   =================================================== */
+
+/* Seleciona todos os botões do cabeçalho de abas */
+section.tab-panel ~ nav button,
+section.tab-panel ~ nav input[type="button"],
+.tab-bar button,
+.tab-bar input[type="button"],
+.tabs button,
+.tabs input[type="button"],
+.app-header + div button,
+.app-header + div input[type="button"] {
+  background: var(--cdl-primary) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 999px !important;
+  padding: 8px 16px !important;
+  font-weight: 600 !important;
+  font-family: "Inter", sans-serif !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+  transition: background 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 3px 8px rgba(37,99,235,0.15) !important;
+}
+
+/* Hover */
+section.tab-panel ~ nav button:hover,
+.tab-bar button:hover,
+.tabs button:hover,
+.app-header + div button:hover {
+  background: var(--cdl-primary-light) !important;
+  transform: translateY(-2px);
+}
+
+/* Botão ativo */
+section.tab-panel ~ nav button.active,
+.tab-bar button.active,
+.tabs button.active {
+  background: var(--cdl-primary) !important;
+  color: #fff !important;
+  box-shadow: 0 5px 14px rgba(37,99,235,0.25) !important;
+}
+
+/* Ajuste para botões menores (como círculos) */
+section.tab-panel ~ nav button,
+.tab-bar button,
+.tabs button {
+  min-width: 80px;
+}
