@@ -16,40 +16,50 @@
 </head>
 
 <body>
+<body>
 
-  <!-- CÓDIGO DO LUCRO - LOGO + TÍTULO -->
-  <div class="brand" style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:16px;">
-    <img src="logo-codigodolucro.svg" alt="Código do Lucro" style="width:48px;height:48px;border-radius:10px;">
-    <div>
-      <div style="font-weight:700;font-size:20px;color:#1E3A8A;line-height:1;">Código do Lucro</div>
-      <div style="font-size:13px;color:rgba(0,0,0,0.7);margin-top:2px;">Sistema de Precificação Inteligente</div>
-    </div>
-  </div>
-  <!-- fim bloco logo/título -->
+  <!-- CONTAINER PRINCIPAL -->
+  <div class="layout">
 
-  <header class="app-header">
-    <!-- resto do conteúdo original -->
-  </header>
+    <!-- MENU LATERAL -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="logo-codigodolucro.svg" alt="Logo">
+        <h2>Código do Lucro</h2>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="active">🏠 Dashboard</button>
+        <button>🧬 DNA</button>
+        <button>💰 Faturamento</button>
+        <button>🥩 Insumos</button>
+        <button>📋 Ficha Técnica</button>
+        <button>💵 PV</button>
+        <button>🍔 Combos</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        v1.0 — Sistema Premium Carreiro
+      </div>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main-content">
+      <header class="app-header">
+        <!-- cabeçalho original aqui -->
+      </header>
+
+      <!-- Aqui ficam suas seções -->
+      <section class="dashboard" id="dashboard">
+        <!-- conteúdo do dashboard -->
+      </section>
+    </main>
+
+  </div> <!-- fim layout -->
+
 </body>
 </html>
 
-<body>
-
-  <!-- MENU LATERAL PREMIUM -->
-  <!-- MENU LATERAL PREMIUM -->
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <img src="logo-codigodolucro.svg" alt="Logo">
-    <h2>Código do Lucro</h2>
-    <button id="menuToggle" class="menu-toggle" aria-label="Abrir menu">☰</button>
-  </div>
-
-  <nav class="sidebar-nav">
-    <button class="active">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M3 12l2-2m0 0l7-7 7 7m-9 2v8m4-8v8m-9 4h18" />
-      </svg>
       Dashboard
     </button>
 
