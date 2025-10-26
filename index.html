@@ -16,7 +16,6 @@
 </head>
 
 <body>
-<body>
   <!-- TOPO FIXO DO SISTEMA -->
 <header class="topbar">
   <!-- TOPO PREMIUM - CÓDIGO DO LUCRO -->
@@ -72,7 +71,32 @@
     <p>Monte e gerencie seus combos promocionais.</p>
   </section>
 </main>
+<section id="dashboard" class="tab-section active">
+  <div class="dashboard-container">
+    <h2>📊 Desempenho Geral</h2>
 
+    <div class="cards-grid">
+      <div class="card">
+        <h3>CMV Médio</h3>
+        <p id="cmvMedio">R$ 0,00</p>
+      </div>
+      <div class="card">
+        <h3>Lucro (%)</h3>
+        <p id="lucroPercentual">0%</p>
+      </div>
+      <div class="card">
+        <h3>PV Loja Médio</h3>
+        <p id="pvMedio">R$ 0,00</p>
+      </div>
+      <div class="card destaque">
+        <h3>Faturamento Mês</h3>
+        <p id="faturamentoMes">R$ 0,00</p>
+      </div>
+    </div>
+
+    <canvas id="graficoLucro" width="400" height="180"></canvas>
+  </div>
+</section>
 </header>
 
   <!-- LAYOUT PRINCIPAL -->
