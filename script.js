@@ -780,3 +780,58 @@ document.querySelectorAll('.tab-button').forEach(button => {
     }, 300);
   });
 });
+// ===================================================
+// BLOCO N — DASHBOARD DINÂMICO + GRÁFICOS
+// ===================================================
+
+// Simulação inicial (depois vamos conectar aos dados reais)
+let cmvMedio = 4.22;
+let lucroPercentual = 20;
+let pvMedio = 10.32;
+let faturamentoMes = 12450;
+
+// Atualiza os cards automaticamente
+document.getElementById('cmvMedio').textContent = `R$ ${cmvMedio.toFixed(2)}`;
+document.getElementById('lucroPercentual').textContent = `${lucroPercentual}%`;
+document.getElementById('pvMedio').textContent = `R$ ${pvMedio.toFixed(2)}`;
+document.getElementById('faturamentoMes').textContent = `R$ ${faturamentoMes.toLocaleString('pt-BR', {minimumFractionDigits:2})}`;
+
+// Animação suave de entrada
+const cards = document.querySelectorAll('.card');
+cards.forEach((card, i) => {
+  card.style.opacity = 0;
+  setTimeout(() => {
+    card.style.transition = 'opacity 0.6s ease';
+    card.style.opacity = 1;
+  }, i * 150);
+});
+
+// ======= Gráfico =======
+const ctx = document.getElementById('graficoLucro');
+if (ctx) {
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+      datasets: [{
+        label: 'Lucro %',
+        data: [12, 16, 20, 23, 18, 25],
+        borderColor: '#6366f1',
+        backgroundColor: 'rgba(99, 102, 241, 0.2)',
+        borderWidth: 2,
+        tension: 0.3,
+        fill: true,
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true, ticks: { color: '#1e3a8a' } },
+        x: { ticks: { color: '#1e3a8a' } }
+      },
+      plugins: {
+        legend: { display: false }
+      }
+    }
+  });
+}
