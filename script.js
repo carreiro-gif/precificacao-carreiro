@@ -441,6 +441,38 @@ document.querySelectorAll(".tab-panel").forEach(sec=>{
   }catch(e){ console.warn('CDL theme apply error', e); }
 })();
  /* ================= PV MODULE (END) ================= */
+/* ================= DASHBOARD SYNC (CÓDIGO DO LUCRO) ================= */
+window.addEventListener("DOMContentLoaded", () => {
+  try {
+    // tenta acessar o estado salvo
+    const stateJSON = localStorage.getItem("precificacaoState") ||
+                      localStorage.getItem("carreiroState") ||
+                      localStorage.getItem("pricingState");
+    if (!stateJSON) return; // nada salvo ainda
+
+    const state = JSON.parse(stateJSON);
+    const loja = state.lojaAtual || state.loja || {};
+    const ficha = loja.ficha || {};
+
+    // valores base
+    const cmv = ficha.custoTotal || 0;
+    const lucroPct = parseFloat(loja.lucroPct || 0);
+    const pvLoja = loja.pvLoja || 0;
+    const faturamento = loja.faturamento || 0;
+
+    // atualiza dashboard
+    const fmt = (v) => isNaN(v) ? "R$ 0,00" : `R$ ${v.toFixed(2).replace(".", ",")}`;
+    document.getElementById("cmvValor").textContent = fmt(cmv);
+    document.getElementById("lucroValor").textContent = `${lucroPct.toFixed(1)}%`;
+    document.getElementById("pvValor").textContent = fmt(pvLoja);
+    document.getElementById("faturamentoValor").textContent = fmt(faturamento);
+
+  } catch (err) {
+    console.error("Erro ao carregar dashboard:", err);
+  }
+});
+/* ================= DASHBOARD SYNC (END) ================= */
+
 /* =============== FATURAMENTO MODULE (START) =============== */
 (function FaturamentoModule(){
   const KEYS = { state: ['precificacaoState','carreiroState','pricingState'], ctx:'pv_context' };
