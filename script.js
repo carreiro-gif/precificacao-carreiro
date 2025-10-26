@@ -723,3 +723,16 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   document.body.appendChild(script);
 });
+// ===================================================
+// BLOCO L — Troca de abas (menu superior)
+// ===================================================
+document.querySelectorAll('.tab-button').forEach(button => {
+  button.addEventListener('click', () => {
+    document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-section').forEach(section => section.classList.remove('active'));
+
+    button.classList.add('active');
+    const tabId = button.getAttribute('data-tab');
+    document.getElementById(tabId).classList.add('active');
+  });
+});
