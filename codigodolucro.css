@@ -622,3 +622,43 @@ section.tab-panel ~ nav button,
   box-shadow: var(--cdl-shadow);
   padding: 10px;
 }
+/* ===================================================
+   CÓDIGO DO LUCRO — BLOCO I.1: Ajuste de largura e alinhamento
+   =================================================== */
+
+/* Garante que o Dashboard ocupe toda a área visível da coluna de conteúdo */
+.app-main {
+  display: grid;
+  grid-template-columns: 250px 1fr; /* menu fixo + conteúdo */
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Conteúdo principal (lado direito do menu) */
+main,
+.dashboard {
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Ajusta padding e centralização */
+.dashboard {
+  padding: 40px 60px;
+}
+
+/* Em telas grandes, deixa o painel amplo */
+@media (min-width: 1200px) {
+  .dashboard {
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Em telas pequenas, continua responsivo */
+@media (max-width: 900px) {
+  .dashboard {
+    padding: 24px 16px;
+  }
+}
