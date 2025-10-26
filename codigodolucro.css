@@ -662,3 +662,80 @@ main,
     padding: 24px 16px;
   }
 }
+/* ===================================================
+   MENU LATERAL — CORRIGIDO E FIXO À ESQUERDA
+   =================================================== */
+.layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  background: linear-gradient(180deg, #1E3A8A, #2563EB);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 18px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  left: 0;
+  box-shadow: 2px 0 6px rgba(0,0,0,0.1);
+}
+
+.sidebar-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.sidebar-header img {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 8px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar-nav button {
+  background: transparent;
+  border: none;
+  color: #fff;
+  text-align: left;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 15px;
+}
+
+.sidebar-nav button:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.sidebar-nav button.active {
+  background: #fff;
+  color: #1E3A8A;
+  font-weight: 700;
+}
+
+.sidebar-footer {
+  font-size: 13px;
+  color: rgba(255,255,255,0.7);
+  text-align: center;
+}
+
+/* Conteúdo principal */
+.main-content {
+  background: #f6f7fb;
+  padding: 40px;
+  overflow-y: auto;
+}
