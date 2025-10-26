@@ -736,3 +736,47 @@ document.querySelectorAll('.tab-button').forEach(button => {
     document.getElementById(tabId).classList.add('active');
   });
 });
+// ===================================================
+// BLOCO M — MODO ESCURO + TRANSIÇÃO ENTRE ABAS
+// ===================================================
+
+// Alternância manual de tema
+const themeToggle = document.getElementById('themeToggle');
+const body = document.body;
+
+// Detectar preferência do sistema
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  body.classList.add('dark-mode');
+  themeToggle.textContent = '☀️';
+}
+
+// Alternar manualmente
+themeToggle.addEventListener('click', () => {
+  body.classList.toggle('dark-mode');
+  themeToggle.textContent = body.classList.contains('dark-mode') ? '☀️' : '🌙';
+});
+
+// Transição suave entre abas
+document.querySelectorAll('.tab-section').forEach(section => {
+  section.style.opacity = '0';
+  section.style.transition = 'opacity 0.3s ease-in-out';
+});
+
+document.querySelectorAll('.tab-button').forEach(button => {
+  button.addEventListener('click', () => {
+    const tabId = button.getAttribute('data-tab');
+    document.querySelectorAll('.tab-section').forEach(section => {
+      section.style.opacity = '0';
+      setTimeout(() => {
+        section.classList.remove('active');
+      }, 300);
+    });
+    setTimeout(() => {
+      const activeSection = document.getElementById(tabId);
+      activeSection.classList.add('active');
+      setTimeout(() => {
+        activeSection.style.opacity = '1';
+      }, 50);
+    }, 300);
+  });
+});
