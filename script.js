@@ -458,7 +458,14 @@ window.addEventListener("DOMContentLoaded", () => {
     const cmv = ficha.custoTotal || 0;
     const lucroPct = parseFloat(loja.lucroPct || 0);
     const pvLoja = loja.pvLoja || 0;
-    const faturamento = loja.faturamento || 0;
+    // tenta pegar faturamento em diferentes caminhos
+const faturamento = 
+  (loja.faturamento && loja.faturamento.total) ||
+  loja.faturamentoMes ||
+  loja.faturamento ||
+  (state.faturamento && state.faturamento.total) ||
+  0;
+
 
     // atualiza dashboard
     const fmt = (v) => isNaN(v) ? "R$ 0,00" : `R$ ${v.toFixed(2).replace(".", ",")}`;
