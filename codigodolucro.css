@@ -1013,3 +1013,62 @@ body {
 .tab-section.active {
   display: block;
 }
+/* ===================================================
+   BLOCO M — MODO ESCURO + TRANSIÇÕES SUAVES
+   =================================================== */
+
+/* Transições suaves em todos os elementos */
+* {
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Botão de alternar tema */
+.theme-toggle {
+  margin-left: 12px;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ========================
+   Tema escuro
+   ======================== */
+body.dark-mode {
+  background: #0f172a;
+  color: #f3f4f6;
+}
+
+body.dark-mode .topbar {
+  background: linear-gradient(90deg, #0a0f2c, #1e3a8a);
+}
+
+body.dark-mode .tab-button {
+  background: rgba(255, 255, 255, 0.1);
+  color: #f3f4f6;
+}
+
+body.dark-mode .tab-button:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+body.dark-mode .tab-button.active {
+  background: #fff;
+  color: #1e3a8a;
+}
+
+body.dark-mode .main-content {
+  background: #1e293b;
+  color: #f3f4f6;
+}
+
+body.dark-mode h2 {
+  color: #f9fafb;
+}
