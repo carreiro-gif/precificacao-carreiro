@@ -445,9 +445,11 @@ document.querySelectorAll(".tab-panel").forEach(sec=>{
 window.addEventListener("DOMContentLoaded", () => {
   try {
     // tenta acessar o estado salvo
-    const stateJSON = localStorage.getItem("precificacaoState") ||
-                      localStorage.getItem("carreiroState") ||
-                      localStorage.getItem("pricingState");
+    const stateJSON = localStorage.getItem("carreiro.precificacao.v1") ||
+                  localStorage.getItem("precificacaoState") ||
+                  localStorage.getItem("carreiroState") ||
+                  localStorage.getItem("pricingState");
+
     if (!stateJSON) return; // nada salvo ainda
 
     const state = JSON.parse(stateJSON);
