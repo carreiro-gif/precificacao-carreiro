@@ -183,6 +183,8 @@ document.getElementById('kpi_pvloja').textContent  = money(r1);
 document.getElementById('kpi_ifood').textContent   = money(r2);
 document.getElementById('kpi_ifoodci').textContent = money(r3);
 document.getElementById('kpi_99').textContent      = money(r4);
+document.getElementById("faturamentoMes").textContent = `R$ ${faturamento.toFixed(2).replace('.', ',')}`;
+    
     const loja=getLoja(); const fId=$('#pv_ficha')?.value;
     const ficha=(loja?.fichas||[]).find(x=>x.id===fId);
     const tbody=$('#pv_tbody'); if(!tbody) return;
