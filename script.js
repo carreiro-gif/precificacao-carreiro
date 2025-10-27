@@ -442,43 +442,46 @@ document.querySelectorAll(".tab-panel").forEach(sec=>{
 })();
  /* ================= PV MODULE (END) ================= */
 /* ================= DASHBOARD SYNC (CÓDIGO DO LUCRO) ================= */
+/* ================= DASHBOARD SYNC (CÓDIGO DO LUCRO) ================= */
 window.addEventListener("DOMContentLoaded", () => {
   try {
-    // tenta acessar o estado salvo
+    // lê o estado salvo da versão principal
     const stateJSON = localStorage.getItem("carreiro.precificacao.v1") ||
-                  localStorage.getItem("precificacaoState") ||
-                  localStorage.getItem("carreiroState") ||
-                  localStorage.getItem("pricingState");
-
-    if (!stateJSON) return; // nada salvo ainda
+                      localStorage.getItem("precificacaoState") ||
+                      localStorage.getItem("carreiroState") ||
+                      localStorage.getItem("pricingState");
+    if (!stateJSON) return;
 
     const state = JSON.parse(stateJSON);
-    const loja = state.lojaAtual || state.loja || {};
-    const ficha = loja.ficha || {};
+    const lojaAtiva = state.lojas?.find(l => l.id === state.lojaAtivaId);
+    if (!lojaAtiva) return;
 
-    // valores base
-    const cmv = ficha.custoTotal || 0;
-    const lucroPct = parseFloat(loja.lucroPct || 0);
-    const pvLoja = loja.pvLoja || 0;
-    // tenta pegar faturamento em diferentes caminhos
-const faturamento = 
-  (loja.faturamento && loja.faturamento.total) ||
-  loja.faturamentoMes ||
-  loja.faturamento ||
-  (state.faturamento && state.faturamento.total) ||
-  0;
+    // dados principais
+    const cmv = lojaAtiva.ficha?.custoTotal || lojaAtiva.cmv || 0;
+    const lucroPct = lojaAtiva.lucroPct || lojaAtiva.dna?.lucroPct || 0;
+    const pvLoja = lojaAtiva.pvLoja || lojaAtiva.pvLojaMedio || 0;
 
+    // faturamento dinâmico
+    const mesAtual = new Date().toISOString().slice(0, 7); // "2025-10"
+    const faturamentoObj = lojaAtiva.faturamento || {};
+    const faturamento = faturamentoObj[mesAtual] || faturamentoObj.total || 0;
+
+    // função formatadora
+    const fmt = (v) => isNaN(v) ? "R$ 0,00" : `R$ ${v.toFixed(2).replace(".", ",")}`;
 
     // atualiza dashboard
-    const fmt = (v) => isNaN(v) ? "R$ 0,00" : `R$ ${v.toFixed(2).replace(".", ",")}`;
     document.getElementById("cmvValor").textContent = fmt(cmv);
     document.getElementById("lucroValor").textContent = `${lucroPct.toFixed(1)}%`;
     document.getElementById("pvValor").textContent = fmt(pvLoja);
     document.getElementById("faturamentoValor").textContent = fmt(faturamento);
 
+    console.log("🔍 Dashboard carregado com:", { cmv, lucroPct, pvLoja, faturamento });
   } catch (err) {
     console.error("Erro ao carregar dashboard:", err);
   }
+});
+/* ================= DASHBOARD SYNC (END) ================= */
+
 });
 /* ================= DASHBOARD SYNC (END) ================= */
 
