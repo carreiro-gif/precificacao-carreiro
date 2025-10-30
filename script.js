@@ -942,3 +942,16 @@ function atualizarDashboard() {
 
 // Executa a atualização assim que o app carregar
 document.addEventListener("DOMContentLoaded", atualizarDashboard);
+// 🔁 Execução garantida do dashboard, mesmo se o DOMContentLoaded não for disparado
+setTimeout(() => {
+  try {
+    if (typeof atualizarDashboard === "function") {
+      console.log("⏱️ Forçando atualização do dashboard...");
+      atualizarDashboard();
+    } else {
+      console.warn("⚠️ Função atualizarDashboard não encontrada.");
+    }
+  } catch (e) {
+    console.error("Erro ao forçar atualização:", e);
+  }
+}, 1500);
