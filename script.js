@@ -932,7 +932,7 @@ function atualizarDashboard() {
   const cmvEl = document.getElementById("cmvMedio");
   const lucroEl = document.getElementById("lucroPercentual");
   const pvEl = document.getElementById("pvMedio");
-  const fatEl = document.getElementById("faturamentoMes");
+  const fatEl = document.getElementById("faturamentoValor");
 
   if (cmvEl) cmvEl.textContent = `R$ ${cmvMedio.toFixed(2).replace('.', ',')}`;
   if (lucroEl) lucroEl.textContent = `${lucroPercentual.toFixed(1)} %`;
