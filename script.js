@@ -917,14 +917,13 @@ if (ctx) {
 // ==========================
 function atualizarDashboard() {
   const loja = getLoja();
-
   if (!loja) return;
 
   // 🔢 Valores simulados ou calculados
   const cmvMedio = loja?.dna?.cmvMedio || 4.22;
   const lucroPercentual = loja?.dna?.lucroPct || 22.5;
   const pvMedio = loja?.dna?.pvMedio || 10.32;
-  const faturamento = loja?.faturamento?.mensal || 12450.75;
+  const faturamento = loja?.faturamento?.total || 12450.75;
 
   console.log("Dashboard carregado com:", { cmvMedio, lucroPercentual, pvMedio, faturamento });
 
@@ -932,8 +931,7 @@ function atualizarDashboard() {
   const cmvEl = document.getElementById("cmvMedio");
   const lucroEl = document.getElementById("lucroPercentual");
   const pvEl = document.getElementById("pvMedio");
-  const fatEl = document.getElementById("faturamentoValor");
-  document.addEventListener("DOMContentLoaded", atualizarDashboard);
+  const fatEl = document.getElementById("faturamentoValor"); // <-- corrigido aqui
 
   if (cmvEl) cmvEl.textContent = `R$ ${cmvMedio.toFixed(2).replace('.', ',')}`;
   if (lucroEl) lucroEl.textContent = `${lucroPercentual.toFixed(1)} %`;
