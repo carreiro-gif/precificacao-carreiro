@@ -915,6 +915,7 @@ if (ctx) {
 // ==========================
 // Bloco: Atualização de Indicadores no Dashboard
 // ==========================
+console.log("🚀 Função atualizarDashboard executada!");
 function atualizarDashboard() {
   const loja = getLoja();
   if (!loja) return;
