@@ -912,3 +912,33 @@ if (ctx) {
     }
   });
 }
+// ==========================
+// Bloco: Atualização de Indicadores no Dashboard
+// ==========================
+function atualizarDashboard() {
+  const loja = getLoja();
+
+  if (!loja) return;
+
+  // 🔢 Valores simulados ou calculados
+  const cmvMedio = loja?.dna?.cmvMedio || 4.22;
+  const lucroPercentual = loja?.dna?.lucroPct || 22.5;
+  const pvMedio = loja?.dna?.pvMedio || 10.32;
+  const faturamento = loja?.faturamento?.mensal || 12450.75;
+
+  console.log("Dashboard carregado com:", { cmvMedio, lucroPercentual, pvMedio, faturamento });
+
+  // 🧮 Atualiza os elementos da tela
+  const cmvEl = document.getElementById("cmvMedio");
+  const lucroEl = document.getElementById("lucroPercentual");
+  const pvEl = document.getElementById("pvMedio");
+  const fatEl = document.getElementById("faturamentoMes");
+
+  if (cmvEl) cmvEl.textContent = `R$ ${cmvMedio.toFixed(2).replace('.', ',')}`;
+  if (lucroEl) lucroEl.textContent = `${lucroPercentual.toFixed(1)} %`;
+  if (pvEl) pvEl.textContent = `R$ ${pvMedio.toFixed(2).replace('.', ',')}`;
+  if (fatEl) fatEl.textContent = `R$ ${faturamento.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+}
+
+// Executa a atualização assim que o app carregar
+document.addEventListener("DOMContentLoaded", atualizarDashboard);
