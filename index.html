@@ -1232,5 +1232,39 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
       });
     })();
   </script>
+
+<!-- Conteúdo do seu app -->
+...
+<!-- Firebase SDK + Firestore -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "SUA_API_KEY",
+    authDomain: "lucro-facil-28aaf.firebaseapp.com",
+    projectId: "lucro-facil-28aaf",
+    storageBucket: "lucro-facil-28aaf.appspot.com",
+    messagingSenderId: "SEU_ID",
+    appId: "SEU_APP_ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  async function salvarPreco() {
+    try {
+      await addDoc(collection(db, "precos"), {
+        nome: "Combo Burger",
+        valor: 29.90
+      });
+      console.log("Preço salvo com sucesso!");
+    } catch (e) {
+      console.error("Erro ao salvar:", e);
+    }
+  }
+
+  salvarPreco();
+</script>
 </body>
 </html>
