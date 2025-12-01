@@ -1237,8 +1237,18 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
 ...
 <!-- Firebase SDK + Firestore -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  
+<!-- Seu código atual -->
+<script>
+  // ... código do seu app ...
+</script>
+
+<!-- Substitua pelo novo bloco do Firebase -->
+<script type="module">
+  console.log("[Firebase] Iniciando módulo...");
+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "SUA_API_KEY",
@@ -1249,22 +1259,27 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
     appId: "SEU_APP_ID"
   };
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+  try {
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    console.log("[Firebase] Inicializado com sucesso.");
 
-  async function salvarPreco() {
-    try {
-      await addDoc(collection(db, "precos"), {
-        nome: "Combo Burger",
-        valor: 29.90
-      });
-      console.log("Preço salvo com sucesso!");
-    } catch (e) {
-      console.error("Erro ao salvar:", e);
-    }
+    window.testeFirebase = async () => {
+      try {
+        const ref = await addDoc(collection(db, "precos"), {
+          nome: "Combo Burger",
+          valor: 29.90,
+          criadoEm: new Date().toISOString()
+        });
+        console.log("[Firebase] Documento criado:", ref.id);
+      } catch (e) {
+        console.error("[Firebase] Erro ao salvar:", e);
+      }
+    };
+  } catch (err) {
+    console.error("[Firebase] Falha ao inicializar:", err);
   }
-
-  salvarPreco();
 </script>
 </body>
 </html>
+
