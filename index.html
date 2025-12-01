@@ -9,10 +9,10 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- CSS principal -->
-  <link rel="stylesheet" href="style.css">
+  
 
   <!-- Tema adicional -->
-  <link rel="stylesheet" href="codigodolucro.css">
+  
 </head>
 
 <body>
@@ -120,6 +120,72 @@
   <!-- fim layout -->
 <!-- Bloco O — Base de dados -->
 <script src="dados.js"></script>
+
+
+<!-- Firebase SDK + Firestore -->
+<script type="module">
+  console.log('[Firebase] Iniciando módulo...');
+
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js';
+  import { getFirestore, collection, addDoc } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey: 'SUA_API_KEY',
+    authDomain: 'lucro-facil-28aaf.firebaseapp.com',
+    projectId: 'lucro-facil-28aaf',
+    storageBucket: 'lucro-facil-28aaf.appspot.com',
+    messagingSenderId: 'SEU_ID',
+    appId: 'SEU_APP_ID'
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  console.log('[Firebase] Inicializado com sucesso.');
+
+  // Função de teste
+  window.testeFirebase = async () => {
+    try {
+      const ref = await addDoc(collection(db, 'precos'), {
+        nome: 'Combo Burger',
+        valor: 29.90,
+        criadoEm: new Date().toISOString()
+      });
+      console.log('[Firebase] Documento criado:', ref.id);
+    } catch (e) {
+      console.error('[Firebase] Erro ao salvar:', e);
+    }
+  };
+
+  // Função para salvar insumo
+  window.salvarInsumoFirebase = async (insumo) => {
+    try {
+      await addDoc(collection(db, 'insumos'), insumo);
+      console.log('[Firebase] Insumo salvo:', insumo);
+    } catch (e) {
+      console.error('[Firebase] Erro ao salvar insumo:', e);
+    }
+  };
+
+  // Função para salvar ficha técnica
+  window.salvarFichaFirebase = async (ficha) => {
+    try {
+      await addDoc(collection(db, 'fichas'), ficha);
+      console.log('[Firebase] Ficha salva:', ficha);
+    } catch (e) {
+      console.error('[Firebase] Erro ao salvar ficha:', e);
+    }
+  };
+
+  // Função para salvar faturamento
+  window.salvarFaturamentoFirebase = async (fat) => {
+    try {
+      await addDoc(collection(db, 'faturamento'), fat);
+      console.log('[Firebase] Faturamento salvo:', fat);
+    } catch (e) {
+      console.error('[Firebase] Erro ao salvar faturamento:', e);
+    }
+  };
+</script>
 
 </body>
 </html>
@@ -1280,6 +1346,72 @@ Cheddar fatiado;un;32,00;24;0"></textarea>
     console.error("[Firebase] Falha ao inicializar:", err);
   }
 </script>
+
+<!-- Firebase SDK + Firestore -->
+<script type="module">
+  console.log('[Firebase] Iniciando módulo...');
+
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js';
+  import { getFirestore, collection, addDoc } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey: 'SUA_API_KEY',
+    authDomain: 'lucro-facil-28aaf.firebaseapp.com',
+    projectId: 'lucro-facil-28aaf',
+    storageBucket: 'lucro-facil-28aaf.appspot.com',
+    messagingSenderId: 'SEU_ID',
+    appId: 'SEU_APP_ID'
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  console.log('[Firebase] Inicializado com sucesso.');
+
+  // Função de teste
+  window.testeFirebase = async () => {
+    try {
+      const ref = await addDoc(collection(db, 'precos'), {
+        nome: 'Combo Burger',
+        valor: 29.90,
+        criadoEm: new Date().toISOString()
+      });
+      console.log('[Firebase] Documento criado:', ref.id);
+    } catch (e) {
+      console.error('[Firebase] Erro ao salvar:', e);
+    }
+  };
+
+  // Função para salvar insumo
+  window.salvarInsumoFirebase = async (insumo) => {
+    try {
+      await addDoc(collection(db, 'insumos'), insumo);
+      console.log('[Firebase] Insumo salvo:', insumo);
+    } catch (e) {
+      console.error('[Firebase] Erro ao salvar insumo:', e);
+    }
+  };
+
+  // Função para salvar ficha técnica
+  window.salvarFichaFirebase = async (ficha) => {
+    try {
+      await addDoc(collection(db, 'fichas'), ficha);
+      console.log('[Firebase] Ficha salva:', ficha);
+    } catch (e) {
+      console.error('[Firebase] Erro ao salvar ficha:', e);
+    }
+  };
+
+  // Função para salvar faturamento
+  window.salvarFaturamentoFirebase = async (fat) => {
+    try {
+      await addDoc(collection(db, 'faturamento'), fat);
+      console.log('[Firebase] Faturamento salvo:', fat);
+    } catch (e) {
+      console.error('[Firebase] Erro ao salvar faturamento:', e);
+    }
+  };
+</script>
+
 </body>
 </html>
 
